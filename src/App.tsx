@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import AuthGate from './components/AuthGate'
+import InventoryCatalog from './components/InventoryCatalog'
 import {
   Activity, ArrowDownLeft, ArrowUpRight, Bell, Boxes, Building2,
   ChevronDown, CircleHelp, LayoutDashboard, Package,
@@ -77,7 +78,7 @@ function Dashboard() {
           </div>
         </header>
 
-        <div className="content">
+        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : <div className="content">
           <section className="welcome-row">
             <div><div className="eyebrow"><span className="live-dot"/> ESPACE DE GESTION</div><h1>Bonjour, bienvenue 👋</h1><p>Voici ce qui se passe dans votre gestion de stock aujourd’hui.</p></div>
             <div className="date-chip">Jeudi 5 novembre 2026 <ChevronDown size={15}/></div>
@@ -120,7 +121,7 @@ function Dashboard() {
             <div className="table-footer"><span>Affichage de {filtered.length} mouvements récents</span><button className="text-button">Consulter l’historique <ArrowUpRight size={15}/></button></div>
           </section>
           <footer className="footer"><span>© 2026 SIB Stock · Gestion intelligente des stocks</span><span><i className="footer-dot"/> Plateforme prête pour configuration</span></footer>
-        </div>
+        </div>}
       </main>
     </div>
   )
