@@ -47,20 +47,22 @@ export default function InventoryCatalog({ mode }: { mode: Mode }) {
     if(!supabase) return
     setBusy(true); setError(''); setNotice('')
     try {
+      const {data:tenantId,error:tenantError}=await supabase.rpc('current_tenant_id')
+      if(tenantError || !tenantId) throw tenantError ?? new Error('Aucun espace entreprise actif.')
       if(mode==='Produits') {
         const {data,error:err}=await supabase.from('products').insert({
-          sku:sku.trim(),name:name.trim(),unit_name:unit.trim()||'unité',
+          tenant_id:tenantId,sku:sku.trim(),name:name.trim(),unit_name:unit.trim()||'unité',
           purchase_price:Number(purchase),sale_price:Number(sale),minimum_stock:Number(minimum),
         }).select('id').single()
         if(err) throw err
         if(barcode.trim()) {
-          const {error:barcodeError}=await supabase.from('product_barcodes').insert({product_id:data.id,barcode:barcode.trim(),barcode_type:'INTERNAL'})
+          const {error:barcodeError}=await supabase.from('product_barcodes').insert({tenant_id:tenantId,product_id:data.id,barcode:barcode.trim(),barcode_type:'INTERNAL'})
           if(barcodeError) throw new Error('Produit créé, mais code-barres non enregistré : '+barcodeError.message)
         }
         setNotice('Produit enregistré.')
         setName('');setSku('');setBarcode('');setPurchase('0');setSale('0');setMinimum('0')
       } else {
-        const {error:err}=await supabase.from('warehouses').insert({code:code.trim(),name:name.trim(),address:address.trim()||null})
+        const {error:err}=await supabase.from('warehouses').insert({tenant_id:tenantId,code:code.trim(),name:name.trim(),address:address.trim()||null})
         if(err) throw err
         setNotice('Entrepôt enregistré.')
         setName('');setCode('');setAddress('')
