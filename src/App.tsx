@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import AuthGate from './components/AuthGate'
 import {
   Activity, ArrowDownLeft, ArrowUpRight, Bell, Boxes, Building2,
   ChevronDown, CircleHelp, LayoutDashboard, Package,
@@ -31,7 +32,7 @@ const stats = [
   { label: 'Sorties du mois', value: '318', note: 'Toutes opérations confondues', icon: ArrowUpRight, tone: 'orange' },
 ]
 
-export default function App() {
+function Dashboard() {
   const [active, setActive] = useState('Vue d’ensemble')
   const [query, setQuery] = useState('')
   const filtered = useMemo(() => movements.filter((m) => [m.code, m.product, m.warehouse].join(' ').toLowerCase().includes(query.toLowerCase())), [query])
@@ -123,4 +124,9 @@ export default function App() {
       </main>
     </div>
   )
+}
+
+
+export default function App() {
+  return <AuthGate><Dashboard /></AuthGate>
 }
