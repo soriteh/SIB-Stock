@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import {
   Activity, ArrowDownLeft, ArrowUpRight, Bell, Boxes, Building2,
-  ChevronDown, CircleHelp, Command, LayoutDashboard, Package,
+  ChevronDown, CircleHelp, LayoutDashboard, Package,
   Search, Settings, ShoppingCart, Truck, Users, Warehouse,
 } from 'lucide-react'
 import { isSupabaseConfigured } from './lib/supabase'
