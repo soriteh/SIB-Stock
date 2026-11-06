@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import AuthGate from './components/AuthGate'
 import InventoryCatalog from './components/InventoryCatalog'
 import StockMovements from './components/StockMovements'
+import BusinessPartners from './components/BusinessPartners'
 import {
   Activity, ArrowDownLeft, ArrowUpRight, Bell, Boxes, Building2,
   ChevronDown, CircleHelp, LayoutDashboard, Package,
@@ -79,7 +80,7 @@ function Dashboard() {
           </div>
         </header>
 
-        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : <div className="content">
+        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Fournisseurs & clients' ? <BusinessPartners /> : <div className="content">
           <section className="welcome-row">
             <div><div className="eyebrow"><span className="live-dot"/> ESPACE DE GESTION</div><h1>Bonjour, bienvenue 👋</h1><p>Voici ce qui se passe dans votre gestion de stock aujourd’hui.</p></div>
             <div className="date-chip">Jeudi 5 novembre 2026 <ChevronDown size={15}/></div>
