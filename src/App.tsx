@@ -14,10 +14,11 @@ import Administration from './components/Administration'
 import SettingsPage from './components/SettingsPage'
 import HelpCenter from './components/HelpCenter'
 import SubscriptionPage from './components/SubscriptionPage'
+import ProfilePage from './components/ProfilePage'
 import {
   Activity, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
   ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package,
-  Search, Settings, ShoppingCart, Truck, Users, Warehouse,
+  Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound,
 } from 'lucide-react'
 import { isSupabaseConfigured } from './lib/supabase'
 
@@ -84,7 +85,7 @@ function Dashboard() {
           <button className={active === 'Paramètres' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Paramètres')}><Settings size={18}/><span>Paramètres</span></button>
           <button className={active === 'Centre d’aide' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Centre d’aide')}><CircleHelp size={18}/><span>Centre d’aide</span></button>
           <div className="plan-card"><div className="plan-top"><span>OFFRE BUSINESS</span><span className="plan-dot"/></div><strong>Votre espace évolue</strong><p>Gérez vos stocks et vos équipes depuis un seul endroit.</p><button onClick={() => setActive('Abonnement')}>Gérer l’abonnement <ArrowUpRight size={14}/></button></div>
-          <div className="profile"><div className="avatar">SC</div><div><strong>Administrateur</strong><small>admin@entreprise.com</small></div><ChevronDown size={15}/></div>
+          <button className="profile profile-trigger" onClick={() => setActive('Mon profil')}><div className="avatar"><UserRound size={17}/></div><div><strong>Mon profil</strong><small>Compte et sécurité</small></div><ChevronDown size={15}/></button>
         </div>
       </aside>
 
@@ -94,11 +95,11 @@ function Dashboard() {
           <div className="top-actions">
             <div className="search-box"><Search size={16}/><input placeholder="Rechercher un produit, une référence..." value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>⌘ K</kbd></div>
             <button className="icon-button" aria-label="Notifications"><Bell size={18}/><i/></button>
-            <div className="top-avatar">SC</div>
+            <button className="top-avatar top-avatar-button" aria-label="Ouvrir mon profil" onClick={() => setActive('Mon profil')}><UserRound size={17}/></button>
           </div>
         </header>
 
-        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : active === 'Administration' ? <Administration /> : active === 'Paramètres' ? <SettingsPage /> : active === 'Centre d’aide' ? <HelpCenter /> : active === 'Abonnement' ? <SubscriptionPage /> : <div className="content">
+        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : active === 'Administration' ? <Administration /> : active === 'Paramètres' ? <SettingsPage /> : active === 'Centre d’aide' ? <HelpCenter /> : active === 'Abonnement' ? <SubscriptionPage /> : active === 'Mon profil' ? <ProfilePage /> : <div className="content">
           <section className="welcome-row">
             <div><div className="eyebrow"><span className="live-dot"/> ESPACE DE GESTION</div><h1>Bonjour, bienvenue 👋</h1><p>Voici ce qui se passe dans votre gestion de stock aujourd’hui.</p></div>
             <div className="date-chip">Jeudi 5 novembre 2026 <ChevronDown size={15}/></div>
