@@ -21,4 +21,6 @@ with check (
   id = public.current_tenant_id()
   and public.has_tenant_role(array['owner','admin'])
 );
-grant select, update on public.tenants to authenticated;
+grant select on public.tenants to authenticated;
+revoke update on table public.tenants from authenticated;
+grant update (name, legal_name, country_code, currency_code, address, phone, email, website, tax_number, legal_form, timezone) on table public.tenants to authenticated;
