@@ -29,4 +29,10 @@ Copier `.env.example` vers `.env.local` et renseigner les variables publiques Su
 
 ## État du projet
 
-Phase 1 — initialisation du dépôt et fondations multi-tenant.
+- Fondations multi-tenant, authentification, produits et entrepôts opérationnels.
+- Moteur de mouvements de stock transactionnel : entrées, sorties, ajustements, soldes et historique.
+- Migration SQL de durcissement appliquée au projet Supabase `sib-stock`.
+- Frontend déployé sur Vercel : https://sib-stock-soritech.vercel.app
+- CI GitHub Actions : vérifications TypeScript et build Vite réussis sur le dernier lot de changements.
+
+Les achats, ventes, transferts, inventaires physiques, finances et rapports avancés restent à développer. Une recette fonctionnelle avec des comptes utilisateurs réels est requise avant utilisation opérationnelle.
