@@ -10,8 +10,9 @@ import CommercialDocuments from './components/CommercialDocuments'
 import Finance from './components/Finance'
 import Reports from './components/Reports'
 import StockAlerts from './components/StockAlerts'
+import Administration from './components/Administration'
 import {
-  Activity, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Bell, Boxes, Building2,
+  Activity, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
   ChevronDown, CircleHelp, LayoutDashboard, Package,
   Search, Settings, ShoppingCart, Truck, Users, Warehouse,
 } from 'lucide-react'
@@ -29,6 +30,7 @@ const navigation = [
   { label: 'Caisse & finances', icon: Landmark },
   { label: 'Rapports', icon: Activity },
   { label: 'Alertes', icon: Bell },
+  { label: 'Administration', icon: ShieldCheck },
   { label: 'Clients', icon: Users },
   { label: 'Fournisseurs', icon: Truck },
 ]
@@ -92,7 +94,7 @@ function Dashboard() {
           </div>
         </header>
 
-        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : <div className="content">
+        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : active === 'Administration' ? <Administration /> : <div className="content">
           <section className="welcome-row">
             <div><div className="eyebrow"><span className="live-dot"/> ESPACE DE GESTION</div><h1>Bonjour, bienvenue 👋</h1><p>Voici ce qui se passe dans votre gestion de stock aujourd’hui.</p></div>
             <div className="date-chip">Jeudi 5 novembre 2026 <ChevronDown size={15}/></div>
