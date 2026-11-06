@@ -46,3 +46,19 @@ end loop;
 update public.inventory_documents set status='posted',posted_by=auth.uid(),posted_at=now() where id=v_doc.id and tenant_id=v_tenant; return v_doc.id;
 end; $$;
 revoke all on function public.post_inventory_document(uuid) from public,anon; grant execute on function public.post_inventory_document(uuid) to authenticated;
+-- Draft totals are maintained from line items; allow cleanup of draft headers only.
+drop policy if exists inventory_documents_delete on public.inventory_documents;
+create policy inventory_documents_delete on public.inventory_documents for delete to authenticated using(tenant_id=(select public.current_tenant_id()) and status='draft');
+grant delete on public.inventory_documents to authenticated;
+create or replace function public.refresh_inventory_document_total() returns trigger language plpgsql security definer set search_path='' as $$
+declare v_id uuid;
+begin
+v_id:=coalesce(new.document_id,old.document_id);
+update public.inventory_documents d set subtotal=x.total_amount,total_amount=x.total_amount
+from (select coalesce(sum(l.line_total),0)::numeric(18,2) as total_amount from public.inventory_document_lines l where l.document_id=v_id) x
+where d.id=v_id and d.status='draft';
+return null;
+end; $$;
+revoke all on function public.refresh_inventory_document_total() from public,anon,authenticated;
+drop trigger if exists inventory_document_lines_retotal on public.inventory_document_lines;
+create trigger inventory_document_lines_retotal after insert or update or delete on public.inventory_document_lines for each row execute function public.refresh_inventory_document_total();
