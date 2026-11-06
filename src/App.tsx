@@ -13,9 +13,10 @@ import StockAlerts from './components/StockAlerts'
 import Administration from './components/Administration'
 import SettingsPage from './components/SettingsPage'
 import HelpCenter from './components/HelpCenter'
+import SubscriptionPage from './components/SubscriptionPage'
 import {
   Activity, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
-  ChevronDown, CircleHelp, LayoutDashboard, Package,
+  ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package,
   Search, Settings, ShoppingCart, Truck, Users, Warehouse,
 } from 'lucide-react'
 import { isSupabaseConfigured } from './lib/supabase'
@@ -33,6 +34,7 @@ const navigation = [
   { label: 'Rapports', icon: Activity },
   { label: 'Alertes', icon: Bell },
   { label: 'Administration', icon: ShieldCheck },
+  { label: 'Abonnement', icon: CreditCard },
   { label: 'Clients', icon: Users },
   { label: 'Fournisseurs', icon: Truck },
 ]
@@ -96,7 +98,7 @@ function Dashboard() {
           </div>
         </header>
 
-        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : active === 'Administration' ? <Administration /> : active === 'Paramètres' ? <SettingsPage /> : active === 'Centre d’aide' ? <HelpCenter /> : <div className="content">
+        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : active === 'Administration' ? <Administration /> : active === 'Paramètres' ? <SettingsPage /> : active === 'Centre d’aide' ? <HelpCenter /> : active === 'Abonnement' ? <SubscriptionPage /> : <div className="content">
           <section className="welcome-row">
             <div><div className="eyebrow"><span className="live-dot"/> ESPACE DE GESTION</div><h1>Bonjour, bienvenue 👋</h1><p>Voici ce qui se passe dans votre gestion de stock aujourd’hui.</p></div>
             <div className="date-chip">Jeudi 5 novembre 2026 <ChevronDown size={15}/></div>
