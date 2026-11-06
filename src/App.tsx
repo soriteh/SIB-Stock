@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import AuthGate from './components/AuthGate'
 import InventoryCatalog from './components/InventoryCatalog'
 import StockMovements from './components/StockMovements'
@@ -17,10 +17,10 @@ import SubscriptionPage from './components/SubscriptionPage'
 import ProfilePage from './components/ProfilePage'
 import {
   Activity, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
-  ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package,
+  ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package, LogOut,
   Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound,
 } from 'lucide-react'
-import { isSupabaseConfigured } from './lib/supabase'
+import { isSupabaseConfigured, supabase } from './lib/supabase'
 
 const navigation = [
   { label: 'Vue d’ensemble', icon: LayoutDashboard },
@@ -57,6 +57,11 @@ const stats = [
 function Dashboard() {
   const [active, setActive] = useState('Vue d’ensemble')
   const [query, setQuery] = useState('')
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+  const [profileEmail, setProfileEmail] = useState('')
+  useEffect(() => { void supabase?.auth.getUser().then(({ data }) => setProfileEmail(data.user?.email ?? '')) }, [])
+  async function signOut() { if (!supabase) return; const { error } = await supabase.auth.signOut(); if (error) window.alert(error.message); else setProfileMenuOpen(false) }
+  function openProfileSection(section: string) { setActive(section); setProfileMenuOpen(false) }
   const filtered = useMemo(() => movements.filter((m) => [m.code, m.product, m.warehouse].join(' ').toLowerCase().includes(query.toLowerCase())), [query])
 
   return (
@@ -85,7 +90,18 @@ function Dashboard() {
           <button className={active === 'Paramètres' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Paramètres')}><Settings size={18}/><span>Paramètres</span></button>
           <button className={active === 'Centre d’aide' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Centre d’aide')}><CircleHelp size={18}/><span>Centre d’aide</span></button>
           <div className="plan-card"><div className="plan-top"><span>OFFRE BUSINESS</span><span className="plan-dot"/></div><strong>Votre espace évolue</strong><p>Gérez vos stocks et vos équipes depuis un seul endroit.</p><button onClick={() => setActive('Abonnement')}>Gérer l’abonnement <ArrowUpRight size={14}/></button></div>
-          <button className="profile profile-trigger" onClick={() => setActive('Mon profil')}><div className="avatar"><UserRound size={17}/></div><div><strong>Mon profil</strong><small>Compte et sécurité</small></div><ChevronDown size={15}/></button>
+          <div className="profile-menu-anchor">
+            {profileMenuOpen && <div className="profile-dropdown" role="menu">
+              <div className="profile-dropdown-heading"><div className="profile-dropdown-avatar"><UserRound size={17}/></div><div><strong>Compte utilisateur</strong><small>{profileEmail || "Compte connecté"}</small></div></div>
+              <div className="profile-dropdown-divider"/>
+              <button role="menuitem" onClick={() => openProfileSection("Mon profil")}><UserRound size={16}/><span>Mon profil</span></button>
+              <button role="menuitem" onClick={() => openProfileSection("Paramètres")}><Settings size={16}/><span>Paramètres</span></button>
+              <button role="menuitem" onClick={() => openProfileSection("Centre d’aide")}><CircleHelp size={16}/><span>Centre d’aide</span></button>
+              <div className="profile-dropdown-divider"/>
+              <button role="menuitem" className="profile-dropdown-logout" onClick={signOut}><LogOut size={16}/><span>Déconnexion</span></button>
+            </div>}
+            <button className="profile profile-trigger" aria-expanded={profileMenuOpen} aria-haspopup="menu" onClick={() => setProfileMenuOpen(v => !v)}><div className="avatar"><UserRound size={17}/></div><div><strong>Mon compte</strong><small>{profileEmail || "Compte utilisateur"}</small></div><ChevronDown size={15} className={profileMenuOpen ? "profile-chevron open" : "profile-chevron"}/></button>
+          </div>
         </div>
       </aside>
 
