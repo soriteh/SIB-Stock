@@ -50,7 +50,9 @@ export default function BusinessPartners() {
   async function submit(e:FormEvent) {
     e.preventDefault(); if(!supabase) return
     setBusy(true);setError('');setNotice('')
-    const payload = {...form,partner_code:form.partner_code.trim()||null,name:form.name.trim(),contact_person:form.contact_person.trim()||null,phone:form.phone.trim()||null,email:form.email.trim()||null,address:form.address.trim()||null,tax_number:form.tax_number.trim()||null,notes:form.notes.trim()||null}
+    const {data:tenantId,error:tenantError}=await supabase.rpc('current_tenant_id')
+      if(tenantError || !tenantId) throw tenantError ?? new Error('Aucun espace entreprise actif.')
+      const payload = {...form,tenant_id:tenantId,partner_code:form.partner_code.trim()||null,name:form.name.trim(),contact_person:form.contact_person.trim()||null,phone:form.phone.trim()||null,email:form.email.trim()||null,address:form.address.trim()||null,tax_number:form.tax_number.trim()||null,notes:form.notes.trim()||null}
     try {
       const result = editing
         ? await supabase.from('business_partners').update(payload).eq('id',editing)
