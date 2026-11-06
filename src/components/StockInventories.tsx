@@ -17,6 +17,7 @@ export default function StockInventories(){
  const [query,setQuery]=useState('')
  const [loading,setLoading]=useState(true)
  const [busy,setBusy]=useState(false)
+ const [savingLine,setSavingLine]=useState(false)
  const [error,setError]=useState('')
  const [notice,setNotice]=useState('')
  const load=useCallback(async()=>{
@@ -52,10 +53,10 @@ export default function StockInventories(){
   if(!supabase)return
   const n=Number(value)
   if(value.trim()===''||!Number.isFinite(n)||n<0){setError('La quantité comptée doit être égale ou supérieure à zéro.');return}
-  setError('')
+  setError('');setSavingLine(true)
   const {error:err}=await supabase.rpc('set_stock_count_line',{p_count_id:line.count_id,p_product_id:line.product_id,p_counted_quantity:n})
-  if(err){setError(err.message);return}
-  setLines(prev=>prev.map(x=>x.id===line.id?{...x,counted_quantity:n}:x))
+  if(err){setError(err.message);setSavingLine(false);return}
+  setLines(prev=>prev.map(x=>x.id===line.id?{...x,counted_quantity:n}:x));setSavingLine(false)
  }
  async function finalize(){
   if(!supabase||!selected)return
@@ -85,7 +86,7 @@ export default function StockInventories(){
     {active&&<><div className="inventory-metrics"><div><strong>{lines.length}</strong><small>Articles à compter</small></div><div><strong>{counted}/{lines.length}</strong><small>Comptages saisis</small></div><div><strong>{difference.toLocaleString('fr-FR')}</strong><small>Écart net</small></div></div>
      <div className="catalog-toolbar"><div className="catalog-search"><Search size={15}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Rechercher un article…"/></div><span className="catalog-total">{filtered.length} article(s)</span></div>
      <div className="table-wrap"><table><thead><tr><th>RÉFÉRENCE</th><th>ARTICLE</th><th>STOCK SYSTÈME</th><th>QUANTITÉ COMPTÉE</th><th>ÉCART</th></tr></thead><tbody>{filtered.map(l=>{const p=products.find(x=>x.id===l.product_id);const diff=l.counted_quantity===null?null:Number(l.counted_quantity)-Number(l.system_quantity);return <tr key={l.id}><td className="ref-cell">{p?.sku??'—'}</td><td><strong>{p?.name??'Produit'}</strong><small className="stock-subcell">{p?.unit_name}</small></td><td>{Number(l.system_quantity).toLocaleString('fr-FR')}</td><td><input className="count-quantity" type="number" min="0" step="0.0001" disabled={active.status!=='draft'} value={l.counted_quantity??''} placeholder="À compter" onChange={e=>setLines(prev=>prev.map(x=>x.id===l.id?{...x,counted_quantity:e.target.value===''?null:Number(e.target.value)}:x))} onBlur={e=>{if(e.target.value!=='')void saveLine(l,e.target.value)}}/></td><td className={diff===null?'':diff>0?'qty-in':diff<0?'qty-out':''}>{diff===null?'—':diff>0?'+'+diff.toLocaleString('fr-FR'):diff.toLocaleString('fr-FR')}</td></tr>})}{filtered.length===0&&<tr><td colSpan={5} className="empty-state">Aucun article à afficher.</td></tr>}</tbody></table></div>
-     {active.status==='draft'&&<div className="inventory-finalize"><span>{counted} comptage(s) enregistré(s) sur {lines.length}</span><button className="primary-button" disabled={busy||counted!==lines.length||lines.length===0} onClick={()=>void finalize()}>{busy?<LoaderCircle className="spin" size={14}/>:<ClipboardCheck size={14}/>} Clôturer et régulariser</button></div>}
+     {active.status==='draft'&&<div className="inventory-finalize"><span>{counted} comptage(s) enregistré(s) sur {lines.length}</span><button className="primary-button" disabled={busy||savingLine||counted!==lines.length||lines.length===0} onClick={()=>void finalize()}>{busy?<LoaderCircle className="spin" size={14}/>:<ClipboardCheck size={14}/>} Clôturer et régulariser</button></div>}
     </>}
    </section>
   </div>
