@@ -3,6 +3,7 @@ import AuthGate from './components/AuthGate'
 import InventoryCatalog from './components/InventoryCatalog'
 import StockMovements from './components/StockMovements'
 import BusinessPartners from './components/BusinessPartners'
+import Clients from './components/Clients'
 import StockTransfers from './components/StockTransfers'
 import StockInventories from './components/StockInventories'
 import {
@@ -21,7 +22,8 @@ const navigation = [
   { label: 'Achats', icon: Truck },
   { label: 'Ventes', icon: ShoppingCart },
   { label: 'Inventaires', icon: Boxes },
-  { label: 'Fournisseurs & clients', icon: Users },
+  { label: 'Clients', icon: Users },
+  { label: 'Fournisseurs', icon: Truck },
 ]
 
 const movements = [
@@ -83,7 +85,7 @@ function Dashboard() {
           </div>
         </header>
 
-        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Fournisseurs & clients' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : <div className="content">
+        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : <div className="content">
           <section className="welcome-row">
             <div><div className="eyebrow"><span className="live-dot"/> ESPACE DE GESTION</div><h1>Bonjour, bienvenue 👋</h1><p>Voici ce qui se passe dans votre gestion de stock aujourd’hui.</p></div>
             <div className="date-chip">Jeudi 5 novembre 2026 <ChevronDown size={15}/></div>
