@@ -1,4 +1,4 @@
-import {useCallback,useEffect,useMemo,useState} from 'react'
+import {useCallback,useEffect,useState} from 'react'
 import {Download,LoaderCircle,RefreshCw,TrendingDown,TrendingUp,Boxes,Wallet} from 'lucide-react'
 import {supabase} from '../lib/supabase'
 type Product={id:string;sku:string;name:string;purchase_price:number;minimum_stock:number}
