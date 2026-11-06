@@ -34,7 +34,7 @@ export default function StockTransfers(){
   if(Number(quantity)<=0){setError('La quantité doit être supérieure à zéro.');return}
   setBusy(true);setError('');setNotice('')
   try{
-   const {data,error:err}=await supabase.rpc('execute_stock_transfer',{p_product_id:product,p_source_warehouse_id:source,p_destination_warehouse_id:destination,p_quantity:Number(quantity),p_notes:notes.trim()||null,p_idempotency_key:crypto.randomUUID()})
+   const {error:err}=await supabase.rpc('execute_stock_transfer',{p_product_id:product,p_source_warehouse_id:source,p_destination_warehouse_id:destination,p_quantity:Number(quantity),p_notes:notes.trim()||null,p_idempotency_key:crypto.randomUUID()})
    if(err)throw err
    setNotice('Transfert validé. Les deux stocks ont été mis à jour.')
    setQuantity('1');setNotes('')
@@ -59,7 +59,7 @@ export default function StockTransfers(){
   <section className="panel catalog-panel"><div className="panel-heading"><div><h2>Historique des transferts</h2><p>Les entrées et sorties correspondantes sont conservées dans l’historique des mouvements.</p></div><span className="catalog-count">{filtered.length} transfert(s)</span></div>
    <div className="catalog-toolbar"><div className="catalog-search"><Search size={15}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Référence, produit ou entrepôt…"/></div></div>
    {loading?<div className="catalog-loading"><LoaderCircle className="spin"/> Chargement…</div>:<div className="table-wrap"><table><thead><tr><th>RÉFÉRENCE</th><th>PRODUIT</th><th>DÉPART</th><th>DESTINATION</th><th>QUANTITÉ</th><th>DATE</th><th>STATUT</th></tr></thead><tbody>
-    {filtered.map(r=><tr key={r.id}><td className="ref-cell">{r.reference}</td><td><strong>{r.products?.name??'—'}</strong><small className="stock-subcell">{r.products?.sku}</small></td><td>{warehouses.find(w=>w.id===r.source_warehouse_id)?.name??'—'}</td><td>{warehouses.find(w=>w.id===r.destination_warehouse_id)?.name??'—'}</td><td><strong>{Number(r.quantity).toLocaleString('fr-FR')}</strong></td><td>{new Date(r.created_at).toLocaleString('fr-FR')}</td><td><span className="status-pill">Terminé</span></td></tr>)}
+    {filtered.map(r=><tr key={r.id}><td className="ref-cell">{r.reference}</td><td><strong>{products.find(p=>p.id===r.product_id)?.name??'—'}</strong><small className="stock-subcell">{products.find(p=>p.id===r.product_id)?.sku??''}</small></td><td>{warehouses.find(w=>w.id===r.source_warehouse_id)?.name??'—'}</td><td>{warehouses.find(w=>w.id===r.destination_warehouse_id)?.name??'—'}</td><td><strong>{Number(r.quantity).toLocaleString('fr-FR')}</strong></td><td>{new Date(r.created_at).toLocaleString('fr-FR')}</td><td><span className="status-pill">Terminé</span></td></tr>)}
     {filtered.length===0&&<tr><td colSpan={7} className="empty-state">Aucun transfert enregistré.</td></tr>}
    </tbody></table></div>}
   </section>
