@@ -145,50 +145,7 @@ $$;
 
 revoke all on function public.create_tenant(text,text,char,char) from public;
 grant execute on function public.create_tenant(text,text,char,char) to authenticated;
-
-create or replace function public.request_subscription(
-  p_plan_id uuid,
-  p_payment_method text,
-  p_payment_reference text default null,
-  p_note text default null
-)
-returns uuid
-language plpgsql
-security definer
-set search_path = ''
-as $$
-declare
-  active_tenant uuid := public.current_tenant_id();
-  request_id uuid;
-begin
-  if auth.uid() is null or active_tenant is null then
-    raise exception 'Authentication and active company required' using errcode='42501';
-  end if;
-  if not public.has_tenant_role(array['owner','admin']) then
-    raise exception 'Only company owners or administrators can request a subscription change' using errcode='42501';
-  end if;
-  if p_payment_method not in ('orange_money','mobile_money','bank_transfer','cash','other') then
-    raise exception 'Invalid payment method' using errcode='22023';
-  end if;
-  if not exists(select 1 from public.subscription_plans where id=p_plan_id and is_active=true and code <> 'trial') then
-    raise exception 'Selected subscription plan is unavailable' using errcode='22023';
-  end if;
-
-  perform pg_advisory_xact_lock(hashtextextended(active_tenant::text,0));
-  if exists(select 1 from public.subscription_requests where tenant_id=active_tenant and status='pending') then
-    raise exception 'A subscription request is already pending' using errcode='23505';
-  end if;
-
-  insert into public.subscription_requests(
-    tenant_id,requested_plan_id,payment_method,payment_reference,note,created_by
-  ) values (
-    active_tenant,p_plan_id,p_payment_method,nullif(trim(coalesce(p_payment_reference,'')), ''),
-    nullif(trim(coalesce(p_note,'')), ''),auth.uid()
-  ) returning id into request_id;
-
-  return request_id;
-end;
-$$;
-
-revoke all on function public.request_subscription(uuid,text,text,text) from public, anon;
-grant execute on function public.request_subscription(uuid,text,text,text) to authenticated;
+-- Enforce one outstanding request per tenant without privileged RPCs.
+create unique index if not exists subscription_requests_one_pending_per_tenant
+  on public.subscription_requests(tenant_id)
+  where status='pending';
