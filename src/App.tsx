@@ -7,6 +7,7 @@ import Clients from './components/Clients'
 import StockTransfers from './components/StockTransfers'
 import StockInventories from './components/StockInventories'
 import CommercialDocuments from './components/CommercialDocuments'
+import Finance from './components/Finance'
 import {
   Activity, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Bell, Boxes, Building2,
   ChevronDown, CircleHelp, LayoutDashboard, Package,
@@ -23,6 +24,7 @@ const navigation = [
   { label: 'Achats', icon: Truck },
   { label: 'Ventes', icon: ShoppingCart },
   { label: 'Inventaires', icon: Boxes },
+  { label: 'Caisse & finances', icon: Landmark },
   { label: 'Clients', icon: Users },
   { label: 'Fournisseurs', icon: Truck },
 ]
@@ -86,7 +88,7 @@ function Dashboard() {
           </div>
         </header>
 
-        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : <div className="content">
+        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : <div className="content">
           <section className="welcome-row">
             <div><div className="eyebrow"><span className="live-dot"/> ESPACE DE GESTION</div><h1>Bonjour, bienvenue 👋</h1><p>Voici ce qui se passe dans votre gestion de stock aujourd’hui.</p></div>
             <div className="date-chip">Jeudi 5 novembre 2026 <ChevronDown size={15}/></div>
