@@ -42,7 +42,7 @@ begin
  if not found then raise exception 'Draft count line not found' using errcode='P0002'; end if;
 end; $$;
 create or replace function public.finalize_stock_count(p_count_id uuid) returns void language plpgsql security definer set search_path='' as $$
-declare t uuid:=public.current_tenant_id(); c public.stock_counts%rowtype; l record; delta numeric;
+declare t uuid:=public.current_tenant_id(); c public.stock_counts%rowtype; l record; current_qty numeric(18,4); delta numeric(18,4);
 begin
  if auth.uid() is null or t is null then raise exception 'Active tenant required' using errcode='42501'; end if;
  if not public.has_tenant_role(array['owner','admin','manager','warehouse_manager','storekeeper']) then raise exception 'Insufficient permission' using errcode='42501'; end if;
@@ -50,7 +50,10 @@ begin
  if not found or c.status<>'draft' then raise exception 'Draft inventory count not found' using errcode='P0002'; end if;
  if exists(select 1 from public.stock_count_lines where tenant_id=t and count_id=p_count_id and counted_quantity is null) then raise exception 'All products must be counted before finalization' using errcode='22023'; end if;
  for l in select cl.*,p.purchase_price from public.stock_count_lines cl join public.products p on p.id=cl.product_id and p.tenant_id=t where cl.tenant_id=t and cl.count_id=p_count_id order by cl.product_id loop
-  delta:=l.counted_quantity-l.system_quantity; update public.stock_count_lines set difference=delta where id=l.id;
+  insert into public.stock_levels(tenant_id,product_id,warehouse_id,quantity) values(t,l.product_id,c.warehouse_id,0) on conflict(tenant_id,product_id,warehouse_id) do nothing;
+  select quantity into current_qty from public.stock_levels where tenant_id=t and product_id=l.product_id and warehouse_id=c.warehouse_id for update;
+  delta:=l.counted_quantity-current_qty;
+  update public.stock_count_lines set difference=l.counted_quantity-l.system_quantity where id=l.id;
   if delta>0 then perform public.apply_stock_movement(l.product_id,c.warehouse_id,delta,'adjustment_in',l.purchase_price,'Inventaire '||c.reference,'count:'||p_count_id::text||':'||l.product_id::text||':in');
   elsif delta<0 then perform public.apply_stock_movement(l.product_id,c.warehouse_id,delta,'adjustment_out',l.purchase_price,'Inventaire '||c.reference,'count:'||p_count_id::text||':'||l.product_id::text||':out'); end if;
  end loop;
