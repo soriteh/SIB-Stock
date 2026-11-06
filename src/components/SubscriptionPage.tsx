@@ -14,7 +14,7 @@ type Subscription = {
 type RequestRow = {
   id: string; status: string; payment_method: string; payment_reference: string | null
   note: string | null; created_at: string; review_note: string | null
-  subscription_plans: { name: string } | null
+  plan: { name: string } | null
 }
 const methods = [
   { value:'orange_money', label:'Orange Money' },
@@ -56,7 +56,7 @@ export default function SubscriptionPage() {
       supabase.from('tenant_subscriptions').select('id,status,trial_started_at,trial_ends_at,current_period_start,current_period_end,cancel_at_period_end,subscription_plans(id,code,name,description,price_amount,currency_code,billing_interval,features)').eq('tenant_id',tenantId).maybeSingle(),
       supabase.from('subscription_plans').select('id,code,name,description,price_amount,currency_code,billing_interval,features').eq('is_active',true).order('sort_order'),
       supabase.from('tenant_members').select('role').eq('tenant_id',tenantId).eq('user_id',userData.user.id).eq('status','active').maybeSingle(),
-      supabase.from('subscription_requests').select('id,status,payment_method,payment_reference,note,created_at,review_note,subscription_plans:requested_plan_id(name)').eq('tenant_id',tenantId).order('created_at',{ascending:false}).limit(10)
+      supabase.from('subscription_requests').select('id,status,payment_method,payment_reference,note,created_at,review_note,plan:subscription_plans(name)').eq('tenant_id',tenantId).order('created_at',{ascending:false}).limit(10)
     ])
     if (subResult.error) setError(subResult.error.message)
     else setSubscription(subResult.data as unknown as Subscription | null)
@@ -140,7 +140,7 @@ export default function SubscriptionPage() {
     </section>
 
     <section className="panel subscription-history"><div className="panel-heading"><div><h2>Historique des demandes</h2><p>Suivi de vos demandes de souscription et renouvellement.</p></div><ReceiptText size={18}/></div>
-      {requests.length===0?<div className="subscription-empty">Aucune demande enregistrée pour le moment.</div>:<div className="subscription-history-list">{requests.map(r=><article key={r.id}><div className="subscription-history-icon"><ReceiptText size={16}/></div><div className="subscription-history-main"><strong>{r.subscription_plans?.name || 'Demande d’abonnement'}</strong><span>{formatDate(r.created_at)} · {methodLabel(r.payment_method)}{r.payment_reference?' · '+r.payment_reference:''}</span>{r.review_note&&<small>Réponse : {r.review_note}</small>}</div><span className={'subscription-status '+r.status}>{statusLabel[r.status]||r.status}</span></article>)}</div>}
+      {requests.length===0?<div className="subscription-empty">Aucune demande enregistrée pour le moment.</div>:<div className="subscription-history-list">{requests.map(r=><article key={r.id}><div className="subscription-history-icon"><ReceiptText size={16}/></div><div className="subscription-history-main"><strong>{r.plan?.name || 'Demande d’abonnement'}</strong><span>{formatDate(r.created_at)} · {methodLabel(r.payment_method)}{r.payment_reference?' · '+r.payment_reference:''}</span>{r.review_note&&<small>Réponse : {r.review_note}</small>}</div><span className={'subscription-status '+r.status}>{statusLabel[r.status]||r.status}</span></article>)}</div>}
     </section>
     <p className="subscription-security-note"><ShieldCheck size={14}/> Vos demandes sont rattachées à votre entreprise. Seul le propriétaire ou un administrateur peut les consulter et les créer.</p>
   </div>
