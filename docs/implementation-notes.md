@@ -1,24 +1,34 @@
-# Notes d'implémentation — Phase 1
+# Notes d'implémentation — État au 6 novembre 2026
 
-## État livré dans le dépôt
+## Fondations livrées
+- Application React + TypeScript + Vite.
+- Authentification Supabase et session persistante.
+- Onboarding entreprise et attribution du rôle owner.
+- Modèle multi-tenant avec RLS.
+- Référentiel produits, SKU, codes-barres et entrepôts.
 
-- Application React + TypeScript + Vite initialisée.
-- Tableau de bord responsive de première intégration.
-- Client Supabase initialisé sans secret côté navigateur.
-- Première migration multi-tenant : entreprises, profils, membres, catégories, produits, codes-barres, entrepôts, niveaux et mouvements de stock.
-- Fonction SQL de création d'entreprise et de sélection de l'espace actif.
-- Fonction SQL transactionnelle de mouvement de stock.
-- Protection RLS et historique des mouvements immuable.
-- Workflow GitHub Actions pour le contrôle TypeScript et le build.
+## Moteur de stock livré
+- Écran connecté des mouvements de stock.
+- Entrées, sorties et ajustements positifs/négatifs.
+- Appel de la fonction PostgreSQL transactionnelle `apply_stock_movement`.
+- Verrouillage de la ligne de stock pour sérialiser les modifications concurrentes.
+- Clé d'idempotence protégée par verrou transactionnel consultatif.
+- Contrôle des signes selon le type de mouvement.
+- Vérification que le produit et l'entrepôt appartiennent à l'entreprise active et sont actifs.
+- Refus des quantités négatives et des coûts unitaires négatifs.
+- Historique non modifiable et soldes par produit/entrepôt.
 
-## À faire avant de connecter une base
+## Base et déploiement
+- Projet Supabase `sib-stock` créé en région Europe (Paris).
+- Migrations initiales et durcissement du moteur appliqués.
+- Variables publiques Vite configurées dans Vercel pour production, preview et développement.
+- Déploiement de production prêt.
+- Dernière CI observée : TypeScript et build Vite réussis.
 
-1. Créer un projet Supabase de développement.
-2. Appliquer la migration avec Supabase CLI.
-3. Vérifier les politiques RLS avec deux utilisateurs appartenant à deux entreprises différentes.
-4. Tester les appels concurrents à `apply_stock_movement`, y compris les clés d'idempotence.
-5. Configurer les variables Vercel depuis le tableau de bord, jamais dans Git.
-
-## Limites actuelles
-
-Le tableau de bord contient encore des données de démonstration. Les pages de navigation secondaires, les écrans d'authentification, les achats, ventes, inventaires, finances, abonnements et fonctionnalités IA ne sont pas encore implémentés. La migration doit être testée dans un projet Supabase isolé avant toute utilisation en production.
+## Limites et tests restants
+- Les autres modules métier restent à construire.
+- Les données de démonstration du tableau de bord principal doivent être remplacées par des agrégats réels.
+- La recette d'inscription, création entreprise et mouvements avec un utilisateur réel reste à effectuer.
+- Tester l'isolation entre deux entreprises et les rôles.
+- Tester les soumissions concurrentes, les reprises réseau et les limites de stock.
+- Les transferts inter-entrepôts et inventaires physiques ne sont pas encore implémentés.
