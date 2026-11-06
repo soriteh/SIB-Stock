@@ -31,6 +31,8 @@ const methodLabel = (value:string) => methods.find(m=>m.value===value)?.label ||
 
 export default function SubscriptionPage() {
   const [subscription,setSubscription] = useState<Subscription | null>(null)
+  const [tenantId,setTenantId] = useState('')
+  const [userId,setUserId] = useState('')
   const [plans,setPlans] = useState<Plan[]>([])
   const [requests,setRequests] = useState<RequestRow[]>([])
   const [selectedPlan,setSelectedPlan] = useState('')
@@ -52,6 +54,7 @@ export default function SubscriptionPage() {
     if (tenantError || !tenantId || !userData.user) {
       setError(tenantError?.message || 'Aucune entreprise active trouvée.'); setLoading(false); return
     }
+    setTenantId(tenantId); setUserId(userData.user.id)
     const [subResult,planResult,memberResult,requestResult] = await Promise.all([
       supabase.from('tenant_subscriptions').select('id,status,trial_started_at,trial_ends_at,current_period_start,current_period_end,cancel_at_period_end,subscription_plans(id,code,name,description,price_amount,currency_code,billing_interval,features)').eq('tenant_id',tenantId).maybeSingle(),
       supabase.from('subscription_plans').select('id,code,name,description,price_amount,currency_code,billing_interval,features').eq('is_active',true).order('sort_order'),
@@ -87,9 +90,10 @@ export default function SubscriptionPage() {
     event.preventDefault()
     if (!supabase || !selectedPlan || !canManage || pendingRequest) return
     setSaving(true); setError(''); setNotice('')
-    const {error:requestError} = await supabase.rpc('request_subscription',{
-      p_plan_id:selectedPlan,p_payment_method:paymentMethod,
-      p_payment_reference:paymentReference.trim() || null,p_note:note.trim() || null
+    const {error:requestError} = await supabase.from('subscription_requests').insert({
+      tenant_id:tenantId,requested_plan_id:selectedPlan,payment_method:paymentMethod,
+      payment_reference:paymentReference.trim() || null,note:note.trim() || null,
+      created_by:userId,status:'pending'
     })
     if (requestError) setError(requestError.message)
     else {
