@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase'
 
 type Product={id:string;sku:string;name:string;unit_name:string}
 type WarehouseRow={id:string;code:string;name:string}
-type Transfer={id:string;reference:string;quantity:number;notes:string|null;created_at:string;products:{name:string;sku:string}|null;source: {name:string}|null;destination:{name:string}|null}
+type Transfer={id:string;reference:string;product_id:string;source_warehouse_id:string;destination_warehouse_id:string;quantity:number;notes:string|null;created_at:string}
 export default function StockTransfers(){
  const [products,setProducts]=useState<Product[]>([])
  const [warehouses,setWarehouses]=useState<WarehouseRow[]>([])
@@ -19,14 +19,14 @@ export default function StockTransfers(){
   const [p,w,t]=await Promise.all([
    supabase.from('products').select('id,sku,name,unit_name').eq('is_active',true).order('name'),
    supabase.from('warehouses').select('id,code,name').eq('is_active',true).order('name'),
-   supabase.from('stock_transfers').select('id,reference,quantity,notes,created_at,products(name,sku),source:warehouses!stock_transfers_source_warehouse_id_fkey(name),destination:warehouses!stock_transfers_destination_warehouse_id_fkey(name)').order('created_at',{ascending:false}).limit(100)
+   supabase.from('stock_transfers').select('id,reference,product_id,source_warehouse_id,destination_warehouse_id,quantity,notes,created_at').order('created_at',{ascending:false}).limit(100)
   ])
   if(p.error||w.error||t.error)setError(p.error?.message||w.error?.message||t.error?.message||'Chargement impossible.')
   setProducts((p.data??[]) as Product[]);setWarehouses((w.data??[]) as WarehouseRow[]);setRows((t.data??[]) as unknown as Transfer[])
   setLoading(false)
  },[])
  useEffect(()=>{void load()},[load])
- const filtered=useMemo(()=>rows.filter(r=>[r.reference,r.products?.name??'',r.products?.sku??'',r.source?.name??'',r.destination?.name??''].join(' ').toLowerCase().includes(query.toLowerCase())),[rows,query])
+ const filtered=useMemo(()=>rows.filter(r=>[r.reference,products.find(p=>p.id===r.product_id)?.name??'',products.find(p=>p.id===r.product_id)?.sku??'',warehouses.find(w=>w.id===r.source_warehouse_id)?.name??'',warehouses.find(w=>w.id===r.destination_warehouse_id)?.name??''].join(' ').toLowerCase().includes(query.toLowerCase())),[rows,query,products,warehouses])
  async function submit(e:FormEvent){
   e.preventDefault();if(!supabase)return
   if(!product||!source||!destination){setError('Sélectionnez le produit et les deux entrepôts.');return}
@@ -59,7 +59,7 @@ export default function StockTransfers(){
   <section className="panel catalog-panel"><div className="panel-heading"><div><h2>Historique des transferts</h2><p>Les entrées et sorties correspondantes sont conservées dans l’historique des mouvements.</p></div><span className="catalog-count">{filtered.length} transfert(s)</span></div>
    <div className="catalog-toolbar"><div className="catalog-search"><Search size={15}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Référence, produit ou entrepôt…"/></div></div>
    {loading?<div className="catalog-loading"><LoaderCircle className="spin"/> Chargement…</div>:<div className="table-wrap"><table><thead><tr><th>RÉFÉRENCE</th><th>PRODUIT</th><th>DÉPART</th><th>DESTINATION</th><th>QUANTITÉ</th><th>DATE</th><th>STATUT</th></tr></thead><tbody>
-    {filtered.map(r=><tr key={r.id}><td className="ref-cell">{r.reference}</td><td><strong>{r.products?.name??'—'}</strong><small className="stock-subcell">{r.products?.sku}</small></td><td>{r.source?.name??'—'}</td><td>{r.destination?.name??'—'}</td><td><strong>{Number(r.quantity).toLocaleString('fr-FR')}</strong></td><td>{new Date(r.created_at).toLocaleString('fr-FR')}</td><td><span className="status-pill">Terminé</span></td></tr>)}
+    {filtered.map(r=><tr key={r.id}><td className="ref-cell">{r.reference}</td><td><strong>{r.products?.name??'—'}</strong><small className="stock-subcell">{r.products?.sku}</small></td><td>{warehouses.find(w=>w.id===r.source_warehouse_id)?.name??'—'}</td><td>{warehouses.find(w=>w.id===r.destination_warehouse_id)?.name??'—'}</td><td><strong>{Number(r.quantity).toLocaleString('fr-FR')}</strong></td><td>{new Date(r.created_at).toLocaleString('fr-FR')}</td><td><span className="status-pill">Terminé</span></td></tr>)}
     {filtered.length===0&&<tr><td colSpan={7} className="empty-state">Aucun transfert enregistré.</td></tr>}
    </tbody></table></div>}
   </section>
