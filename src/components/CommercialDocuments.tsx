@@ -1,14 +1,16 @@
 import {useCallback,useEffect,useMemo,useState,type FormEvent} from 'react'
 import {FilePlus2,LoaderCircle,Plus,RefreshCw,Search,Trash2} from 'lucide-react'
 import {supabase} from '../lib/supabase'
+import {formatTenantMoney,useTenantSettings} from '../contexts/TenantSettingsContext'
 type Mode='purchase'|'sale'
 type Product={id:string;sku:string;name:string;purchase_price:number;sale_price:number}
 type Partner={id:string;name:string;partner_type:string}
 type Warehouse={id:string;code:string;name:string}
 type Line={product_id:string;quantity:string;unit_price:string}
 type Doc={id:string;reference:string;status:string;document_date:string;total_amount:number;business_partners:{name:string}|null;warehouses:{name:string}|null}
-const money=(n:number)=>new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(n)+' GNF'
 export default function CommercialDocuments({mode}:{mode:Mode}){
+ const {currency_code}=useTenantSettings()
+ const money=(n:number)=>formatTenantMoney(n,currency_code)
  const purchase=mode==='purchase',title=purchase?'Achats':'Ventes',partnerLabel=purchase?'Fournisseur':'Client'
  const [products,setProducts]=useState<Product[]>([]),[partners,setPartners]=useState<Partner[]>([]),[warehouses,setWarehouses]=useState<Warehouse[]>([]),[docs,setDocs]=useState<Doc[]>([])
  const [query,setQuery]=useState(''),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[show,setShow]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState('')
