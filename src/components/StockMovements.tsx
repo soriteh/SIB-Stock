@@ -8,7 +8,6 @@ type WarehouseRow = { id: string; code: string; name: string; is_active: boolean
 type Movement = { id: string; movement_type: string; quantity_delta: number; quantity_after: number; unit_cost: number | null; notes: string | null; created_at: string; products: { name: string; sku: string } | null; warehouses: { name: string } | null }
 type StockRow = { quantity: number; reserved_quantity: number; products: { name: string; sku: string; unit_name: string; minimum_stock: number } | null; warehouses: { name: string } | null }
 const movementLabels: Record<string, string> = { opening: 'Stock initial', receipt: 'Entrée / réception', sale: 'Sortie', transfer_in: 'Transfert entrant', transfer_out: 'Transfert sortant', adjustment_in: 'Ajustement positif', adjustment_out: 'Ajustement négatif', customer_return: 'Retour client', supplier_return: 'Retour fournisseur', reversal: 'Contrepassation' }
-const money = (value: number) => new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(value) + ' GNF'
 const quantity = (value: number) => new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 4 }).format(value)
 
 export default function StockMovements() {
