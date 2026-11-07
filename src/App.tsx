@@ -22,6 +22,7 @@ import {
   Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound,
 } from 'lucide-react'
 import { isSupabaseConfigured, supabase } from './lib/supabase'
+import { TenantSettingsProvider, useTenantSettings } from './contexts/TenantSettingsContext'
 
 const navigation = [
   { label: 'Vue d’ensemble', icon: LayoutDashboard },
@@ -61,16 +62,10 @@ function Dashboard() {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [profileEmail, setProfileEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
-  const [tenantLogoUrl, setTenantLogoUrl] = useState('')
+  const company = useTenantSettings()
   const [currentTime, setCurrentTime] = useState(() => new Date())
   const profileMenuAnchorRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const updateLogo = (event: Event) => { const detail = (event as CustomEvent<string>).detail; if (detail) setTenantLogoUrl(detail) }
-    window.addEventListener('tenant-logo-updated', updateLogo)
-    return () => window.removeEventListener('tenant-logo-updated', updateLogo)
-  }, [])
 
   useEffect(() => {
     let mounted = true
@@ -80,8 +75,6 @@ function Dashboard() {
       const user = data.user
       if (!mounted || !user) return
       setProfileEmail(user.email ?? '')
-      const { data: tenantId } = await supabase.rpc('current_tenant_id')
-      if (tenantId) { const { data: tenant } = await supabase.from('tenants').select('logo_url').eq('id', tenantId).maybeSingle(); if (mounted) setTenantLogoUrl(tenant?.logo_url || '') }
       const { data: profile } = await supabase.from('profiles').select('full_name').eq('id', user.id).maybeSingle()
       if (mounted) setDisplayName(profile?.full_name?.trim() || String(user.user_metadata?.full_name ?? '').trim() || user.email?.split('@')[0] || 'Utilisateur')
     }
@@ -129,13 +122,13 @@ function Dashboard() {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand">
-          <div className={tenantLogoUrl ? "brand-mark has-custom-logo" : "brand-mark"}>{tenantLogoUrl ? <img src={tenantLogoUrl} alt="Logo de l’entreprise"/> : <>S<span>I</span>B</>}</div>
-          <div><strong>SIB Stock</strong><small>INVENTORY CLOUD</small></div>
+          <div className={company.logo_url ? "brand-mark has-custom-logo" : "brand-mark"}>{company.logo_url ? <img src={company.logo_url} alt={"Logo "+company.name}/> : <>S<span>I</span>B</>}</div>
+          <div><strong>{company.name || "SIB Stock"}</strong><small>INVENTORY CLOUD</small></div>
         </div>
         <div className="sidebar-scroll">
           <div className="workspace">
             <div className="workspace-icon"><Building2 size={17} /></div>
-            <div className="workspace-copy"><strong>Mon entreprise</strong><small>Espace de travail</small></div>
+            <div className="workspace-copy"><strong>{company.name || "Mon entreprise"}</strong><small>Espace de travail</small></div>
             <ChevronDown size={15} />
           </div>
           <div className="nav-label">ESPACE DE TRAVAIL</div>
@@ -189,7 +182,7 @@ function Dashboard() {
             <span className="welcome-particle welcome-particle-two" aria-hidden="true" />
             <span className="welcome-particle welcome-particle-three" aria-hidden="true" />
             <div className="welcome-hero-content">
-              <div className="welcome-eyebrow"><span className="welcome-live-dot" /> SIB STOCK <span className="welcome-eyebrow-divider">/</span> ESPACE DE GESTION</div>
+              <div className="welcome-eyebrow"><span className="welcome-live-dot" /> {company.name.toUpperCase()} <span className="welcome-eyebrow-divider">/</span> ESPACE DE GESTION</div>
               <h1>{greeting}{displayName ? ', ' : ''}{displayName || 'et bienvenue'} <span className="welcome-wave" aria-label="salutations">👋</span></h1>
               <p>Nous vous souhaitons une excellente journée de travail.</p>
               <div className="welcome-date"><span className="welcome-date-mark" />{welcomeDate}</div>
@@ -251,7 +244,7 @@ function Dashboard() {
             </tbody></table></div>
             <div className="table-footer"><span>Affichage de {filtered.length} mouvements récents</span><button className="text-button">Consulter l’historique <ArrowUpRight size={15}/></button></div>
           </section>
-          <footer className="footer"><span>© 2026 SIB Stock · Gestion intelligente des stocks</span><span><i className="footer-dot"/> Plateforme prête pour configuration</span></footer>
+          <footer className="footer"><span>© {currentTime.getFullYear()} {company.legal_name || company.name} · Gestion intelligente des stocks</span><span><i className="footer-dot"/> Plateforme prête pour configuration</span></footer>
         </div>}
       </main>
     </div>
@@ -260,5 +253,5 @@ function Dashboard() {
 
 
 export default function App() {
-  return <AuthGate><Dashboard /></AuthGate>
+  return <AuthGate><TenantSettingsProvider><Dashboard /></TenantSettingsProvider></AuthGate>
 }
