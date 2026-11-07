@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import AuthGate from './components/AuthGate'
 import InventoryCatalog from './components/InventoryCatalog'
@@ -60,13 +60,37 @@ function Dashboard() {
   const [query, setQuery] = useState('')
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [profileEmail, setProfileEmail] = useState('')
+  const profileMenuAnchorRef = useRef<HTMLDivElement>(null)
+  const profileDropdownRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => { void supabase?.auth.getUser().then(({ data }) => setProfileEmail(data.user?.email ?? '')) }, [])
+
+  useEffect(() => {
+    if (!profileMenuOpen) return
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target
+      if (!(target instanceof Node)) return
+      if (profileMenuAnchorRef.current?.contains(target) || profileDropdownRef.current?.contains(target)) return
+      setProfileMenuOpen(false)
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setProfileMenuOpen(false)
+    }
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [profileMenuOpen])
+
   useEffect(() => {
     if (!profileMenuOpen) return
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = previousOverflow }
   }, [profileMenuOpen])
+
   async function signOut() { if (!supabase) return; const { error } = await supabase.auth.signOut(); if (error) window.alert(error.message); else setProfileMenuOpen(false) }
   function openProfileSection(section: string) { setActive(section); setProfileMenuOpen(false) }
   const filtered = useMemo(() => movements.filter((m) => [m.code, m.product, m.warehouse].join(' ').toLowerCase().includes(query.toLowerCase())), [query])
@@ -97,8 +121,8 @@ function Dashboard() {
           <button className={active === 'Paramètres' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Paramètres')}><Settings size={18}/><span>Paramètres</span></button>
           <button className={active === 'Centre d’aide' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Centre d’aide')}><CircleHelp size={18}/><span>Centre d’aide</span></button>
           <div className="plan-card"><div className="plan-top"><span>OFFRE BUSINESS</span><span className="plan-dot"/></div><strong>Votre espace évolue</strong><p>Gérez vos stocks et vos équipes depuis un seul endroit.</p><button onClick={() => setActive('Abonnement')}>Gérer l’abonnement <ArrowUpRight size={14}/></button></div>
-          <div className="profile-menu-anchor">
-            {profileMenuOpen && createPortal(<div className="profile-dropdown" role="menu" aria-label="Menu du compte">
+          <div className="profile-menu-anchor" ref={profileMenuAnchorRef}>
+            {profileMenuOpen && createPortal(<div ref={profileDropdownRef} className="profile-dropdown" role="menu" aria-label="Menu du compte">
               <div className="profile-dropdown-heading"><div className="profile-dropdown-avatar"><UserRound size={17}/></div><div><strong>Compte utilisateur</strong><small>{profileEmail || "Compte connecté"}</small></div></div>
               <div className="profile-dropdown-divider"/>
               <button role="menuitem" onClick={() => openProfileSection("Mon profil")}><UserRound size={16}/><span>Mon profil</span></button>
