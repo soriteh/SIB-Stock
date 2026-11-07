@@ -123,25 +123,29 @@ function Dashboard() {
           <div className="brand-mark">S<span>I</span>B</div>
           <div><strong>SIB Stock</strong><small>INVENTORY CLOUD</small></div>
         </div>
-        <div className="workspace">
-          <div className="workspace-icon"><Building2 size={17} /></div>
-          <div className="workspace-copy"><strong>Mon entreprise</strong><small>Espace de travail</small></div>
-          <ChevronDown size={15} />
-        </div>
-        <div className="nav-label">ESPACE DE TRAVAIL</div>
-        <nav className="navigation">
-          {navigation.map(({ label, icon: Icon }) => (
-            <button key={label} className={active === label ? 'nav-item active' : 'nav-item'} onClick={() => setActive(label)}>
-              <Icon size={18} strokeWidth={1.8} /><span>{label}</span>
-              {label === 'Mouvements' && <i className="nav-count">4</i>}
-            </button>
-          ))}
-        </nav>
-        <div className="sidebar-bottom">
-          <div className="nav-label">CONFIGURATION</div>
-          <button className={active === 'Paramètres' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Paramètres')}><Settings size={18}/><span>Paramètres</span></button>
-          <button className={active === 'Centre d’aide' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Centre d’aide')}><CircleHelp size={18}/><span>Centre d’aide</span></button>
+        <div className="sidebar-scroll">
+          <div className="workspace">
+            <div className="workspace-icon"><Building2 size={17} /></div>
+            <div className="workspace-copy"><strong>Mon entreprise</strong><small>Espace de travail</small></div>
+            <ChevronDown size={15} />
+          </div>
+          <div className="nav-label">ESPACE DE TRAVAIL</div>
+          <nav className="navigation">
+            {navigation.map(({ label, icon: Icon }) => (
+              <button key={label} className={active === label ? 'nav-item active' : 'nav-item'} onClick={() => setActive(label)}>
+                <Icon size={18} strokeWidth={1.8} /><span>{label}</span>
+                {label === 'Mouvements' && <i className="nav-count">4</i>}
+              </button>
+            ))}
+          </nav>
+          <div className="sidebar-settings">
+            <div className="nav-label">CONFIGURATION</div>
+            <button className={active === 'Paramètres' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Paramètres')}><Settings size={18}/><span>Paramètres</span></button>
+            <button className={active === 'Centre d’aide' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Centre d’aide')}><CircleHelp size={18}/><span>Centre d’aide</span></button>
+          </div>
           <div className="plan-card"><div className="plan-top"><span>OFFRE BUSINESS</span><span className="plan-dot"/></div><strong>Votre espace évolue</strong><p>Gérez vos stocks et vos équipes depuis un seul endroit.</p><button onClick={() => setActive('Abonnement')}>Gérer l’abonnement <ArrowUpRight size={14}/></button></div>
+        </div>
+        <div className="sidebar-bottom">
           <div className="profile-menu-anchor" ref={profileMenuAnchorRef}>
             {profileMenuOpen && createPortal(<div ref={profileDropdownRef} className="profile-dropdown" role="menu" aria-label="Menu du compte">
               <div className="profile-dropdown-heading"><div className="profile-dropdown-avatar"><UserRound size={17}/></div><div><strong>Compte utilisateur</strong><small>{profileEmail || "Compte connecté"}</small></div></div>
