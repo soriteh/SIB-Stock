@@ -66,7 +66,7 @@ export default function SettingsPage() {
     const nextUrl = publicData.publicUrl
     const { error: updateError } = await supabase.from('tenants').update({ logo_url: nextUrl }).eq('id', tenantId)
     if (updateError) setError('Le logo a été téléversé mais son enregistrement a échoué : ' + updateError.message)
-    else { setLogoUrl(nextUrl); setForm(current => ({ ...current, logo_url: nextUrl })); window.dispatchEvent(new CustomEvent('tenant-logo-updated', { detail: nextUrl })); setNotice('Le logo de votre entreprise a été mis à jour.') }
+    else { setLogoUrl(nextUrl); setForm(current => ({ ...current, logo_url: nextUrl })); window.dispatchEvent(new CustomEvent('tenant-settings-updated', { detail: { logo_url: nextUrl } })); setNotice('Le logo de votre entreprise a été mis à jour.') }
     setUploadingLogo(false)
   }
 
@@ -85,7 +85,7 @@ export default function SettingsPage() {
     }
     const { error: saveError } = await supabase.from('tenants').update(payload).eq('id', form.id)
     if (saveError) setError(saveError.message)
-    else setNotice('Les paramètres de votre entreprise ont été enregistrés.')
+    else { window.dispatchEvent(new CustomEvent('tenant-settings-updated', { detail: { ...form, ...payload } })); setNotice('Les paramètres de votre entreprise ont été enregistrés et appliqués à l’application.') }
     setSaving(false)
   }
 
