@@ -1,7 +1,7 @@
 import {useCallback,useEffect,useState} from 'react'
 import {Download,LoaderCircle,RefreshCw,TrendingDown,TrendingUp,Boxes,Wallet} from 'lucide-react'
 import {supabase} from '../lib/supabase'
-import {formatTenantMoney,useTenantSettings} from '../contexts/TenantSettingsContext'
+import {useTenantSettings} from '../contexts/TenantSettingsContext'
 type Product={id:string;sku:string;name:string;purchase_price:number;minimum_stock:number}
 type Level={product_id:string;warehouse_id:string;quantity:number;products:Product|null;warehouses:{name:string}|null}
 type Doc={id:string;document_type:string;status:string;total_amount:number;document_date:string}
@@ -10,7 +10,6 @@ type Fin={id:string;transaction_type:string;amount:number;created_at:string}
 export default function Reports(){
  const {currency_code}=useTenantSettings()
  const fmt=(n:number)=>new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(n)
- const money=(n:number)=>formatTenantMoney(n,currency_code)
  const [levels,setLevels]=useState<Level[]>([]),[docs,setDocs]=useState<Doc[]>([]),[moves,setMoves]=useState<Move[]>([]),[finance,setFinance]=useState<Fin[]>([]),[loading,setLoading]=useState(true),[error,setError]=useState('')
  const [from,setFrom]=useState(new Date(new Date().getFullYear(),new Date().getMonth(),1).toISOString().slice(0,10)),[to,setTo]=useState(new Date().toISOString().slice(0,10))
  const load=useCallback(async()=>{if(!supabase)return;setLoading(true);const [l,d,m,f]=await Promise.all([supabase.from('stock_levels').select('product_id,warehouse_id,quantity,products(id,sku,name,purchase_price,minimum_stock),warehouses(name)'),supabase.from('inventory_documents').select('id,document_type,status,total_amount,document_date').order('document_date',{ascending:false}).limit(1000),supabase.from('stock_movements').select('id,movement_type,quantity_delta,created_at').order('created_at',{ascending:false}).limit(2000),supabase.from('financial_transactions').select('id,transaction_type,amount,created_at').order('created_at',{ascending:false}).limit(2000)]);const e=l.error||d.error||m.error||f.error;if(e)setError(e.message);setLevels((l.data??[]) as unknown as Level[]);setDocs((d.data??[]) as Doc[]);setMoves((m.data??[]) as Move[]);setFinance((f.data??[]) as Fin[]);setLoading(false)},[])
