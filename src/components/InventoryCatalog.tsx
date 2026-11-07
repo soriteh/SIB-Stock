@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { Barcode, Boxes, LoaderCircle, MapPin, Package, Plus, RefreshCw, Search, Warehouse } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { formatTenantMoney, useTenantSettings } from '../contexts/TenantSettingsContext'
 
 type Mode = 'Produits' | 'Entrepôts'
 type ProductRow = { id:string; sku:string; name:string; unit_name:string; purchase_price:number; sale_price:number; minimum_stock:number; is_active:boolean }
 type WarehouseRow = { id:string; code:string; name:string; address:string|null; is_active:boolean }
 
 export default function InventoryCatalog({ mode }: { mode: Mode }) {
+  const { currency_code } = useTenantSettings()
+  const money = (value:number) => formatTenantMoney(value,currency_code)
   const [products,setProducts] = useState<ProductRow[]>([])
   const [warehouses,setWarehouses] = useState<WarehouseRow[]>([])
   const [query,setQuery] = useState('')
@@ -90,8 +93,8 @@ export default function InventoryCatalog({ mode }: { mode: Mode }) {
           <label>Référence SKU<input required value={sku} onChange={e=>setSku(e.target.value)} placeholder="Ex. PC-HP-001"/></label>
           <label>Code-barres<input value={barcode} onChange={e=>setBarcode(e.target.value)} placeholder="EAN / UPC / code interne"/></label>
           <label>Unité<input required value={unit} onChange={e=>setUnit(e.target.value)}/></label>
-          <label>Prix d'achat (GNF)<input type="number" min="0" step="0.01" required value={purchase} onChange={e=>setPurchase(e.target.value)}/></label>
-          <label>Prix de vente (GNF)<input type="number" min="0" step="0.01" required value={sale} onChange={e=>setSale(e.target.value)}/></label>
+          <label>Prix d'achat ({currency_code})<input type="number" min="0" step="0.01" required value={purchase} onChange={e=>setPurchase(e.target.value)}/></label>
+          <label>Prix de vente ({currency_code})<input type="number" min="0" step="0.01" required value={sale} onChange={e=>setSale(e.target.value)}/></label>
           <label>Seuil minimum<input type="number" min="0" step="0.01" required value={minimum} onChange={e=>setMinimum(e.target.value)}/></label>
         </>:<>
           <label>Nom de l'entrepôt<input required value={name} onChange={e=>setName(e.target.value)} placeholder="Ex. Dépôt principal"/></label>
@@ -102,7 +105,7 @@ export default function InventoryCatalog({ mode }: { mode: Mode }) {
       <div className="catalog-form-actions"><button type="button" className="outline-button" onClick={()=>setShowForm(false)}>Annuler</button><button className="primary-button" disabled={busy}>{busy?<LoaderCircle className="spin" size={14}/>:null} Enregistrer</button></div>
     </form>}
     <section className="panel catalog-panel"><div className="panel-heading"><div><h2>{mode==='Produits'?'Référentiel des produits':'Liste des entrepôts'}</h2><p>Données de votre entreprise · accès sécurisé</p></div><span className="catalog-count">{rows.length} enregistrement(s)</span></div>
-      {loading?<div className="catalog-loading"><LoaderCircle className="spin"/> Chargement des données…</div>:mode==='Produits'?<div className="table-wrap"><table><thead><tr><th>RÉFÉRENCE</th><th>PRODUIT</th><th>UNITÉ</th><th>ACHAT (GNF)</th><th>VENTE (GNF)</th><th>SEUIL</th><th>STATUT</th></tr></thead><tbody>{(rows as ProductRow[]).map(p=><tr key={p.id}><td className="ref-cell">{p.sku}</td><td className="product-cell">{p.name}</td><td>{p.unit_name}</td><td>{Number(p.purchase_price).toLocaleString('fr-FR')}</td><td>{Number(p.sale_price).toLocaleString('fr-FR')}</td><td>{p.minimum_stock}</td><td><span className={p.is_active?'status-pill':'type-pill out'}>{p.is_active?'Actif':'Inactif'}</span></td></tr>)}</tbody></table>{rows.length===0&&<div className="empty-state"><Package size={22}/><p>Aucun produit enregistré. Créez votre première référence.</p></div>}</div>:<div className="warehouse-grid">{(rows as WarehouseRow[]).map(w=><article className="warehouse-card" key={w.id}><div className="warehouse-card-icon"><Warehouse size={20}/></div><div><strong>{w.name}</strong><small>{w.code}</small><p><MapPin size={12}/>{w.address||'Adresse non renseignée'}</p></div><span className={w.is_active?'status-pill':'type-pill out'}>{w.is_active?'Actif':'Inactif'}</span></article>)}{rows.length===0&&<div className="empty-state"><Boxes size={22}/><p>Aucun entrepôt enregistré. Créez votre premier entrepôt.</p></div>}</div>}
+      {loading?<div className="catalog-loading"><LoaderCircle className="spin"/> Chargement des données…</div>:mode==='Produits'?<div className="table-wrap"><table><thead><tr><th>RÉFÉRENCE</th><th>PRODUIT</th><th>UNITÉ</th><th>ACHAT ({currency_code})</th><th>VENTE ({currency_code})</th><th>SEUIL</th><th>STATUT</th></tr></thead><tbody>{(rows as ProductRow[]).map(p=><tr key={p.id}><td className="ref-cell">{p.sku}</td><td className="product-cell">{p.name}</td><td>{p.unit_name}</td><td>{Number(p.purchase_price).toLocaleString('fr-FR')}</td><td>{Number(p.sale_price).toLocaleString('fr-FR')}</td><td>{p.minimum_stock}</td><td><span className={p.is_active?'status-pill':'type-pill out'}>{p.is_active?'Actif':'Inactif'}</span></td></tr>)}</tbody></table>{rows.length===0&&<div className="empty-state"><Package size={22}/><p>Aucun produit enregistré. Créez votre première référence.</p></div>}</div>:<div className="warehouse-grid">{(rows as WarehouseRow[]).map(w=><article className="warehouse-card" key={w.id}><div className="warehouse-card-icon"><Warehouse size={20}/></div><div><strong>{w.name}</strong><small>{w.code}</small><p><MapPin size={12}/>{w.address||'Adresse non renseignée'}</p></div><span className={w.is_active?'status-pill':'type-pill out'}>{w.is_active?'Actif':'Inactif'}</span></article>)}{rows.length===0&&<div className="empty-state"><Boxes size={22}/><p>Aucun entrepôt enregistré. Créez votre premier entrepôt.</p></div>}</div>}
     </section>
     <p className="catalog-footnote"><Barcode size={14}/> Les stocks sont modifiés uniquement par des mouvements validés, jamais directement depuis la fiche produit.</p>
   </div>
