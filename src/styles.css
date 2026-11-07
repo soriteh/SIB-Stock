@@ -529,3 +529,27 @@ th{font-size:9px}td{font-size:10px}
 .brand-mark.has-custom-logo{background:#fff;overflow:hidden;transform:none;letter-spacing:normal}
 .brand-mark.has-custom-logo img{width:100%;height:100%;object-fit:contain;padding:7px;border-radius:inherit}
 @media(max-width:700px){.company-logo-editor{align-items:flex-start;gap:12px}.company-logo-preview{width:82px;height:82px;flex-basis:82px}}
+
+/* Compact company logo tile in the sidebar */
+.sidebar .brand-mark.has-custom-logo{
+  width:36px;
+  height:36px;
+  min-width:36px;
+  flex:0 0 36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:9px;
+  background:#fff;
+  overflow:hidden;
+}
+.sidebar .brand-mark.has-custom-logo img{
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  padding:4px;
+}
+.sidebar .brand{gap:9px;padding-left:6px;padding-right:6px}
