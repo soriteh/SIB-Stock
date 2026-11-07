@@ -67,6 +67,12 @@ function Dashboard() {
   const profileDropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const updateLogo = (event: Event) => { const detail = (event as CustomEvent<string>).detail; if (detail) setTenantLogoUrl(detail) }
+    window.addEventListener('tenant-logo-updated', updateLogo)
+    return () => window.removeEventListener('tenant-logo-updated', updateLogo)
+  }, [])
+
+  useEffect(() => {
     let mounted = true
     async function loadAccount() {
       if (!supabase) return
