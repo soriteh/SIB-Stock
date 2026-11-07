@@ -183,6 +183,24 @@ function Dashboard() {
             <div className="welcome-hero-accent" aria-hidden="true"><span>S</span><i>I</i><span>B</span></div>
           </section>
 
+          <section className="quick-actions" aria-label="Actions rapides">
+            {[
+              { label: 'Nouveau produit', icon: Package, target: 'Produits', tone: 'quick-blue' },
+              { label: 'Entrée de stock', icon: ArrowDownLeft, target: 'Mouvements', tone: 'quick-violet' },
+              { label: 'Sortie de stock', icon: ArrowUpRight, target: 'Mouvements', tone: 'quick-orange' },
+              { label: 'Transfert', icon: ArrowLeftRight, target: 'Transferts', tone: 'quick-teal' },
+              { label: 'Inventaire', icon: Boxes, target: 'Inventaires', tone: 'quick-green' },
+              { label: 'Achats', icon: Truck, target: 'Achats', tone: 'quick-cyan' },
+              { label: 'Ventes', icon: ShoppingCart, target: 'Ventes', tone: 'quick-slate' },
+              { label: 'Clients', icon: Users, target: 'Clients', tone: 'quick-navy' },
+            ].map(({ label, icon: Icon, target, tone }) => (
+              <button key={label} className={`quick-action ${tone}`} onClick={() => setActive(target)}>
+                <Icon size={20} strokeWidth={1.9} />
+                <span>{label}</span>
+              </button>
+            ))}
+          </section>
+
           {!isSupabaseConfigured && <div className="setup-notice"><div><strong>Configuration Supabase requise</strong><p>Le socle visuel est initialisé. Ajoutez vos variables d’environnement pour connecter les données réelles.</p></div><code>VITE_SUPABASE_URL · VITE_SUPABASE_ANON_KEY</code></div>}
 
           <section className="stats-grid">
