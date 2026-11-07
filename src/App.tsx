@@ -128,7 +128,7 @@ function Dashboard() {
         <div className="sidebar-scroll">
           <div className="workspace">
             <div className="workspace-icon"><Building2 size={17} /></div>
-            <div className="workspace-copy"><strong>{company.name || "Mon entreprise"}</strong><small>Espace de travail</small></div>
+            <div className="workspace-copy"><strong>{company.name || "Mon entreprise"}</strong><small>{company.email || company.phone || "Espace de travail"}</small></div>
             <ChevronDown size={15} />
           </div>
           <div className="nav-label">ESPACE DE TRAVAIL</div>
