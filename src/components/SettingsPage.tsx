@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { Building2, CheckCircle2, Globe, ImagePlus, LoaderCircle, Mail, MapPin, Phone, Save, Settings2 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
@@ -32,7 +32,7 @@ export default function SettingsPage() {
         return
       }
       const [{ data, error: loadError }, { data: membership }] = await Promise.all([
-        supabase.from('tenants').select('id,name,legal_name,slug,country_code,currency_code,address,phone,email,website,tax_number,legal_form,timezone').eq('id', tenantId).single(),
+        supabase.from('tenants').select('id,name,legal_name,slug,country_code,currency_code,address,phone,email,website,tax_number,legal_form,timezone,logo_url').eq('id', tenantId).single(),
         supabase.from('tenant_members').select('role').eq('tenant_id', tenantId).eq('user_id', userData.user.id).eq('status','active').maybeSingle(),
       ])
       if (!active) return
@@ -51,7 +51,7 @@ export default function SettingsPage() {
   }
 
 
-  async function uploadLogo(event: React.ChangeEvent<HTMLInputElement>) {
+  async function uploadLogo(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
     event.target.value = ''
     if (!file || !supabase || !tenantId || !canEdit) return
@@ -66,7 +66,7 @@ export default function SettingsPage() {
     const nextUrl = publicData.publicUrl
     const { error: updateError } = await supabase.from('tenants').update({ logo_url: nextUrl }).eq('id', tenantId)
     if (updateError) setError('Le logo a été téléversé mais son enregistrement a échoué : ' + updateError.message)
-    else { setLogoUrl(nextUrl); setForm(current => ({ ...current, logo_url: nextUrl })); setNotice('Le logo de votre entreprise a été mis à jour.') }
+    else { setLogoUrl(nextUrl); setForm(current => ({ ...current, logo_url: nextUrl })); window.dispatchEvent(new CustomEvent('tenant-logo-updated', { detail: nextUrl })); setNotice('Le logo de votre entreprise a été mis à jour.') }
     setUploadingLogo(false)
   }
 
