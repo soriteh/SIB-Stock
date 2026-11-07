@@ -1,13 +1,13 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Building2, CheckCircle2, Globe, LoaderCircle, Mail, MapPin, Phone, Save, Settings2 } from 'lucide-react'
+import { Building2, CheckCircle2, Globe, ImagePlus, LoaderCircle, Mail, MapPin, Phone, Save, Settings2 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
 type CompanySettings = {
   id: string; name: string; legal_name: string | null; slug: string; country_code: string | null
-  currency_code: string; address: string | null; phone: string | null; email: string | null
+  currency_code: string; address: string | null; phone: string | null; email: string | null; logo_url: string | null
   website: string | null; tax_number: string | null; legal_form: string | null; timezone: string
 }
-const empty: CompanySettings = { id:'', name:'', legal_name:'', slug:'', country_code:'GN', currency_code:'GNF', address:'', phone:'', email:'', website:'', tax_number:'', legal_form:'', timezone:'Africa/Conakry' }
+const empty: CompanySettings = { id:'', name:'', legal_name:'', slug:'', country_code:'GN', currency_code:'GNF', address:'', phone:'', email:'', logo_url:'', website:'', tax_number:'', legal_form:'', timezone:'Africa/Conakry' }
 
 export default function SettingsPage() {
   const [form, setForm] = useState<CompanySettings>(empty)
@@ -16,6 +16,9 @@ export default function SettingsPage() {
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [canEdit, setCanEdit] = useState(false)
+  const [tenantId, setTenantId] = useState('')
+  const [logoUrl, setLogoUrl] = useState('')
+  const [uploadingLogo, setUploadingLogo] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -34,7 +37,7 @@ export default function SettingsPage() {
       ])
       if (!active) return
       if (loadError) setError(loadError.message)
-      else setForm({ ...empty, ...(data as CompanySettings) })
+      else { setForm({ ...empty, ...(data as CompanySettings) }); setTenantId(tenantId); setLogoUrl(data.logo_url || '') }
       setCanEdit(['owner','admin'].includes(membership?.role || ''))
       setLoading(false)
     }
@@ -45,6 +48,26 @@ export default function SettingsPage() {
   function change<K extends keyof CompanySettings>(key: K, value: CompanySettings[K]) {
     setForm(current => ({ ...current, [key]: value }))
     setNotice('')
+  }
+
+
+  async function uploadLogo(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file || !supabase || !tenantId || !canEdit) return
+    if (!['image/png','image/jpeg','image/webp'].includes(file.type)) { setError('Format non accepté. Utilisez PNG, JPG ou WebP.'); return }
+    if (file.size > 2 * 1024 * 1024) { setError('Le logo ne doit pas dépasser 2 Mo.'); return }
+    setUploadingLogo(true); setError(''); setNotice('')
+    const extension = file.type === 'image/jpeg' ? 'jpg' : file.type === 'image/webp' ? 'webp' : 'png'
+    const path = tenantId + '/logo-' + Date.now() + '.' + extension
+    const { error: uploadError } = await supabase.storage.from('tenant-logos').upload(path, file, { cacheControl:'3600', upsert:false, contentType:file.type })
+    if (uploadError) { setError('Échec du téléversement du logo : ' + uploadError.message); setUploadingLogo(false); return }
+    const { data: publicData } = supabase.storage.from('tenant-logos').getPublicUrl(path)
+    const nextUrl = publicData.publicUrl
+    const { error: updateError } = await supabase.from('tenants').update({ logo_url: nextUrl }).eq('id', tenantId)
+    if (updateError) setError('Le logo a été téléversé mais son enregistrement a échoué : ' + updateError.message)
+    else { setLogoUrl(nextUrl); setForm(current => ({ ...current, logo_url: nextUrl })); setNotice('Le logo de votre entreprise a été mis à jour.') }
+    setUploadingLogo(false)
   }
 
   async function save(event: FormEvent) {
@@ -74,6 +97,21 @@ export default function SettingsPage() {
     {notice && <div className="settings-message success"><CheckCircle2 size={16}/>{notice}</div>}
     {!canEdit && <div className="settings-readonly">Vous pouvez consulter ces informations. Seuls le propriétaire et les administrateurs peuvent les modifier.</div>}
     <form onSubmit={save}>
+      <section className="panel settings-panel">
+        <div className="settings-section-title"><ImagePlus size={18}/><div><h2>Logo de l’entreprise</h2><p>Ce logo sera affiché dans le menu de l’application.</p></div></div>
+        <div className="company-logo-editor">
+          <div className="company-logo-preview">{logoUrl ? <img src={logoUrl} alt="Logo de l’entreprise"/> : <Building2 size={30}/>}</div>
+          <div className="company-logo-actions">
+            <strong>{logoUrl ? 'Logo actuel' : 'Aucun logo personnalisé'}</strong>
+            <p>Formats PNG, JPG ou WebP · 2 Mo maximum.</p>
+            <label className="secondary-button logo-upload-button">
+              {uploadingLogo ? <LoaderCircle className="spin" size={15}/> : <ImagePlus size={15}/>}
+              {uploadingLogo ? 'Téléversement…' : 'Choisir un logo'}
+              <input type="file" accept="image/png,image/jpeg,image/webp" onChange={uploadLogo} disabled={!canEdit || uploadingLogo} hidden/>
+            </label>
+          </div>
+        </div>
+      </section>
       <section className="panel settings-panel">
         <div className="settings-section-title"><Building2 size={18}/><div><h2>Identité de l’entreprise</h2><p>Informations affichées dans votre espace de gestion.</p></div></div>
         <div className="settings-grid">
