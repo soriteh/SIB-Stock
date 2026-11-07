@@ -9,7 +9,8 @@ type Warehouse={id:string;code:string;name:string}
 type Line={product_id:string;quantity:string;unit_price:string}
 type Doc={id:string;reference:string;status:string;document_date:string;total_amount:number;business_partners:{name:string}|null;warehouses:{name:string}|null}
 export default function CommercialDocuments({mode}:{mode:Mode}){
- const tenantSettings=useTenantSettings()\n const {currency_code}=tenantSettings
+ const tenantSettings=useTenantSettings()
+ const {currency_code}=tenantSettings
  const money=(n:number)=>formatTenantMoney(n,currency_code)
  const purchase=mode==='purchase',title=purchase?'Achats':'Ventes',partnerLabel=purchase?'Fournisseur':'Client'
  const [products,setProducts]=useState<Product[]>([]),[partners,setPartners]=useState<Partner[]>([]),[warehouses,setWarehouses]=useState<Warehouse[]>([]),[docs,setDocs]=useState<Doc[]>([])
