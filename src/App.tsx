@@ -60,10 +60,31 @@ function Dashboard() {
   const [query, setQuery] = useState('')
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [profileEmail, setProfileEmail] = useState('')
+  const [displayName, setDisplayName] = useState('')
+  const [currentTime, setCurrentTime] = useState(() => new Date())
   const profileMenuAnchorRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => { void supabase?.auth.getUser().then(({ data }) => setProfileEmail(data.user?.email ?? '')) }, [])
+  useEffect(() => {
+    let mounted = true
+    async function loadAccount() {
+      if (!supabase) return
+      const { data } = await supabase.auth.getUser()
+      const user = data.user
+      if (!mounted || !user) return
+      setProfileEmail(user.email ?? '')
+      const { data: profile } = await supabase.from('profiles').select('full_name').eq('id', user.id).maybeSingle()
+      if (mounted) setDisplayName(profile?.full_name?.trim() || String(user.user_metadata?.full_name ?? '').trim() || user.email?.split('@')[0] || 'Utilisateur')
+    }
+    void loadAccount()
+    const clock = window.setInterval(() => setCurrentTime(new Date()), 60000)
+    return () => { mounted = false; window.clearInterval(clock) }
+  }, [])
+
+  const hour = currentTime.getHours()
+  const greeting = hour >= 5 && hour < 12 ? 'Bonjour' : hour >= 12 && hour < 18 ? 'Bon après-midi' : hour >= 18 && hour < 22 ? 'Bonsoir' : 'Bonne nuit'
+  const formattedDate = currentTime.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+  const welcomeDate = formattedDate.charAt(0).toLocaleUpperCase('fr-FR') + formattedDate.slice(1)
 
   useEffect(() => {
     if (!profileMenuOpen) return
@@ -147,9 +168,19 @@ function Dashboard() {
         </header>
 
         {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : active === 'Administration' ? <Administration /> : active === 'Paramètres' ? <SettingsPage /> : active === 'Centre d’aide' ? <HelpCenter /> : active === 'Abonnement' ? <SubscriptionPage /> : active === 'Mon profil' ? <ProfilePage /> : <div className="content">
-          <section className="welcome-row">
-            <div><div className="eyebrow"><span className="live-dot"/> ESPACE DE GESTION</div><h1>Bonjour, bienvenue 👋</h1><p>Voici ce qui se passe dans votre gestion de stock aujourd’hui.</p></div>
-            <div className="date-chip">Jeudi 5 novembre 2026 <ChevronDown size={15}/></div>
+          <section className="welcome-hero">
+            <span className="welcome-orb welcome-orb-one" aria-hidden="true" />
+            <span className="welcome-orb welcome-orb-two" aria-hidden="true" />
+            <span className="welcome-particle welcome-particle-one" aria-hidden="true" />
+            <span className="welcome-particle welcome-particle-two" aria-hidden="true" />
+            <span className="welcome-particle welcome-particle-three" aria-hidden="true" />
+            <div className="welcome-hero-content">
+              <div className="welcome-eyebrow"><span className="welcome-live-dot" /> SIB STOCK <span className="welcome-eyebrow-divider">/</span> ESPACE DE GESTION</div>
+              <h1>{greeting}{displayName ? ', ' : ''}{displayName || 'et bienvenue'} <span className="welcome-wave" aria-label="salutations">👋</span></h1>
+              <p>Nous vous souhaitons une excellente journée de travail.</p>
+              <div className="welcome-date"><span className="welcome-date-mark" />{welcomeDate}</div>
+            </div>
+            <div className="welcome-hero-accent" aria-hidden="true"><span>S</span><i>I</i><span>B</span></div>
           </section>
 
           {!isSupabaseConfigured && <div className="setup-notice"><div><strong>Configuration Supabase requise</strong><p>Le socle visuel est initialisé. Ajoutez vos variables d’environnement pour connecter les données réelles.</p></div><code>VITE_SUPABASE_URL · VITE_SUPABASE_ANON_KEY</code></div>}
