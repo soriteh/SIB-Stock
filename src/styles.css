@@ -102,3 +102,16 @@
 .profile-trigger .profile-chevron.open{transform:rotate(180deg)}
 @media(max-width:700px){.profile-dropdown{left:72px;bottom:72px;width:258px;max-width:calc(100vw - 84px);max-height:calc(100vh - 88px);max-height:calc(100dvh - 88px)}}
 @media(max-height:420px){.profile-dropdown{bottom:8px;max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px)}}
+
+
+/* Fixed application navigation: only the main content scrolls */
+html,body,#root{min-height:100%;height:100%}
+body{overflow:hidden}
+.app-shell{height:100vh;height:100dvh;min-height:0;overflow:hidden}
+.sidebar{position:fixed;inset:0 auto 0 0;width:258px;height:100vh;height:100dvh;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;z-index:50}
+.main-area{height:100vh;height:100dvh;min-height:0;margin-left:258px;width:calc(100% - 258px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+.topbar{position:sticky;top:0;z-index:20}
+@media(max-width:700px){
+  .sidebar{width:64px}
+  .main-area{margin-left:64px;width:calc(100% - 64px)}
+}
