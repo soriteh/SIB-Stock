@@ -1,10 +1,12 @@
 import {useCallback,useEffect,useState,type FormEvent} from 'react'
 import {Landmark,LoaderCircle,Plus,RefreshCw,Wallet} from 'lucide-react'
 import {supabase} from '../lib/supabase'
+import {formatTenantMoney,useTenantSettings} from '../contexts/TenantSettingsContext'
 type Account={id:string;account_type:'cash'|'bank';name:string;currency_code:string;current_balance:number;is_active:boolean}
 type Tx={id:string;account_id:string;transaction_type:'deposit'|'withdrawal';amount:number;balance_after:number;reference:string|null;description:string|null;created_at:string}
-const money=(n:number)=>new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(n)+' GNF'
 export default function Finance(){
+ const {currency_code}=useTenantSettings()
+ const money=(n:number)=>formatTenantMoney(n,currency_code)
  const [accounts,setAccounts]=useState<Account[]>([]),[transactions,setTransactions]=useState<Tx[]>([])
  const [loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState('')
  const [showAccount,setShowAccount]=useState(false),[showTx,setShowTx]=useState(false),[showTransfer,setShowTransfer]=useState(false)
