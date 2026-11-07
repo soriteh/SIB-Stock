@@ -82,7 +82,7 @@
 /* Account dropdown menu */
 .profile-menu-anchor{position:relative;width:100%;z-index:40}
 .profile-menu-anchor .profile-trigger{position:relative;z-index:1}
-.profile-dropdown{position:fixed;left:16px;bottom:78px;width:258px;max-width:min(258px,calc(100vw - 32px));max-height:calc(100vh - 100px);max-height:calc(100dvh - 100px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable;padding:8px;background:#fff;border:1px solid #e5eaf1;border-radius:11px;box-shadow:0 14px 40px rgba(8,25,48,.22);z-index:1000;color:#26384f;scrollbar-width:thin;scrollbar-color:#b8c7d9 #f3f6fa}
+.profile-dropdown{position:fixed;left:16px;bottom:78px;width:258px;max-width:min(258px,calc(100vw - 32px));max-height:calc(100vh - 100px);max-height:calc(100dvh - 100px);overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:contain;overscroll-behavior-x:none;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable;contain:layout paint;padding:8px;background:#fff;border:1px solid #e5eaf1;border-radius:11px;box-shadow:0 14px 40px rgba(8,25,48,.22);z-index:1000;color:#26384f;scrollbar-width:thin;scrollbar-color:#b8c7d9 #f3f6fa}
 .profile-dropdown::-webkit-scrollbar{width:7px}
 .profile-dropdown::-webkit-scrollbar-track{background:#f3f6fa;border-radius:8px}
 .profile-dropdown::-webkit-scrollbar-thumb{background:#b8c7d9;border-radius:8px;border:1px solid #f3f6fa}
