@@ -153,3 +153,92 @@ body{overflow:hidden}
 @media(prefers-reduced-motion:reduce){
   .welcome-live-dot,.welcome-wave,.welcome-particle{animation:none}
 }
+
+
+/* SIB Gestion visual language applied to SIB Stock */
+:root{--sib-ink:#14243f;--sib-muted:#7183a1;--sib-blue:#2563d9;--sib-orange:#ff7800;--sib-line:#e3eaf4;--sib-surface:#fff;--sib-canvas:#edf1f8}
+body{background:var(--sib-canvas);color:var(--sib-ink)}
+.app-shell{background:var(--sib-canvas)}
+.sidebar{width:276px;padding:22px 16px 16px;background:linear-gradient(180deg,#101f38 0%,#0b1b34 100%);border-right:1px solid rgba(255,255,255,.06)}
+.brand{flex-direction:column;justify-content:center;gap:9px;padding:8px 8px 22px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:19px;text-align:center}
+.brand-mark{width:64px;height:64px;display:grid;place-items:center;border-radius:17px;background:#fff;color:#075bb8;font-size:25px;letter-spacing:-3px;box-shadow:0 8px 25px rgba(0,0,0,.2);transform:rotate(-3deg)}
+.brand-mark span{color:#ff7800}
+.brand strong{font-size:16px}.brand small{font-size:9px;letter-spacing:.4px;color:#8fa2bf}
+.workspace{margin-bottom:22px;background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.1)}
+.nav-label{font-size:10px;letter-spacing:.2px;text-transform:none;color:#8192ad;padding-left:12px}
+.navigation{gap:5px}
+.nav-item{height:46px;border-radius:12px;font-size:13px;padding:0 13px;color:#c0cde0}
+.nav-item.active{background:linear-gradient(100deg,rgba(38,99,217,.25),rgba(38,99,217,.1));border:1px solid rgba(100,157,244,.2);box-shadow:inset 3px 0 #ff7800;color:#fff}
+.nav-item.active svg{color:#ff9a43}
+.nav-item:hover{background:rgba(255,255,255,.075)}
+.sidebar-bottom{padding-top:10px}
+.plan-card{border-radius:13px;background:linear-gradient(145deg,#173d6d,#102744);border-color:#294d78;padding:16px}
+.profile{border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:11px;margin-top:8px;background:rgba(255,255,255,.035)}
+.profile strong{font-size:11px}.profile small{font-size:10px}
+.main-area{margin-left:276px;width:calc(100% - 276px);background:var(--sib-canvas)}
+.topbar{height:76px;padding:0 28px;background:rgba(255,255,255,.96);border-bottom:1px solid #e4eaf3}
+.breadcrumb strong{font:800 22px Manrope,sans-serif;letter-spacing:-.8px;color:#14243f}
+.breadcrumb span,.breadcrumb b{display:none}
+.top-actions{gap:12px}
+.search-box{height:40px;width:270px;border-radius:10px;background:#f8faff;border-color:#e5ebf5}
+.icon-button{width:42px;height:42px;border-radius:12px;background:#edf3ff;color:#2162cc;display:grid;place-items:center}
+.top-avatar{width:38px;height:38px}
+.content{max-width:1800px;padding:18px 22px 26px}
+.welcome-hero{min-height:170px;margin-bottom:18px;padding:24px 30px;border-radius:20px}
+.welcome-hero h1{font-size:clamp(25px,2.7vw,39px)}
+.quick-actions{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:12px;margin:0 0 18px}
+.quick-action{min-width:0;min-height:94px;padding:13px 9px;border:0;border-radius:17px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;font:700 12px Manrope,sans-serif;text-align:center;box-shadow:0 7px 16px rgba(28,53,91,.13);transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.quick-action:hover{transform:translateY(-3px);box-shadow:0 11px 22px rgba(28,53,91,.2);filter:saturate(1.12)}
+.quick-action svg{flex-shrink:0}
+.quick-action span{line-height:1.25}
+.quick-blue{background:linear-gradient(135deg,#3479ee,#2155d4)}
+.quick-violet{background:linear-gradient(135deg,#8750ed,#6a2bd5)}
+.quick-orange{background:linear-gradient(135deg,#f79a0b,#ef6500)}
+.quick-teal{background:linear-gradient(135deg,#12a2b2,#087d94)}
+.quick-green{background:linear-gradient(135deg,#10ae7b,#07875e)}
+.quick-cyan{background:linear-gradient(135deg,#0da9ca,#0878ad)}
+.quick-slate{background:linear-gradient(135deg,#8b8b8b,#565656)}
+.quick-navy{background:linear-gradient(135deg,#46546a,#202d43)}
+.stats-grid{gap:13px;margin-bottom:16px}
+.stat-card{min-height:112px;display:grid;grid-template-columns:54px minmax(0,1fr);grid-template-rows:auto auto;column-gap:13px;align-content:center;padding:16px 17px;border:1px solid #e6ebf3;border-radius:16px;box-shadow:0 5px 18px rgba(27,48,80,.055)}
+.stat-head{display:contents}
+.stat-head>span{grid-column:2;grid-row:1;align-self:end;font-size:10px;font-weight:800;text-transform:uppercase;color:#7183a1;letter-spacing:.15px}
+.stat-icon{grid-column:1;grid-row:1/3;width:54px;height:54px;border-radius:15px;align-self:center}
+.stat-value{grid-column:2;grid-row:2;margin-top:8px;font-size:19px}
+.stat-note{grid-column:2;font-size:10px;margin-top:4px}
+.middle-grid{grid-template-columns:1fr 1fr;gap:16px}
+.panel{padding:20px;border:1px solid #e6ebf3;border-radius:17px;box-shadow:0 5px 18px rgba(27,48,80,.05)}
+.panel-heading h2{font-size:15px}
+.panel-heading p{font-size:10px}
+.movement-panel{padding-bottom:0}
+th{font-size:9px}td{font-size:10px}
+.table-wrap{border:1px solid #edf0f5;border-radius:10px}
+.table-footer{font-size:10px}
+.setup-notice{border-radius:12px}
+@media(max-width:1400px){.quick-actions{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:1100px){
+  .sidebar{width:220px;padding:18px 12px}
+  .main-area{margin-left:220px;width:calc(100% - 220px)}
+  .content{padding:18px 16px}
+  .quick-actions{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  .sidebar{width:64px;padding:14px 7px}
+  .brand{padding:4px 0 17px}
+  .brand-mark{width:43px;height:43px;border-radius:12px;font-size:18px}
+  .main-area{margin-left:64px;width:calc(100% - 64px)}
+  .topbar{height:62px;padding:0 12px}
+  .breadcrumb strong{font-size:15px}
+  .content{padding:14px 10px 20px}
+  .welcome-hero{min-height:165px;padding:19px 16px}
+  .quick-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .quick-action{min-height:78px;border-radius:13px;font-size:11px}
+  .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .stat-card{grid-template-columns:38px minmax(0,1fr);column-gap:8px;min-height:92px;padding:11px}
+  .stat-icon{width:38px;height:38px;border-radius:11px}
+  .stat-head>span{font-size:8px}
+  .stat-value{font-size:16px}
+  .stat-note{font-size:8px}
+  .middle-grid{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){.quick-action{transition:none}}
