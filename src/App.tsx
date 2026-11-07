@@ -61,6 +61,7 @@ function Dashboard() {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [profileEmail, setProfileEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
+  const [tenantLogoUrl, setTenantLogoUrl] = useState('')
   const [currentTime, setCurrentTime] = useState(() => new Date())
   const profileMenuAnchorRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
@@ -73,6 +74,8 @@ function Dashboard() {
       const user = data.user
       if (!mounted || !user) return
       setProfileEmail(user.email ?? '')
+      const { data: tenantId } = await supabase.rpc('current_tenant_id')
+      if (tenantId) { const { data: tenant } = await supabase.from('tenants').select('logo_url').eq('id', tenantId).maybeSingle(); if (mounted) setTenantLogoUrl(tenant?.logo_url || '') }
       const { data: profile } = await supabase.from('profiles').select('full_name').eq('id', user.id).maybeSingle()
       if (mounted) setDisplayName(profile?.full_name?.trim() || String(user.user_metadata?.full_name ?? '').trim() || user.email?.split('@')[0] || 'Utilisateur')
     }
@@ -120,7 +123,7 @@ function Dashboard() {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand">
-          <div className="brand-mark">S<span>I</span>B</div>
+          <div className={tenantLogoUrl ? "brand-mark has-custom-logo" : "brand-mark"}>{tenantLogoUrl ? <img src={tenantLogoUrl} alt="Logo de l’entreprise"/> : <>S<span>I</span>B</>}</div>
           <div><strong>SIB Stock</strong><small>INVENTORY CLOUD</small></div>
         </div>
         <div className="sidebar-scroll">
