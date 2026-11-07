@@ -322,3 +322,51 @@ th{font-size:9px}td{font-size:10px}
   .profile{justify-content:center;min-height:54px;padding:5px 0;border:0;background:transparent}
   .profile .avatar{width:38px;height:38px}
 }
+
+
+/* Keep account and sign-out controls anchored to the bottom of the fixed sidebar */
+.sidebar{
+  position:fixed;top:0;bottom:0;left:0;
+  height:100vh;height:100dvh;min-height:0;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+.navigation{
+  flex:1 1 auto;min-height:0;
+  overflow-y:auto;overflow-x:hidden;
+  align-content:start;
+  padding-bottom:12px;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(157,179,210,.28) transparent;
+}
+.navigation::-webkit-scrollbar{width:4px}
+.navigation::-webkit-scrollbar-thumb{background:rgba(157,179,210,.28);border-radius:8px}
+.sidebar-bottom{
+  position:relative;z-index:3;
+  flex:0 0 auto;width:100%;
+  margin-top:auto;
+  padding:12px 0 max(8px,env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,rgba(16,37,65,.96),#0b1b33 22%);
+  border-top:1px solid rgba(210,225,246,.12);
+}
+.sidebar-bottom>.nav-label{margin-top:0}
+.sidebar-bottom .profile-menu-anchor{width:100%}
+.sidebar-bottom .profile-trigger{
+  min-height:72px;width:100%;
+  display:flex;align-items:center;
+  border:1px solid rgba(210,225,246,.13);
+  border-radius:24px;
+  background:rgba(255,255,255,.045);
+}
+.sidebar-bottom .sidebar-logout{
+  width:100%;height:58px;margin:12px 0 0;
+  border-radius:22px;
+}
+@media(max-width:700px){
+  .sidebar{height:100vh;height:100dvh;overflow:hidden}
+  .navigation{overflow-y:auto;min-height:0}
+  .sidebar-bottom{padding:9px 0 max(8px,env(safe-area-inset-bottom))}
+  .sidebar-bottom .profile-trigger{min-height:52px;border-radius:14px}
+  .sidebar-bottom .sidebar-logout{display:none}
+}
