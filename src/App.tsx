@@ -83,9 +83,9 @@ function Dashboard() {
     return () => { mounted = false; window.clearInterval(clock) }
   }, [])
 
-  const hour = currentTime.getHours()
+  const hour = Number(new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', hourCycle: 'h23', timeZone: company.timezone || 'Africa/Conakry' }).format(currentTime))
   const greeting = hour >= 5 && hour < 12 ? 'Bonjour' : hour >= 12 && hour < 18 ? 'Bon après-midi' : hour >= 18 && hour < 22 ? 'Bonsoir' : 'Bonne nuit'
-  const formattedDate = currentTime.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+  const formattedDate = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: company.timezone || 'Africa/Conakry' }).format(currentTime)
   const welcomeDate = formattedDate.charAt(0).toLocaleUpperCase('fr-FR') + formattedDate.slice(1)
 
   useEffect(() => {
