@@ -154,6 +154,7 @@ function Dashboard() {
             </div>, document.body)}
             <button className="profile profile-trigger" aria-expanded={profileMenuOpen} aria-haspopup="menu" onClick={() => setProfileMenuOpen(v => !v)}><div className="avatar"><UserRound size={17}/></div><div><strong>Mon compte</strong><small>{profileEmail || "Compte utilisateur"}</small></div><ChevronDown size={15} className={profileMenuOpen ? "profile-chevron open" : "profile-chevron"}/></button>
           </div>
+          <button className="sidebar-logout" onClick={signOut}><LogOut size={16}/><span>Se déconnecter</span></button>
         </div>
       </aside>
 
