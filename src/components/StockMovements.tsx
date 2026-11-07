@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
 import { Activity, ArrowDownLeft, ArrowUpRight, LoaderCircle, Plus, RefreshCw, Search, Warehouse } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { formatTenantMoney, useTenantSettings } from '../contexts/TenantSettingsContext'
 
 type Product = { id: string; sku: string; name: string; unit_name: string; purchase_price: number; is_active: boolean }
 type WarehouseRow = { id: string; code: string; name: string; is_active: boolean }
@@ -11,6 +12,8 @@ const money = (value: number) => new Intl.NumberFormat('fr-FR', { maximumFractio
 const quantity = (value: number) => new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 4 }).format(value)
 
 export default function StockMovements() {
+  const { currency_code } = useTenantSettings()
+  const money = (value:number) => formatTenantMoney(value,currency_code)
   const [products, setProducts] = useState<Product[]>([])
   const [warehouses, setWarehouses] = useState<WarehouseRow[]>([])
   const [movements, setMovements] = useState<Movement[]>([])
@@ -97,7 +100,7 @@ export default function StockMovements() {
         <label>Produit<select required value={productId} onChange={e => setProductId(e.target.value)}><option value="">Choisir un produit</option>{products.map(p => <option key={p.id} value={p.id}>{p.sku} — {p.name}</option>)}</select></label>
         <label>Entrepôt<select required value={warehouseId} onChange={e => setWarehouseId(e.target.value)}><option value="">Choisir un entrepôt</option>{warehouses.map(w => <option key={w.id} value={w.id}>{w.code} — {w.name}</option>)}</select></label>
         <label>Quantité<input required type="number" min="0.0001" step="0.0001" value={amount} onChange={e => setAmount(e.target.value)}/></label>
-        <label>Coût unitaire (GNF)<input type="number" min="0" step="0.01" value={unitCost} onChange={e => setUnitCost(e.target.value)} placeholder="Facultatif"/></label>
+        <label>Coût unitaire ({currency_code})<input type="number" min="0" step="0.01" value={unitCost} onChange={e => setUnitCost(e.target.value)} placeholder="Facultatif"/></label>
         <label>Motif / référence<input value={notes} onChange={e => setNotes(e.target.value)} placeholder="Bon, facture, commentaire…"/></label>
       </div>
       {products.length === 0 && <p className="catalog-footnote">Créez d’abord un produit actif pour enregistrer un mouvement.</p>}
