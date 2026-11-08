@@ -151,5 +151,5 @@ export default function AuthGate({ children }: { children: ReactNode }) {
 }
 
 function Brand() {
-  return <div className="auth-brand"><div className="auth-brand-mark">S<span>I</span>B</div><div><strong>SIB Stock</strong><small>INVENTORY CLOUD</small></div><Package className="auth-brand-icon" size={24}/></div>
+  return <div className="auth-brand"><div className="auth-brand-mark">S<span>I</span>B</div><div><strong>SIB Stock</strong></div></div>
 }
