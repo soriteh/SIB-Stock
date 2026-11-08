@@ -187,7 +187,7 @@ function Dashboard() {
               <p>Nous vous souhaitons une excellente journée de travail.</p>
               <div className="welcome-date"><span className="welcome-date-mark" />{welcomeDate}</div>
             </div>
-            <div className="welcome-hero-accent" aria-hidden="true"><span>S</span><i>I</i><span>B</span></div>
+            <div className="welcome-hero-accent" aria-hidden="true">{company.logo_url ? <img src={company.logo_url} alt="" /> : null}</div>
           </section>
 
           <section className="quick-actions" aria-label="Actions rapides">
