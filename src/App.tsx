@@ -123,7 +123,7 @@ function Dashboard() {
       <aside className="sidebar">
         <div className="brand">
           <div className={company.logo_url ? "brand-mark has-custom-logo" : "brand-mark"}>{company.logo_url ? <img src={company.logo_url} alt={"Logo "+company.name}/> : <>S<span>I</span>B</>}</div>
-          <div><strong>{company.name || "SIB Stock"}</strong><small>INVENTORY CLOUD</small></div>
+          <div><strong>{company.name || "SIB Stock"}</strong></div>
         </div>
         <div className="sidebar-scroll">
           <div className="workspace">
