@@ -641,3 +641,37 @@ th{font-size:9px}td{font-size:10px}
 .top-profile-menu>button.top-profile-logout:hover{background:#fff1ef}
 @media(max-width:760px){.topbar{height:auto;min-height:68px;padding:12px 16px;gap:11px}.topbar-title{font-size:20px}.top-actions{gap:9px}.search-box{height:40px}.icon-button.notification-button,.top-avatar.top-avatar-button{width:40px;height:40px;flex-basis:40px}}
 @media(max-width:390px){.topbar{padding-left:12px;padding-right:12px}.top-actions{gap:7px}.search-box{gap:6px}.search-box input{font-size:10px}}
+
+/* Header date/time, theme switch and data-first dashboard */
+.topbar-datetime{display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:116px;white-space:nowrap}
+.topbar-datetime strong{font:700 14px Manrope,sans-serif;color:#1b2c48;font-variant-numeric:tabular-nums}
+.topbar-datetime span{font:500 10px 'DM Sans',sans-serif;color:#8592a6;text-transform:capitalize}
+.theme-toggle{width:38px;height:38px;flex:0 0 38px;border:1px solid #e4eaf3;border-radius:11px;background:#f8faff;color:#4e6380;display:grid;place-items:center;transition:all .18s}
+.theme-toggle:hover{background:#edf4ff;color:#155fc3;border-color:#c9dcf8}
+.top-actions{gap:10px}
+.dashboard-empty-state{min-height:330px;margin:26px 0;padding:42px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#fff;border:1px dashed #d9e2ef;border-radius:18px}
+.dashboard-empty-icon{width:58px;height:58px;border-radius:17px;background:#eef4ff;color:#2569c4;display:grid;place-items:center;margin-bottom:17px}
+.dashboard-empty-state h2{font:700 18px Manrope,sans-serif;color:#1c2e49;margin:0 0 8px}
+.dashboard-empty-state p{max-width:510px;font-size:12px;line-height:1.7;color:#8190a5;margin:0}
+.dashboard-empty-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+.dashboard-empty-actions button{font-size:11px;padding:10px 14px}
+.top-notification-empty{padding:18px 10px 12px}
+.top-notification-empty strong{font-size:12px}
+.top-notification-empty p{font-size:10px}
+@media(max-width:760px){.topbar-datetime{margin-right:auto;align-items:flex-start;min-width:0}.topbar-datetime span{font-size:9px}.topbar-datetime strong{font-size:12px}.theme-toggle{width:36px;height:36px;flex-basis:36px}}
+:root[data-theme="dark"]{color-scheme:dark;background:#0b1424;color:#e4ebf5}
+:root[data-theme="dark"] body,:root[data-theme="dark"] .main-area{background:#0b1424;color:#e4ebf5}
+:root[data-theme="dark"] .topbar,:root[data-theme="dark"] .dashboard-empty-state,:root[data-theme="dark"] .top-notification-panel,:root[data-theme="dark"] .top-profile-menu{background:#111e32;border-color:#263852;color:#e4ebf5}
+:root[data-theme="dark"] .topbar-title,:root[data-theme="dark"] .topbar-datetime strong,:root[data-theme="dark"] .dashboard-empty-state h2,:root[data-theme="dark"] .top-profile-identity strong,:root[data-theme="dark"] .top-notification-heading,:root[data-theme="dark"] .top-notification-empty strong{color:#e7eef9}
+:root[data-theme="dark"] .topbar-datetime span,:root[data-theme="dark"] .dashboard-empty-state p,:root[data-theme="dark"] .top-profile-identity small,:root[data-theme="dark"] .top-notification-empty p{color:#9aabc2}
+:root[data-theme="dark"] .search-box{background:#0c192b;border-color:#2a3c56;color:#9aabc2}
+:root[data-theme="dark"] .search-box input{color:#e7eef9}
+:root[data-theme="dark"] .search-box input::placeholder{color:#8495ad}
+:root[data-theme="dark"] .search-box kbd,:root[data-theme="dark"] .theme-toggle{background:#172740;border-color:#30435f;color:#c4d3e8}
+:root[data-theme="dark"] .icon-button.notification-button{background:#172b49;color:#8dbaff}
+:root[data-theme="dark"] .top-avatar.top-avatar-button{background:#3b2a25;color:#ffc49c}
+:root[data-theme="dark"] .top-profile-menu>button{color:#bdcbe0}
+:root[data-theme="dark"] .top-profile-menu>button:hover{background:#1a2b44;color:#9bc3ff}
+:root[data-theme="dark"] .top-profile-divider{background:#293b55}
+:root[data-theme="dark"] .top-notification-heading{border-bottom-color:#293b55}
+:root[data-theme="dark"] .dashboard-empty-icon{background:#172b49;color:#8dbaff}
