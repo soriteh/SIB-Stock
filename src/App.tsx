@@ -102,8 +102,6 @@ function Dashboard() {
     return () => window.removeEventListener('keydown', handleShortcut)
   }, [])
 
-  const clockParts = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', hourCycle: 'h23', timeZone: company.timezone || 'Africa/Conakry' }).formatToParts(currentTime)
-  const hour = Number(clockParts.find(part => part.type === 'hour')?.value ?? '0')
   const formattedDate = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: company.timezone || 'Africa/Conakry' }).format(currentTime)
   const welcomeDate = formattedDate.charAt(0).toLocaleUpperCase('fr-FR') + formattedDate.slice(1)
   const formattedClock = new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit',timeZone:company.timezone||'Africa/Conakry'}).format(currentTime)
