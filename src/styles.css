@@ -611,3 +611,33 @@ th{font-size:9px}td{font-size:10px}
 .top-notification-empty p{font-size:11px;line-height:1.5;color:#8391a6;margin:6px 0 0;max-width:240px}
 @media(max-width:760px){.topbar{height:auto;min-height:76px;padding:14px 16px;align-items:flex-start;flex-direction:column;gap:13px}.topbar-title{font-size:22px}.top-actions{width:100%;gap:10px}.search-box{width:auto;flex:1;height:44px;padding:0 10px}.search-box input{font-size:11px}.search-box kbd{display:none}.icon-button.notification-button,.top-avatar.top-avatar-button{width:44px;height:44px;flex:0 0 44px}}
 @media(max-width:390px){.topbar{padding-left:12px;padding-right:12px}.top-actions{gap:7px}.search-box{gap:7px}.search-box input{font-size:10px}}
+
+
+/* Compact header controls and profile dropdown */
+.topbar{height:76px;min-height:76px;padding:0 28px;gap:18px}
+.topbar-title{font-size:23px;letter-spacing:-.65px}
+.top-actions{gap:12px}
+.search-box{width:min(360px,36vw);height:42px;padding:0 12px;gap:9px;border-radius:12px}
+.search-box input{font-size:12px}
+.search-box kbd{font-size:9px;padding:4px 6px}
+.icon-button.notification-button{width:44px;height:44px;border-radius:13px}
+.icon-button.notification-button svg{width:19px;height:19px}
+.icon-button.notification-button i{width:7px;height:7px;right:6px;top:6px}
+.top-avatar.top-avatar-button{width:44px;height:44px;overflow:hidden}
+.top-avatar.top-avatar-button img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.top-profile-wrap{position:relative}
+.top-profile-menu{position:absolute;right:0;top:calc(100% + 11px);z-index:120;width:min(290px,calc(100vw - 28px));padding:9px;background:#fff;border:1px solid #e6ecf4;border-radius:14px;box-shadow:0 16px 44px rgba(16,35,64,.17);animation:topProfileIn .16s ease-out}
+@keyframes topProfileIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+.top-profile-identity{display:flex;align-items:center;gap:10px;padding:9px 8px 12px}
+.top-profile-identity>img,.top-profile-initial{width:38px;height:38px;flex:0 0 38px;border-radius:50%;object-fit:cover}
+.top-profile-initial{display:grid;place-items:center;background:#ffead9;color:#a94b12;font-weight:700;font-size:14px}
+.top-profile-identity div{min-width:0;display:flex;flex-direction:column;gap:3px}
+.top-profile-identity strong{font-size:12px;color:#1c2e49;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top-profile-identity small{font-size:10px;color:#8794a8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top-profile-divider{height:1px;background:#edf1f6;margin:4px 2px}
+.top-profile-menu>button{width:100%;height:36px;display:flex;align-items:center;gap:9px;padding:0 9px;border:0;border-radius:8px;background:transparent;color:#43536b;font:500 11px Manrope,sans-serif;text-align:left;cursor:pointer}
+.top-profile-menu>button:hover{background:#f3f6fb;color:#145fc3}
+.top-profile-menu>button.top-profile-logout{color:#c34b42}
+.top-profile-menu>button.top-profile-logout:hover{background:#fff1ef}
+@media(max-width:760px){.topbar{height:auto;min-height:68px;padding:12px 16px;gap:11px}.topbar-title{font-size:20px}.top-actions{gap:9px}.search-box{height:40px}.icon-button.notification-button,.top-avatar.top-avatar-button{width:40px;height:40px;flex-basis:40px}}
+@media(max-width:390px){.topbar{padding-left:12px;padding-right:12px}.top-actions{gap:7px}.search-box{gap:6px}.search-box input{font-size:10px}}
