@@ -977,3 +977,30 @@ th{font-size:9px}td{font-size:10px}
  .content{padding:12px 9px 16px}
 }
 @media(prefers-reduced-motion:reduce){.app-shell>.sidebar,.sidebar-toggle{transition:none}}
+
+
+/* Main workspace responds to the actual width left by the sidebar */
+.app-shell{width:100%;min-width:0}
+.main-area{container-type:inline-size;container-name:workspace;min-width:0;width:calc(100% - 258px);transition:width .22s ease}
+.app-shell.sidebar-is-collapsed .main-area{width:calc(100% - 68px);flex:1 1 auto;min-width:0}
+.main-area>*{min-width:0;max-width:100%}
+.main-area .content,.main-area .page-content,.main-area .page-container{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+.main-area :is(.stats-grid,.middle-grid,.dashboard-live-grid,.dashboard-kpi-grid,.dashboard-analytics-grid,.dashboard-bottom-grid,.dashboard-grid,.inventory-layout,.report-grid,.settings-grid,.profile-grid,.client-detail-grid,.finance-account-grid,.warehouse-grid,.quick-actions){min-width:0;max-width:100%}
+.main-area :is(.stats-grid,.middle-grid,.dashboard-live-grid,.dashboard-kpi-grid,.dashboard-analytics-grid,.dashboard-bottom-grid,.dashboard-grid,.report-grid,.settings-grid,.profile-grid,.client-detail-grid,.finance-account-grid){grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.main-area :is(input,select,textarea,button){max-width:100%;box-sizing:border-box}
+.main-area :is(.table-container,.table-wrapper,.data-table-wrapper,.overflow-x-auto){max-width:100%;min-width:0;overflow-x:auto}
+@container workspace (max-width:1250px){
+ .main-area :is(.stats-grid,.middle-grid,.dashboard-live-grid,.dashboard-kpi-grid,.dashboard-analytics-grid,.dashboard-bottom-grid,.dashboard-grid,.report-grid,.settings-grid,.profile-grid,.client-detail-grid,.finance-account-grid){grid-template-columns:repeat(2,minmax(0,1fr))}
+ .main-area :is(.topbar){padding-left:18px;padding-right:18px}
+ .main-area :is(.content){padding-left:18px;padding-right:18px}
+}
+@container workspace (max-width:760px){
+ .main-area :is(.stats-grid,.middle-grid,.dashboard-live-grid,.dashboard-kpi-grid,.dashboard-analytics-grid,.dashboard-bottom-grid,.dashboard-grid,.report-grid,.settings-grid,.profile-grid,.client-detail-grid,.finance-account-grid,.warehouse-grid){grid-template-columns:minmax(0,1fr)}
+ .main-area :is(.topbar){padding-left:12px;padding-right:12px}
+ .main-area :is(.content){padding-left:12px;padding-right:12px}
+ .main-area :is(.dashboard-panel,.panel,.card){min-width:0}
+}
+@media(max-width:760px){
+ .main-area{container-type:normal;width:100%!important;max-width:100%;flex:1 1 100%}
+ .app-shell.sidebar-is-collapsed .main-area{width:100%!important}
+}
