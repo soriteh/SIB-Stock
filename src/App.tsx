@@ -131,8 +131,10 @@ function Dashboard() {
     return () => window.removeEventListener('keydown', handleShortcut)
   }, [])
 
-  const hour = Number(new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', hourCycle: 'h23', timeZone: company.timezone || 'Africa/Conakry' }).format(currentTime))
+  const clockParts = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', hourCycle: 'h23', timeZone: company.timezone || 'Africa/Conakry' }).formatToParts(currentTime)
+  const hour = Number(clockParts.find(part => part.type === 'hour')?.value ?? '0')
   const greeting = hour >= 5 && hour < 12 ? 'Bonjour' : hour >= 12 && hour < 18 ? 'Bon après-midi' : hour >= 18 && hour < 22 ? 'Bonsoir' : 'Bonne nuit'
+  const welcomeMessage = hour >= 5 && hour < 12 ? 'Nous vous souhaitons une excellente matinée de travail.' : hour >= 12 && hour < 18 ? 'Nous vous souhaitons un excellent après-midi de travail.' : hour >= 18 && hour < 22 ? 'Nous vous souhaitons une agréable soirée.' : 'Nous vous souhaitons une excellente nuit.'
   const formattedDate = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: company.timezone || 'Africa/Conakry' }).format(currentTime)
   const welcomeDate = formattedDate.charAt(0).toLocaleUpperCase('fr-FR') + formattedDate.slice(1)
 
@@ -238,7 +240,7 @@ function Dashboard() {
             <div className="welcome-hero-content">
               <div className="welcome-eyebrow"><span className="welcome-live-dot" /> {company.name.toUpperCase()} <span className="welcome-eyebrow-divider">/</span> ESPACE DE GESTION</div>
               <h1>{greeting}{displayName ? ', ' : ''}{displayName || 'et bienvenue'} <span className="welcome-wave" aria-label="salutations">👋</span></h1>
-              <p>Nous vous souhaitons une excellente journée de travail.</p>
+              <p>{welcomeMessage}</p>
               <div className="welcome-date"><span className="welcome-date-mark" />{welcomeDate}</div>
             </div>
             <div className="welcome-hero-accent" aria-hidden="true">{company.logo_url ? <img src={company.logo_url} alt="" /> : null}</div>
