@@ -836,3 +836,10 @@ th{font-size:9px}td{font-size:10px}
 .dashboard-shortcuts-grid button.dashboard-shortcut svg{width:27px;height:27px}
 @media(max-width:900px){.dashboard-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.dashboard-shortcuts-grid button.dashboard-shortcut{height:116px;min-height:116px;font-size:15px;border-radius:18px}}
 @media(max-width:480px){.dashboard-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.dashboard-shortcuts-grid button.dashboard-shortcut{height:96px;min-height:96px;font-size:13px;border-radius:14px}}
+
+
+/* Desktop: keep all eight dashboard shortcuts on a single horizontal row */
+.dashboard-shortcuts-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:12px}
+.dashboard-shortcuts-grid button.dashboard-shortcut{min-width:0;height:140px;min-height:140px;padding:10px 5px;font-size:clamp(11px,1.15vw,16px);white-space:normal}
+@media(max-width:900px){.dashboard-shortcuts-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:560px){.dashboard-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
