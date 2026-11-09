@@ -11,7 +11,7 @@ type Account={id:string;name:string;account_type:'cash'|'bank';current_balance:n
 type Fin={id:string;transaction_type:string;amount:number;created_at:string}
 const dayKey=(d:Date)=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return y+'-'+m+'-'+day}
 const labels:Record<string,string>={opening:'Stock initial',receipt:'Réception',sale:'Sortie / vente',transfer_in:'Transfert entrant',transfer_out:'Transfert sortant',adjustment_in:'Ajustement positif',adjustment_out:'Ajustement négatif',customer_return:'Retour client',supplier_return:'Retour fournisseur',reversal:'Annulation'}
-export default function DashboardOverview({onNavigate,displayName}:{onNavigate:(section:string)=>void;displayName:string}){
+export default function DashboardOverview({onNavigate,displayName,currentTime}:{onNavigate:(section:string)=>void;displayName:string;currentTime:Date}){
  const company=useTenantSettings(),currency=company.currency_code||'GNF'
  const money=(n:number)=>formatTenantMoney(n,currency)
  const [levels,setLevels]=useState<Level[]>([]),[moves,setMoves]=useState<Move[]>([]),[docs,setDocs]=useState<Doc[]>([]),[accounts,setAccounts]=useState<Account[]>([]),[finance,setFinance]=useState<Fin[]>([])
@@ -32,7 +32,7 @@ export default function DashboardOverview({onNavigate,displayName}:{onNavigate:(
   setUpdated(new Date());setLoading(false)
  },[])
  useEffect(()=>{void load()},[load])
- const now=new Date(),today=dayKey(now),month=today.slice(0,7),since=new Date(now);since.setDate(now.getDate()-13)
+ const now=currentTime,today=dayKey(now),month=today.slice(0,7),since=new Date(now);since.setDate(now.getDate()-13)
  const moves14=moves.filter(x=>x.created_at.slice(0,10)>=dayKey(since)&&x.created_at.slice(0,10)<=today)
  const posted=docs.filter(x=>x.status==='posted')
  const todayDocs=posted.filter(x=>x.document_date.slice(0,10)===today)
@@ -57,7 +57,7 @@ export default function DashboardOverview({onNavigate,displayName}:{onNavigate:(
  const hour=Number(new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',hourCycle:'h23',timeZone:company.timezone||'Africa/Conakry'}).format(now))
  const greeting=hour>=5&&hour<12?'Bonjour':hour>=12&&hour<18?'Bon après-midi':hour>=18&&hour<22?'Bonsoir':'Bonne nuit'
  const welcomeText=hour>=5&&hour<12?'Nous vous souhaitons une excellente matinée de travail.':hour>=12&&hour<18?'Nous vous souhaitons un excellent après-midi de travail.':hour>=18&&hour<22?'Nous vous souhaitons une agréable soirée.':'Nous vous souhaitons une excellente nuit.'
- const shortcuts=[{label:'Nouvelle vente',icon:ShoppingCart,section:'Ventes',tone:'blue'},{label:'Devis',icon:FileText,section:'Ventes',tone:'violet'},{label:'Facture',icon:Receipt,section:'Ventes',tone:'orange'},{label:'Client',icon:Users,section:'Clients',tone:'teal'},{label:'Opération bancaire',icon:Landmark,section:'Caisse & finances',tone:'green'},{label:'Caisse ↔ Banque',icon:ArrowLeftRight,section:'Caisse & finances',tone:'cyan'},{label:'Stock',icon:Boxes,section:'Produits',tone:'gray'},{label:'Utilisateurs',icon:ShieldCheck,section:'Administration',tone:'navy'}]
+ const shortcuts=[{label:'Nouveau produit',icon:Package,section:'Produits',tone:'blue'},{label:'Entrée de stock',icon:ArrowDownLeft,section:'Mouvements',tone:'violet'},{label:'Sortie de stock',icon:ArrowUpRight,section:'Mouvements',tone:'orange'},{label:'Transfert',icon:ArrowLeftRight,section:'Transferts',tone:'teal'},{label:'Inventaire',icon:Boxes,section:'Inventaires',tone:'green'},{label:'Achats',icon:Truck,section:'Achats',tone:'cyan'},{label:'Ventes',icon:ShoppingCart,section:'Ventes',tone:'gray'},{label:'Clients',icon:Users,section:'Clients',tone:'navy'}]
  return <div className="content dashboard-page">
   <section className="dashboard-welcome"><div className="dashboard-welcome-copy"><span className="dashboard-welcome-brand"><i/> SORITECH INNOV BUSINESS <b>/</b> ESPACE DE GESTION</span><h2>{greeting}, {displayName||'Utilisateur'} <span aria-hidden="true">👋</span></h2><p>{welcomeText}</p><div className="dashboard-welcome-date"><CalendarDays size={14}/>{new Intl.DateTimeFormat('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:company.timezone||'Africa/Conakry'}).format(now)}</div></div>{company.logo_url&&<img className="dashboard-welcome-logo" src={company.logo_url} alt={'Logo '+company.name}/>}</section>
   <div className="dashboard-toolbar"><div><span className="eyebrow"><span className="live-dot"/> PILOTAGE DES STOCKS</span><h2>Synthèse de l’activité</h2><p>Vue consolidée des stocks, des achats, des ventes et de la trésorerie.</p></div><button className="outline-button" onClick={()=>void load()} disabled={loading}><RefreshCw size={14} className={loading?'spin':''}/> Actualiser</button></div>
