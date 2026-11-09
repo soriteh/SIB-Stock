@@ -1,5 +1,5 @@
 import {useCallback,useEffect,useMemo,useState} from 'react'
-import {Activity,ArrowDownLeft,ArrowUpRight,Boxes,Building2,CalendarDays,Clock3,Package,RefreshCw,ShoppingCart,Truck,Wallet,ArrowLeftRight,Users} from 'lucide-react'
+import {Activity,ArrowDownLeft,ArrowUpRight,Boxes,Building2,CalendarDays,Clock3,Package,ShoppingCart,Truck,Wallet,ArrowLeftRight,Users} from 'lucide-react'
 import {supabase} from '../lib/supabase'
 import {formatTenantMoney,useTenantSettings} from '../contexts/TenantSettingsContext'
 
@@ -60,7 +60,7 @@ export default function DashboardOverview({onNavigate,displayName,currentTime}:{
  const shortcuts=[{label:'Nouveau produit',icon:Package,section:'Produits',tone:'blue'},{label:'Entrée de stock',icon:ArrowDownLeft,section:'Mouvements',tone:'violet'},{label:'Sortie de stock',icon:ArrowUpRight,section:'Mouvements',tone:'orange'},{label:'Transfert',icon:ArrowLeftRight,section:'Transferts',tone:'teal'},{label:'Inventaire',icon:Boxes,section:'Inventaires',tone:'green'},{label:'Achats',icon:Truck,section:'Achats',tone:'cyan'},{label:'Ventes',icon:ShoppingCart,section:'Ventes',tone:'gray'},{label:'Clients',icon:Users,section:'Clients',tone:'navy'}]
  return <div className="content dashboard-page">
   <section className="dashboard-welcome"><div className="dashboard-welcome-copy"><span className="dashboard-welcome-brand"><i/> SORITECH INNOV BUSINESS <b>/</b> ESPACE DE GESTION</span><h2>{greeting}, {displayName||'Utilisateur'} <span aria-hidden="true">👋</span></h2><p>{welcomeText}</p><div className="dashboard-welcome-date"><CalendarDays size={14}/>{new Intl.DateTimeFormat('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:company.timezone||'Africa/Conakry'}).format(now)}</div></div>{company.logo_url&&<img className="dashboard-welcome-logo" src={company.logo_url} alt={'Logo '+company.name}/>}</section>
-  <div className="dashboard-toolbar"><div><span className="eyebrow"><span className="live-dot"/> PILOTAGE DES STOCKS</span><h2>Synthèse de l’activité</h2><p>Vue consolidée des stocks, des achats, des ventes et de la trésorerie.</p></div><button className="outline-button" onClick={()=>void load()} disabled={loading}><RefreshCw size={14} className={loading?'spin':''}/> Actualiser</button></div>
+  
   <section className="dashboard-shortcuts"><div className="dashboard-shortcuts-heading"><h3>Raccourcis</h3><span>Accès rapide aux opérations</span></div><div className="dashboard-shortcuts-grid">{shortcuts.map(({label,icon:Icon,section,tone})=><button className={'dashboard-shortcut '+tone} key={label} onClick={()=>onNavigate(section)}><Icon size={21} strokeWidth={2}/><span>{label}</span></button>)}</div></section>
   {error&&<div className="catalog-error">Certaines données n’ont pas pu être chargées : {error}</div>}
   <section className="dashboard-kpi-grid">
