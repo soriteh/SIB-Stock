@@ -675,3 +675,16 @@ th{font-size:9px}td{font-size:10px}
 :root[data-theme="dark"] .top-profile-divider{background:#293b55}
 :root[data-theme="dark"] .top-notification-heading{border-bottom-color:#293b55}
 :root[data-theme="dark"] .dashboard-empty-icon{background:#172b49;color:#8dbaff}
+
+
+/* Header date, time and theme control refinement */
+.topbar{gap:16px}
+.topbar-datetime{min-width:132px;padding:0 4px}
+.topbar-datetime strong{font-size:13px;letter-spacing:.2px}
+.topbar-datetime span{font-size:10px}
+.theme-toggle{cursor:pointer}
+.theme-toggle:focus-visible,.icon-button.notification-button:focus-visible,.top-avatar-button:focus-visible{outline:3px solid rgba(37,112,220,.25);outline-offset:2px}
+:root[data-theme="dark"] .theme-toggle:hover{background:#203756;color:#a9cbff;border-color:#42618b}
+:root[data-theme="dark"] .topbar-datetime strong{color:#edf4ff}
+@media(max-width:760px){.topbar-datetime{min-width:94px;padding:0}.topbar-datetime strong{font-size:12px}.topbar-datetime span{font-size:9px}}
+@media(max-width:520px){.topbar-datetime{min-width:auto}.topbar-datetime span{max-width:118px;overflow:hidden;text-overflow:ellipsis}.topbar{align-items:center}}
