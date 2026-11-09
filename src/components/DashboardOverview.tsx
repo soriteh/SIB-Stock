@@ -1,5 +1,5 @@
 import {useCallback,useEffect,useMemo,useState} from 'react'
-import {Activity,ArrowDownLeft,ArrowUpRight,Boxes,Building2,CalendarDays,Clock3,Package,RefreshCw,ShoppingCart,Truck,Wallet,ArrowLeftRight,FileText,Receipt,Users,Landmark,ShieldCheck} from 'lucide-react'
+import {Activity,ArrowDownLeft,ArrowUpRight,Boxes,Building2,CalendarDays,Clock3,Package,RefreshCw,ShoppingCart,Truck,Wallet,ArrowLeftRight,Users} from 'lucide-react'
 import {supabase} from '../lib/supabase'
 import {formatTenantMoney,useTenantSettings} from '../contexts/TenantSettingsContext'
 
