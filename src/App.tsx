@@ -16,6 +16,7 @@ import SettingsPage from './components/SettingsPage'
 import HelpCenter from './components/HelpCenter'
 import SubscriptionPage from './components/SubscriptionPage'
 import ProfilePage from './components/ProfilePage'
+import DashboardOverview from './components/DashboardOverview'
 import {
   Activity, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
   ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package, LogOut,
@@ -54,61 +55,7 @@ function Dashboard() {
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [profileEmail, setProfileEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
-  const [dashboardStats, setDashboardStats] = useState({products:0,stockValue:0,purchases:0,sales:0,lowStock:0})
-  const [dashboardLoading, setDashboardLoading] = useState(true)
-  const [dashboardError, setDashboardError] = useState('')
-  const company = useTenantSettings()
-  const [currentTime, setCurrentTime] = useState(() => new Date())
-  const formattedClock = new Intl.DateTimeFormat('fr-FR', {hour:'2-digit',minute:'2-digit',timeZone: company.timezone || 'Africa/Conakry'}).format(currentTime)
-  const profileMenuAnchorRef = useRef<HTMLDivElement>(null)
-  const profileDropdownRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    let mounted = true
-    async function loadAccount() {
-      if (!supabase) return
-      const { data } = await supabase.auth.getUser()
-      const user = data.user
-      if (!mounted || !user) return
-      setProfileEmail(user.email ?? '')
-      const { data: profile } = await supabase.from('profiles').select('full_name,avatar_path').eq('id', user.id).maybeSingle()
-      if (mounted) setDisplayName(profile?.full_name?.trim() || String(user.user_metadata?.full_name ?? '').trim() || user.email?.split('@')[0] || 'Utilisateur')
-      if (profile?.avatar_path) { const { data: signed } = await supabase.storage.from('profile-avatars').createSignedUrl(profile.avatar_path, 3600); if (mounted) setProfileAvatarUrl(signed?.signedUrl ?? '') }
-    }
-    void loadAccount()
-    const clock = window.setInterval(() => setCurrentTime(new Date()), 60000)
-    return () => { mounted = false; window.clearInterval(clock) }
-  }, [])
-
-  useEffect(() => {
-    if (active !== 'Vue d’ensemble') return
-    let cancelled = false
-    async function loadDashboardStats() {
-      if (!supabase) { setDashboardLoading(false); return }
-      setDashboardLoading(true)
-      setDashboardError('')
-      const [products, levels, docs] = await Promise.all([
-        supabase.from('products').select('id', {count:'exact',head:true}),
-        supabase.from('stock_levels').select('quantity,products(purchase_price,minimum_stock)'),
-        supabase.from('inventory_documents').select('document_type,total_amount,status').eq('status','posted')
-      ])
-      if (cancelled) return
-      const err = products.error || levels.error || docs.error
-      if (err) setDashboardError(err.message)
-      const rows = (levels.data ?? []) as unknown as Array<{quantity:number;products:{purchase_price:number;minimum_stock:number}|null}>
-      const posted = docs.data ?? []
-      setDashboardStats({
-        products: products.count ?? 0,
-        stockValue: rows.reduce((sum,row)=>sum+Number(row.quantity||0)*Number(row.products?.purchase_price||0),0),
-        purchases: posted.filter(row=>row.document_type==='purchase').reduce((sum,row)=>sum+Number(row.total_amount||0),0),
-        sales: posted.filter(row=>row.document_type==='sale').reduce((sum,row)=>sum+Number(row.total_amount||0),0),
-        lowStock: rows.filter(row=>Number(row.quantity||0)<=Number(row.products?.minimum_stock||0)).length
-      })
-      setDashboardLoading(false)
-    }
-    void loadDashboardStats()
-    return ()=>{cancelled=true}
-  }, [active])
 
   useEffect(() => {
     document.documentElement.dataset.theme = darkTheme ? 'dark' : 'light'
@@ -230,56 +177,7 @@ function Dashboard() {
           </div>
         </header>
 
-        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : active === 'Administration' ? <Administration /> : active === 'Paramètres' ? <SettingsPage /> : active === 'Centre d’aide' ? <HelpCenter /> : active === 'Abonnement' ? <SubscriptionPage /> : active === 'Mon profil' ? <ProfilePage /> : <div className="content">
-          <section className="welcome-hero">
-            <span className="welcome-orb welcome-orb-one" aria-hidden="true" />
-            <span className="welcome-orb welcome-orb-two" aria-hidden="true" />
-            <span className="welcome-particle welcome-particle-one" aria-hidden="true" />
-            <span className="welcome-particle welcome-particle-two" aria-hidden="true" />
-            <span className="welcome-particle welcome-particle-three" aria-hidden="true" />
-            <div className="welcome-hero-content">
-              <div className="welcome-eyebrow"><span className="welcome-live-dot" /> {company.name.toUpperCase()} <span className="welcome-eyebrow-divider">/</span> ESPACE DE GESTION</div>
-              <h1>{greeting}{displayName ? ', ' : ''}{displayName || 'et bienvenue'} <span className="welcome-wave" aria-label="salutations">👋</span></h1>
-              <p>{welcomeMessage}</p>
-              <div className="welcome-date"><span className="welcome-date-mark" />{welcomeDate}</div>
-            </div>
-            <div className="welcome-hero-accent" aria-hidden="true">{company.logo_url ? <img src={company.logo_url} alt="" /> : null}</div>
-          </section>
-
-          <section className="quick-actions" aria-label="Actions rapides">
-            {[
-              { label: 'Nouveau produit', icon: Package, target: 'Produits', tone: 'quick-blue' },
-              { label: 'Entrée de stock', icon: ArrowDownLeft, target: 'Mouvements', tone: 'quick-violet' },
-              { label: 'Sortie de stock', icon: ArrowUpRight, target: 'Mouvements', tone: 'quick-orange' },
-              { label: 'Transfert', icon: ArrowLeftRight, target: 'Transferts', tone: 'quick-teal' },
-              { label: 'Inventaire', icon: Boxes, target: 'Inventaires', tone: 'quick-green' },
-              { label: 'Achats', icon: Truck, target: 'Achats', tone: 'quick-cyan' },
-              { label: 'Ventes', icon: ShoppingCart, target: 'Ventes', tone: 'quick-slate' },
-              { label: 'Clients', icon: Users, target: 'Clients', tone: 'quick-navy' },
-            ].map(({ label, icon: Icon, target, tone }) => (
-              <button key={label} className={`quick-action ${tone}`} onClick={() => setActive(target)}>
-                <Icon size={20} strokeWidth={1.9} />
-                <span>{label}</span>
-              </button>
-            ))}
-          </section>
-
-          {!isSupabaseConfigured && <div className="setup-notice"><div><strong>Configuration Supabase requise</strong><p>Le socle visuel est initialisé. Ajoutez vos variables d’environnement pour connecter les données réelles.</p></div><code>VITE_SUPABASE_URL · VITE_SUPABASE_ANON_KEY</code></div>}
-
-          <section className="dashboard-live-section">
-            <div className="dashboard-section-heading"><div><span className="eyebrow">INDICATEURS EN TEMPS RÉEL</span><h2>Activité de votre stock</h2><p>Données issues des enregistrements de votre espace.</p></div><button className="outline-button" onClick={()=>setActive('Rapports')}>Voir les rapports <ArrowUpRight size={14}/></button></div>
-            {dashboardError&&<div className="catalog-error">Impossible de charger certains indicateurs : {dashboardError}</div>}
-            <div className="dashboard-live-grid">
-              <article className="dashboard-live-card"><span>Produits enregistrés</span><strong>{dashboardLoading?'—':dashboardStats.products.toLocaleString('fr-FR')}</strong><small>Catalogue produits</small></article>
-              <article className="dashboard-live-card"><span>Valeur du stock</span><strong>{dashboardLoading?'—':new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(dashboardStats.stockValue)} <small>{company.currency_code||'GNF'}</small></strong><small>Au coût d’achat renseigné</small></article>
-              <article className="dashboard-live-card"><span>Achats validés</span><strong>{dashboardLoading?'—':new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(dashboardStats.purchases)} <small>{company.currency_code||'GNF'}</small></strong><small>Total des achats comptabilisés</small></article>
-              <article className="dashboard-live-card"><span>Ventes validées</span><strong>{dashboardLoading?'—':new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(dashboardStats.sales)} <small>{company.currency_code||'GNF'}</small></strong><small>Total des ventes comptabilisées</small></article>
-              <article className="dashboard-live-card"><span>Références à réapprovisionner</span><strong>{dashboardLoading?'—':dashboardStats.lowStock.toLocaleString('fr-FR')}</strong><small>Seuil minimum atteint ou dépassé</small></article>
-            </div>
-            {!dashboardLoading&&!dashboardError&&dashboardStats.products===0&&<div className="dashboard-empty-note"><Boxes size={18}/> Aucun produit n’est encore enregistré. Les indicateurs se rempliront avec vos données réelles.</div>}
-          </section>
-          <footer className="footer"><span>© {currentTime.getFullYear()} {company.legal_name || company.name} · Gestion intelligente des stocks</span><span><i className="footer-dot"/> Plateforme prête pour configuration</span></footer>
-        </div>}
+        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : active === 'Administration' ? <Administration /> : active === 'Paramètres' ? <SettingsPage /> : active === 'Centre d’aide' ? <HelpCenter /> : active === 'Abonnement' ? <SubscriptionPage /> : active === 'Mon profil' ? <ProfilePage /> : <DashboardOverview onNavigate={setActive} />
       </main>
     </div>
   )
