@@ -18,11 +18,11 @@ import SubscriptionPage from './components/SubscriptionPage'
 import ProfilePage from './components/ProfilePage'
 import DashboardOverview from './components/DashboardOverview'
 import {
-  Activity, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
+  Activity, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
   ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package, LogOut,
   Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound, Sun, Moon,
 } from 'lucide-react'
-import { isSupabaseConfigured, supabase } from './lib/supabase'
+import { supabase } from './lib/supabase'
 import { TenantSettingsProvider, useTenantSettings } from './contexts/TenantSettingsContext'
 
 const navigation = [
@@ -55,6 +55,30 @@ function Dashboard() {
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [profileEmail, setProfileEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
+  const company = useTenantSettings()
+  const [currentTime, setCurrentTime] = useState(() => new Date())
+  const profileMenuAnchorRef = useRef<HTMLDivElement>(null)
+  const profileDropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    let mounted = true
+    async function loadAccount() {
+      if (!supabase) return
+      const { data } = await supabase.auth.getUser()
+      const user = data.user
+      if (!mounted || !user) return
+      setProfileEmail(user.email ?? '')
+      const { data: profile } = await supabase.from('profiles').select('full_name,avatar_path').eq('id', user.id).maybeSingle()
+      if (mounted) setDisplayName(profile?.full_name?.trim() || String(user.user_metadata?.full_name ?? '').trim() || user.email?.split('@')[0] || 'Utilisateur')
+      if (profile?.avatar_path) {
+        const { data: signed } = await supabase.storage.from('profile-avatars').createSignedUrl(profile.avatar_path, 3600)
+        if (mounted) setProfileAvatarUrl(signed?.signedUrl ?? '')
+      }
+    }
+    void loadAccount()
+    const clock = window.setInterval(() => setCurrentTime(new Date()), 60000)
+    return () => { mounted = false; window.clearInterval(clock) }
+  }, [])
 
 
   useEffect(() => {
