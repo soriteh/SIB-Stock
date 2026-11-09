@@ -95,7 +95,7 @@ function Dashboard() {
       if (cancelled) return
       const err = products.error || levels.error || docs.error
       if (err) setDashboardError(err.message)
-      const rows = (levels.data ?? []) as Array<{quantity:number;products:{purchase_price:number;minimum_stock:number}|null}>
+      const rows = (levels.data ?? []) as unknown as Array<{quantity:number;products:{purchase_price:number;minimum_stock:number}|null}>
       const posted = docs.data ?? []
       setDashboardStats({
         products: products.count ?? 0,
