@@ -1,5 +1,5 @@
 import {useCallback,useEffect,useMemo,useState} from 'react'
-import {Activity,ArrowDownLeft,ArrowUpRight,Boxes,Building2,CalendarDays,Clock3,Package,RefreshCw,ShoppingCart,Truck,Wallet} from 'lucide-react'
+import {Activity,ArrowDownLeft,ArrowUpRight,Boxes,Building2,CalendarDays,Clock3,Package,Plus,RefreshCw,ShoppingCart,Truck,Wallet,ClipboardList,ArrowLeftRight} from 'lucide-react'
 import {supabase} from '../lib/supabase'
 import {formatTenantMoney,useTenantSettings} from '../contexts/TenantSettingsContext'
 
@@ -11,7 +11,7 @@ type Account={id:string;name:string;account_type:'cash'|'bank';current_balance:n
 type Fin={id:string;transaction_type:string;amount:number;created_at:string}
 const dayKey=(d:Date)=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return y+'-'+m+'-'+day}
 const labels:Record<string,string>={opening:'Stock initial',receipt:'Réception',sale:'Sortie / vente',transfer_in:'Transfert entrant',transfer_out:'Transfert sortant',adjustment_in:'Ajustement positif',adjustment_out:'Ajustement négatif',customer_return:'Retour client',supplier_return:'Retour fournisseur',reversal:'Annulation'}
-export default function DashboardOverview({onNavigate}:{onNavigate:(section:string)=>void}){
+export default function DashboardOverview({onNavigate,displayName}:{onNavigate:(section:string)=>void;displayName:string}){
  const company=useTenantSettings(),currency=company.currency_code||'GNF'
  const money=(n:number)=>formatTenantMoney(n,currency)
  const [levels,setLevels]=useState<Level[]>([]),[moves,setMoves]=useState<Move[]>([]),[docs,setDocs]=useState<Doc[]>([]),[accounts,setAccounts]=useState<Account[]>([]),[finance,setFinance]=useState<Fin[]>([])
@@ -54,8 +54,14 @@ export default function DashboardOverview({onNavigate}:{onNavigate:(section:stri
  const topProducts=useMemo(()=>{const grouped=new Map<string,{product:Product;quantity:number;value:number}>();for(const row of levels){if(!row.products)continue;const old=grouped.get(row.product_id)||{product:row.products,quantity:0,value:0};old.quantity+=Number(row.quantity||0);old.value+=Number(row.quantity||0)*Number(row.products.purchase_price||0);grouped.set(row.product_id,old)}return [...grouped.values()].sort((a,b)=>b.value-a.value).slice(0,5)},[levels])
  const latest=moves.slice(0,6)
  const totalTop=Math.max(1,...topProducts.map(x=>x.value))
+ const hour=Number(new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',hourCycle:'h23',timeZone:company.timezone||'Africa/Conakry'}).format(now))
+ const greeting=hour>=5&&hour<12?'Bonjour':hour>=12&&hour<18?'Bon après-midi':hour>=18&&hour<22?'Bonsoir':'Bonne nuit'
+ const welcomeText=hour>=5&&hour<12?'Nous vous souhaitons une excellente matinée de travail.':hour>=12&&hour<18?'Nous vous souhaitons un excellent après-midi de travail.':hour>=18&&hour<22?'Nous vous souhaitons une agréable soirée.':'Nous vous souhaitons une excellente nuit.'
+ const shortcuts=[{label:'Nouveau produit',icon:Plus,section:'Produits'},{label:'Entrée / sortie',icon:ArrowLeftRight,section:'Mouvements'},{label:'Nouvel achat',icon:Truck,section:'Achats'},{label:'Nouvelle vente',icon:ShoppingCart,section:'Ventes'},{label:'Faire un inventaire',icon:ClipboardList,section:'Inventaires'},{label:'Consulter les rapports',icon:Activity,section:'Rapports'}]
  return <div className="content dashboard-page">
+  <section className="dashboard-welcome"><div className="dashboard-welcome-copy"><span className="dashboard-welcome-brand"><i/> SORITECH INNOV BUSINESS <b>/</b> ESPACE DE GESTION</span><h2>{greeting}, {displayName||'Utilisateur'} <span aria-hidden="true">👋</span></h2><p>{welcomeText}</p><div className="dashboard-welcome-date"><CalendarDays size={14}/>{new Intl.DateTimeFormat('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:company.timezone||'Africa/Conakry'}).format(now)}</div></div>{company.logo_url&&<img className="dashboard-welcome-logo" src={company.logo_url} alt={'Logo '+company.name}/>}</section>
   <div className="dashboard-toolbar"><div><span className="eyebrow"><span className="live-dot"/> PILOTAGE DES STOCKS</span><h2>Synthèse de l’activité</h2><p>Vue consolidée des stocks, des achats, des ventes et de la trésorerie.</p></div><button className="outline-button" onClick={()=>void load()} disabled={loading}><RefreshCw size={14} className={loading?'spin':''}/> Actualiser</button></div>
+  <section className="dashboard-shortcuts"><div className="dashboard-shortcuts-heading"><h3>Raccourcis</h3><span>Accès rapide aux opérations</span></div><div className="dashboard-shortcuts-grid">{shortcuts.map(({label,icon:Icon,section})=><button key={section} onClick={()=>onNavigate(section)}><Icon size={17}/><span>{label}</span></button>)}</div></section>
   {error&&<div className="catalog-error">Certaines données n’ont pas pu être chargées : {error}</div>}
   <section className="dashboard-kpi-grid">
    <article className="dashboard-kpi"><div className="dashboard-kpi-icon green"><ArrowDownLeft size={19}/></div><div><span>ENTRÉES AUJOURD’HUI</span><strong>{loading?'—':moves14.filter(x=>x.created_at.slice(0,10)===today&&Number(x.quantity_delta)>0).reduce((s,x)=>s+Number(x.quantity_delta),0).toLocaleString('fr-FR')}</strong><small>Quantités reçues</small></div></article>
