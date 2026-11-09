@@ -61,6 +61,8 @@ function Dashboard() {
   const [query, setQuery] = useState('')
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [notificationsOpen, setNotificationsOpen] = useState(false)
+  const [topProfileOpen, setTopProfileOpen] = useState(false)
+  const [profileAvatarUrl, setProfileAvatarUrl] = useState('')
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [profileEmail, setProfileEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
@@ -77,8 +79,9 @@ function Dashboard() {
       const user = data.user
       if (!mounted || !user) return
       setProfileEmail(user.email ?? '')
-      const { data: profile } = await supabase.from('profiles').select('full_name').eq('id', user.id).maybeSingle()
+      const { data: profile } = await supabase.from('profiles').select('full_name,avatar_path').eq('id', user.id).maybeSingle()
       if (mounted) setDisplayName(profile?.full_name?.trim() || String(user.user_metadata?.full_name ?? '').trim() || user.email?.split('@')[0] || 'Utilisateur')
+      if (profile?.avatar_path) { const { data: signed } = await supabase.storage.from('profile-avatars').createSignedUrl(profile.avatar_path, 3600); if (mounted) setProfileAvatarUrl(signed?.signedUrl ?? '') }
     }
     void loadAccount()
     const clock = window.setInterval(() => setCurrentTime(new Date()), 60000)
@@ -93,6 +96,7 @@ function Dashboard() {
       }
       if (event.key === 'Escape') {
         setNotificationsOpen(false)
+        setTopProfileOpen(false)
         searchInputRef.current?.blur()
       }
     }
@@ -190,7 +194,10 @@ function Dashboard() {
               <button className={notificationsOpen?"icon-button notification-button is-open":"icon-button notification-button"} aria-label="Notifications" aria-expanded={notificationsOpen} onClick={()=>setNotificationsOpen(v=>!v)}><Bell size={21}/><i/></button>
               {notificationsOpen&&<div className="top-notification-panel"><div className="top-notification-heading"><strong>Notifications</strong><button type="button" onClick={()=>setNotificationsOpen(false)} aria-label="Fermer">×</button></div><div className="top-notification-empty"><span><Bell size={20}/></span><strong>Aucune notification à afficher</strong><p>Les alertes et informations importantes apparaîtront ici.</p></div></div>}
             </div>
-            <button className="top-avatar top-avatar-button" aria-label="Ouvrir mon profil" title={displayName||"Mon profil"} onClick={() => setActive('Mon profil')}><UserRound size={20}/></button>
+            <div className="top-profile-wrap">
+              <button className="top-avatar top-avatar-button" aria-label="Ouvrir le menu du profil" aria-haspopup="menu" aria-expanded={topProfileOpen} title={displayName||"Mon profil"} onClick={() => setTopProfileOpen(v=>!v)}>{profileAvatarUrl?<img src={profileAvatarUrl} alt="Photo de profil"/>:<UserRound size={18}/>}</button>
+              {topProfileOpen&&<div className="top-profile-menu" role="menu" aria-label="Menu du profil"><div className="top-profile-identity">{profileAvatarUrl?<img src={profileAvatarUrl} alt=""/>:<span className="top-profile-initial">{(displayName||profileEmail||'U').slice(0,1).toUpperCase()}</span>}<div><strong>{displayName||'Utilisateur'}</strong><small>{profileEmail||'Compte utilisateur'}</small></div></div><div className="top-profile-divider"/><button role="menuitem" onClick={()=>{setActive('Mon profil');setTopProfileOpen(false)}}><UserRound size={15}/> Mon profil</button><button role="menuitem" onClick={()=>{setActive('Paramètres');setTopProfileOpen(false)}}><Settings size={15}/> Paramètres</button><button role="menuitem" onClick={()=>{setActive('Centre d’aide');setTopProfileOpen(false)}}><CircleHelp size={15}/> Centre d’aide</button><div className="top-profile-divider"/><button role="menuitem" className="top-profile-logout" onClick={()=>{setTopProfileOpen(false);void signOut()}}><LogOut size={15}/> Déconnexion</button></div>}
+            </div>
           </div>
         </header>
 
