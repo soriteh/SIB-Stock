@@ -20,7 +20,7 @@ import DashboardOverview from './components/DashboardOverview'
 import {
   Activity, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
   ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package, LogOut,
-  Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound, Sun, Moon,
+  Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound, Sun, Moon, Menu, PanelLeftClose,
 } from 'lucide-react'
 import { supabase } from './lib/supabase'
 import { TenantSettingsProvider, useTenantSettings } from './contexts/TenantSettingsContext'
@@ -46,6 +46,8 @@ const navigation = [
 
 function Dashboard() {
   const [active, setActive] = useState('Vue d’ensemble')
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [notificationsOpen, setNotificationsOpen] = useState(false)
@@ -147,7 +149,8 @@ function Dashboard() {
   function openProfileSection(section: string) { setActive(section); setProfileMenuOpen(false) }
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell${sidebarCollapsed ? " sidebar-is-collapsed" : ""}${mobileSidebarOpen ? " mobile-sidebar-open" : ""}`}>
+      {mobileSidebarOpen && <button type="button" className="sidebar-backdrop" aria-label="Fermer le menu" onClick={() => setMobileSidebarOpen(false)} />}
       <aside className="sidebar">
         <div className="brand">
           <div className={company.id ? (company.logo_url ? "brand-mark has-custom-logo" : "brand-mark") : "brand-mark brand-mark-loading"}>{company.id ? (company.logo_url ? <img src={company.logo_url} alt={"Logo "+company.name} /> : <>S<span>I</span>B</>) : null}</div>
@@ -162,15 +165,15 @@ function Dashboard() {
           <div className="nav-label">ESPACE DE TRAVAIL</div>
           <nav className="navigation">
             {navigation.map(({ label, icon: Icon }) => (
-              <button key={label} className={active === label ? 'nav-item active' : 'nav-item'} onClick={() => setActive(label)}>
+              <button key={label} className={active === label ? 'nav-item active' : 'nav-item'} onClick={() => { setActive(label); setMobileSidebarOpen(false) }}>
                 <Icon size={18} strokeWidth={1.8} /><span>{label}</span>
               </button>
             ))}
           </nav>
           <div className="sidebar-settings">
             <div className="nav-label">CONFIGURATION</div>
-            <button className={active === 'Paramètres' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Paramètres')}><Settings size={18}/><span>Paramètres</span></button>
-            <button className={active === 'Centre d’aide' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Centre d’aide')}><CircleHelp size={18}/><span>Centre d’aide</span></button>
+            <button className={active === 'Paramètres' ? 'nav-item active' : 'nav-item'} onClick={() => { setActive('Paramètres'); setMobileSidebarOpen(false) }}><Settings size={18}/><span>Paramètres</span></button>
+            <button className={active === 'Centre d’aide' ? 'nav-item active' : 'nav-item'} onClick={() => { setActive('Centre d’aide'); setMobileSidebarOpen(false) }}><CircleHelp size={18}/><span>Centre d’aide</span></button>
           </div>
 
         </div>
@@ -193,7 +196,7 @@ function Dashboard() {
 
       <main className="main-area">
         <header className="topbar">
-          <h1 className="topbar-title">{active}</h1>
+          <div className="topbar-heading"><button type="button" className="sidebar-toggle" aria-label="Ouvrir ou replier le menu" aria-expanded={mobileSidebarOpen || !sidebarCollapsed} onClick={() => { if (window.matchMedia("(max-width: 760px)").matches) setMobileSidebarOpen(v => !v); else setSidebarCollapsed(v => !v) }}>{sidebarCollapsed ? <Menu size={19}/> : <PanelLeftClose size={19}/>}</button><h1 className="topbar-title">{active}</h1></div>
           <div className="top-actions">
             <div className="topbar-datetime"><strong>{formattedClock}</strong><span>{welcomeDate}</span></div>
             <label className="search-box" aria-label="Rechercher dans les mouvements récents"><Search size={19}/><input ref={searchInputRef} placeholder="Rechercher un produit, une référence..." value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>⌘ K</kbd>{query&&<button type="button" className="search-clear" aria-label="Effacer la recherche" onClick={()=>setQuery('')}>×</button>}</label>
