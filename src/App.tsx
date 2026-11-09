@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import AuthGate from './components/AuthGate'
 import InventoryCatalog from './components/InventoryCatalog'
@@ -131,7 +131,6 @@ function Dashboard() {
 
   async function signOut() { if (!supabase) return; const { error } = await supabase.auth.signOut(); if (error) window.alert(error.message); else setProfileMenuOpen(false) }
   function openProfileSection(section: string) { setActive(section); setProfileMenuOpen(false) }
-  const filtered = []
 
   return (
     <div className="app-shell">
