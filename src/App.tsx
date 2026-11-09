@@ -82,6 +82,17 @@ function Dashboard() {
 
 
   useEffect(() => {
+    const iconHref = company.logo_url || '/favicon.svg'
+    let icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')
+    if (!icon) { icon = document.createElement('link'); icon.rel = 'icon'; document.head.appendChild(icon) }
+    icon.href = iconHref
+    icon.type = company.logo_url ? (company.logo_url.toLowerCase().includes('.svg') ? 'image/svg+xml' : 'image/png') : 'image/svg+xml'
+    let shortcut = document.querySelector<HTMLLinkElement>('link[rel="shortcut icon"]')
+    if (!shortcut) { shortcut = document.createElement('link'); shortcut.rel = 'shortcut icon'; document.head.appendChild(shortcut) }
+    shortcut.href = iconHref
+  }, [company.logo_url])
+
+  useEffect(() => {
     document.documentElement.dataset.theme = darkTheme ? 'dark' : 'light'
     try { localStorage.setItem('sib-stock-theme', darkTheme ? 'dark' : 'light') } catch {}
   }, [darkTheme])
