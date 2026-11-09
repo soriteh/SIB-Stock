@@ -104,10 +104,9 @@ function Dashboard() {
 
   const clockParts = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', hourCycle: 'h23', timeZone: company.timezone || 'Africa/Conakry' }).formatToParts(currentTime)
   const hour = Number(clockParts.find(part => part.type === 'hour')?.value ?? '0')
-  const greeting = hour >= 5 && hour < 12 ? 'Bonjour' : hour >= 12 && hour < 18 ? 'Bon après-midi' : hour >= 18 && hour < 22 ? 'Bonsoir' : 'Bonne nuit'
-  const welcomeMessage = hour >= 5 && hour < 12 ? 'Nous vous souhaitons une excellente matinée de travail.' : hour >= 12 && hour < 18 ? 'Nous vous souhaitons un excellent après-midi de travail.' : hour >= 18 && hour < 22 ? 'Nous vous souhaitons une agréable soirée.' : 'Nous vous souhaitons une excellente nuit.'
   const formattedDate = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: company.timezone || 'Africa/Conakry' }).format(currentTime)
   const welcomeDate = formattedDate.charAt(0).toLocaleUpperCase('fr-FR') + formattedDate.slice(1)
+  const formattedClock = new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit',timeZone:company.timezone||'Africa/Conakry'}).format(currentTime)
 
   useEffect(() => {
     if (!profileMenuOpen) return
