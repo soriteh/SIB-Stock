@@ -54,6 +54,9 @@ function Dashboard() {
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [profileEmail, setProfileEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
+  const [dashboardStats, setDashboardStats] = useState({products:0,stockValue:0,purchases:0,sales:0,lowStock:0})
+  const [dashboardLoading, setDashboardLoading] = useState(true)
+  const [dashboardError, setDashboardError] = useState('')
   const company = useTenantSettings()
   const [currentTime, setCurrentTime] = useState(() => new Date())
   const formattedClock = new Intl.DateTimeFormat('fr-FR', {hour:'2-digit',minute:'2-digit',timeZone: company.timezone || 'Africa/Conakry'}).format(currentTime)
@@ -76,6 +79,36 @@ function Dashboard() {
     const clock = window.setInterval(() => setCurrentTime(new Date()), 60000)
     return () => { mounted = false; window.clearInterval(clock) }
   }, [])
+
+  useEffect(() => {
+    if (active !== 'Vue d’ensemble') return
+    let cancelled = false
+    async function loadDashboardStats() {
+      if (!supabase) { setDashboardLoading(false); return }
+      setDashboardLoading(true)
+      setDashboardError('')
+      const [products, levels, docs] = await Promise.all([
+        supabase.from('products').select('id', {count:'exact',head:true}),
+        supabase.from('stock_levels').select('quantity,products(purchase_price,minimum_stock)'),
+        supabase.from('inventory_documents').select('document_type,total_amount,status').eq('status','posted')
+      ])
+      if (cancelled) return
+      const err = products.error || levels.error || docs.error
+      if (err) setDashboardError(err.message)
+      const rows = (levels.data ?? []) as Array<{quantity:number;products:{purchase_price:number;minimum_stock:number}|null}>
+      const posted = docs.data ?? []
+      setDashboardStats({
+        products: products.count ?? 0,
+        stockValue: rows.reduce((sum,row)=>sum+Number(row.quantity||0)*Number(row.products?.purchase_price||0),0),
+        purchases: posted.filter(row=>row.document_type==='purchase').reduce((sum,row)=>sum+Number(row.total_amount||0),0),
+        sales: posted.filter(row=>row.document_type==='sale').reduce((sum,row)=>sum+Number(row.total_amount||0),0),
+        lowStock: rows.filter(row=>Number(row.quantity||0)<=Number(row.products?.minimum_stock||0)).length
+      })
+      setDashboardLoading(false)
+    }
+    void loadDashboardStats()
+    return ()=>{cancelled=true}
+  }, [active])
 
   useEffect(() => {
     document.documentElement.dataset.theme = darkTheme ? 'dark' : 'light'
@@ -231,11 +264,17 @@ function Dashboard() {
 
           {!isSupabaseConfigured && <div className="setup-notice"><div><strong>Configuration Supabase requise</strong><p>Le socle visuel est initialisé. Ajoutez vos variables d’environnement pour connecter les données réelles.</p></div><code>VITE_SUPABASE_URL · VITE_SUPABASE_ANON_KEY</code></div>}
 
-          <section className="dashboard-empty-state">
-            <div className="dashboard-empty-icon"><Boxes size={25}/></div>
-            <h2>Vos données de stock apparaîtront ici</h2>
-            <p>Aucune statistique, alerte ou opération de démonstration n’est affichée. Enregistrez vos produits et vos mouvements pour consulter des indicateurs issus de vos données réelles.</p>
-            <div className="dashboard-empty-actions"><button className="primary-button" onClick={()=>setActive('Produits')}>Ajouter des produits</button><button className="outline-button" onClick={()=>setActive('Mouvements')}>Consulter les mouvements</button></div>
+          <section className="dashboard-live-section">
+            <div className="dashboard-section-heading"><div><span className="eyebrow">INDICATEURS EN TEMPS RÉEL</span><h2>Activité de votre stock</h2><p>Données issues des enregistrements de votre espace.</p></div><button className="outline-button" onClick={()=>setActive('Rapports')}>Voir les rapports <ArrowUpRight size={14}/></button></div>
+            {dashboardError&&<div className="catalog-error">Impossible de charger certains indicateurs : {dashboardError}</div>}
+            <div className="dashboard-live-grid">
+              <article className="dashboard-live-card"><span>Produits enregistrés</span><strong>{dashboardLoading?'—':dashboardStats.products.toLocaleString('fr-FR')}</strong><small>Catalogue produits</small></article>
+              <article className="dashboard-live-card"><span>Valeur du stock</span><strong>{dashboardLoading?'—':new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(dashboardStats.stockValue)} <small>{company.currency_code||'GNF'}</small></strong><small>Au coût d’achat renseigné</small></article>
+              <article className="dashboard-live-card"><span>Achats validés</span><strong>{dashboardLoading?'—':new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(dashboardStats.purchases)} <small>{company.currency_code||'GNF'}</small></strong><small>Total des achats comptabilisés</small></article>
+              <article className="dashboard-live-card"><span>Ventes validées</span><strong>{dashboardLoading?'—':new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(dashboardStats.sales)} <small>{company.currency_code||'GNF'}</small></strong><small>Total des ventes comptabilisées</small></article>
+              <article className="dashboard-live-card"><span>Références à réapprovisionner</span><strong>{dashboardLoading?'—':dashboardStats.lowStock.toLocaleString('fr-FR')}</strong><small>Seuil minimum atteint ou dépassé</small></article>
+            </div>
+            {!dashboardLoading&&!dashboardError&&dashboardStats.products===0&&<div className="dashboard-empty-note"><Boxes size={18}/> Aucun produit n’est encore enregistré. Les indicateurs se rempliront avec vos données réelles.</div>}
           </section>
           <footer className="footer"><span>© {currentTime.getFullYear()} {company.legal_name || company.name} · Gestion intelligente des stocks</span><span><i className="footer-dot"/> Plateforme prête pour configuration</span></footer>
         </div>}
