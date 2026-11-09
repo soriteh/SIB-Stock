@@ -122,7 +122,7 @@ function Dashboard() {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand">
-          <div className={company.logo_url ? "brand-mark has-custom-logo" : "brand-mark"}>{company.logo_url ? <img src={company.logo_url} alt={"Logo "+company.name}/> : <>S<span>I</span>B</>}</div>
+          <div className={company.id ? (company.logo_url ? "brand-mark has-custom-logo" : "brand-mark") : "brand-mark brand-mark-loading"}>{company.id ? (company.logo_url ? <img src={company.logo_url} alt={"Logo "+company.name} /> : <>S<span>I</span>B</>) : null}</div>
           <div><strong>{company.name || "SIB Stock"}</strong></div>
         </div>
         <div className="sidebar-scroll">
