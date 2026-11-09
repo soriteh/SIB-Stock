@@ -76,7 +76,7 @@ function Dashboard() {
       }
     }
     void loadAccount()
-    const clock = window.setInterval(() => setCurrentTime(new Date()), 60000)
+    const clock = window.setInterval(() => setCurrentTime(new Date()), 30000)
     return () => { mounted = false; window.clearInterval(clock) }
   }, [])
 
@@ -113,9 +113,9 @@ function Dashboard() {
     return () => window.removeEventListener('keydown', handleShortcut)
   }, [])
 
-  const formattedDate = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: company.timezone || 'Africa/Conakry' }).format(currentTime)
+  const formattedDate = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Africa/Conakry' }).format(currentTime)
   const welcomeDate = formattedDate.charAt(0).toLocaleUpperCase('fr-FR') + formattedDate.slice(1)
-  const formattedClock = new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit',timeZone:company.timezone||'Africa/Conakry'}).format(currentTime)
+  const formattedClock = new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit',timeZone:'Africa/Conakry'}).format(currentTime)
 
   useEffect(() => {
     if (!profileMenuOpen) return
