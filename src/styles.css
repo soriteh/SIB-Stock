@@ -857,7 +857,7 @@ th{font-size:9px}td{font-size:10px}
 
 
 /* Enforce compact welcome banner dimensions on the dashboard */
-.dashboard-page > section.dashboard-welcome{display:flex!important;height:198px!important;min-height:198px!important;max-height:198px!important;flex:0 0 198px!important;box-sizing:border-box!important;padding:26px 33px!important;margin:0 0 21px!important;overflow:hidden!important;align-items:center!important}
+.dashboard-page > section.dashboard-welcome{display:flex!important;height:160px!important;min-height:160px!important;max-height:160px!important;flex:0 0 160px!important;box-sizing:border-box!important;padding:18px 30px!important;margin:0 0 21px!important;overflow:hidden!important;align-items:center!important}
 .dashboard-page > section.dashboard-welcome .dashboard-welcome-copy{width:100%;min-width:0}
 .dashboard-page > section.dashboard-welcome .dashboard-welcome-brand,.dashboard-page > section.dashboard-welcome .dashboard-welcome-logo{display:none!important}
 .dashboard-page > section.dashboard-welcome h2{font-size:44px!important;line-height:1.12!important;margin:0 0 12px!important}
