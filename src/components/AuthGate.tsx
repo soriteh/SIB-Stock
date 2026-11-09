@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
-import { ArrowRight, Building2, LoaderCircle, LogOut, Package } from 'lucide-react'
+import { ArrowRight, Building2, LoaderCircle, LogOut } from 'lucide-react'
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 
 type TenantSummary = { id: string; name: string; slug: string; status: string }
