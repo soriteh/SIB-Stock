@@ -1004,3 +1004,91 @@ th{font-size:9px}td{font-size:10px}
  .main-area{container-type:normal;width:100%!important;max-width:100%;flex:1 1 100%}
  .app-shell.sidebar-is-collapsed .main-area{width:100%!important}
 }
+
+ 
+/* SIB Stock: correct main workspace sizing when sidebar collapses */
+/* Le sidebar est déjà un élément du flex : ne jamais lui ajouter une seconde marge. */
+@media (min-width:761px){
+  .app-shell{
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:stretch!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    gap:0!important;
+  }
+  .app-shell>.sidebar{
+    position:relative!important;
+    inset:auto!important;
+    flex:0 0 276px!important;
+    width:276px!important;
+    min-width:276px!important;
+    max-width:276px!important;
+    margin:0!important;
+    transform:none!important;
+    transition:flex-basis .22s ease,width .22s ease,min-width .22s ease,padding .22s ease!important;
+  }
+  .app-shell.sidebar-is-collapsed>.sidebar{
+    flex:0 0 68px!important;
+    width:68px!important;
+    min-width:68px!important;
+    max-width:68px!important;
+  }
+  .app-shell>.main-area,
+  .app-shell.sidebar-is-collapsed>.main-area{
+    position:relative!important;
+    display:block!important;
+    flex:1 1 0%!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    margin:0!important;
+    left:auto!important;
+    right:auto!important;
+    transform:none!important;
+    overflow-x:hidden!important;
+    transition:none!important;
+    container-type:inline-size!important;
+    container-name:workspace!important;
+  }
+  .app-shell>.main-area>.topbar{
+    width:100%!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+  }
+  .app-shell>.main-area>.content{
+    width:100%!important;
+    max-width:1800px!important;
+    min-width:0!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    box-sizing:border-box!important;
+  }
+  .app-shell>.main-area :is(.stats-grid,.middle-grid,.quick-actions,.report-grid,.settings-grid,.finance-account-grid,.dashboard-grid){
+    min-width:0!important;
+    max-width:100%!important;
+  }
+  .app-shell>.main-area :is(.stats-grid,.middle-grid,.report-grid,.settings-grid,.finance-account-grid){
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))!important;
+  }
+  .app-shell>.main-area :is(.quick-actions){
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,135px),1fr))!important;
+  }
+  .app-shell>.main-area :is(.table-wrap,.table-container,.table-wrapper,.data-table-wrapper){
+    max-width:100%!important;
+    min-width:0!important;
+    overflow-x:auto!important;
+  }
+}
+@media(max-width:760px){
+  .app-shell>.main-area,
+  .app-shell.sidebar-is-collapsed>.main-area{
+    margin:0!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    flex:1 1 100%!important;
+  }
+}
+
