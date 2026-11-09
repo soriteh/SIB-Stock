@@ -801,3 +801,30 @@ th{font-size:9px}td{font-size:10px}
 @media(max-width:1000px){.dashboard-shortcuts-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:650px){.dashboard-welcome{min-height:170px;padding:22px;border-radius:16px}.dashboard-welcome-logo{width:82px;height:70px}.dashboard-welcome-brand{font-size:8px;letter-spacing:1px;gap:6px;margin-bottom:17px}.dashboard-welcome h2{font-size:24px}.dashboard-welcome p{font-size:12px}.dashboard-welcome-date{margin-top:17px;font-size:10px}.dashboard-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-shortcuts-grid button{justify-content:flex-start}}
 @media(max-width:390px){.dashboard-welcome-logo{display:none}.dashboard-shortcuts-heading>span{font-size:9px}}
+
+
+/* Dashboard hero and eight large shortcut tiles — reference layout */
+.dashboard-welcome{height:198px;min-height:198px;margin:0 0 21px;padding:30px 33px;border-radius:23px}
+.dashboard-welcome-brand{display:none}
+.dashboard-welcome-copy{width:100%}
+.dashboard-welcome h2{font-size:clamp(30px,3.2vw,44px);line-height:1.12;margin:0 0 12px;letter-spacing:-1.5px}
+.dashboard-welcome p{font-size:clamp(15px,1.55vw,21px);line-height:1.3}
+.dashboard-welcome-date{margin-top:18px;font-size:16px}
+.dashboard-welcome-logo{display:none}
+.dashboard-shortcuts{margin:0 0 18px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.dashboard-shortcuts-heading{display:none}
+.dashboard-shortcuts-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:14px}
+.dashboard-shortcuts-grid button.dashboard-shortcut{height:112px;min-height:112px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:11px;padding:12px 8px;border:0;border-radius:18px;color:#fff;font-size:16px;font-weight:750;line-height:1.25;text-align:center;box-shadow:0 7px 16px rgba(20,40,70,.14);transition:transform .18s,filter .18s,box-shadow .18s}
+.dashboard-shortcuts-grid button.dashboard-shortcut:hover{transform:translateY(-3px);filter:brightness(1.06);border:0;box-shadow:0 11px 20px rgba(20,40,70,.2)}
+.dashboard-shortcuts-grid button.dashboard-shortcut svg{width:22px;height:22px;color:#fff}
+.dashboard-shortcuts-grid button.dashboard-shortcut.blue{background:linear-gradient(135deg,#3479ee,#1e4fd6)}
+.dashboard-shortcuts-grid button.dashboard-shortcut.violet{background:linear-gradient(135deg,#8850ef,#6c2ad8)}
+.dashboard-shortcuts-grid button.dashboard-shortcut.orange{background:linear-gradient(135deg,#f69a08,#ed5c0a)}
+.dashboard-shortcuts-grid button.dashboard-shortcut.teal{background:linear-gradient(135deg,#13a7b6,#087b91)}
+.dashboard-shortcuts-grid button.dashboard-shortcut.green{background:linear-gradient(135deg,#10b981,#00805e)}
+.dashboard-shortcuts-grid button.dashboard-shortcut.cyan{background:linear-gradient(135deg,#08b3ce,#0074a8)}
+.dashboard-shortcuts-grid button.dashboard-shortcut.gray{background:linear-gradient(135deg,#999,#5e5e5e)}
+.dashboard-shortcuts-grid button.dashboard-shortcut.navy{background:linear-gradient(135deg,#46546b,#1d293b)}
+:root[data-theme="dark"] .dashboard-shortcuts{background:transparent}
+@media(max-width:1100px){.dashboard-shortcuts-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:650px){.dashboard-welcome{height:auto;min-height:180px;padding:24px 22px;border-radius:17px}.dashboard-welcome h2{font-size:27px}.dashboard-welcome p{font-size:14px}.dashboard-welcome-date{font-size:12px}.dashboard-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.dashboard-shortcuts-grid button.dashboard-shortcut{height:94px;min-height:94px;font-size:14px;border-radius:14px}}
