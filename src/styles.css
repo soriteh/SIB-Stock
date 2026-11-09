@@ -688,3 +688,20 @@ th{font-size:9px}td{font-size:10px}
 :root[data-theme="dark"] .topbar-datetime strong{color:#edf4ff}
 @media(max-width:760px){.topbar-datetime{min-width:94px;padding:0}.topbar-datetime strong{font-size:12px}.topbar-datetime span{font-size:9px}}
 @media(max-width:520px){.topbar-datetime{min-width:auto}.topbar-datetime span{max-width:118px;overflow:hidden;text-overflow:ellipsis}.topbar{align-items:center}}
+
+
+/* Live dashboard metrics */
+.dashboard-live-section{margin:24px 0 30px}
+.dashboard-section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:17px}
+.dashboard-section-heading h2{margin:6px 0 4px;font-size:21px;letter-spacing:-.5px;color:var(--text,#172943)}
+.dashboard-section-heading p{margin:0;color:var(--muted,#8190a5);font-size:12px}
+.dashboard-live-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:13px}
+.dashboard-live-card{min-width:0;padding:18px 18px 16px;border:1px solid var(--border,#e6ecf4);border-radius:15px;background:var(--panel,#fff);box-shadow:0 3px 12px rgba(19,43,75,.035)}
+.dashboard-live-card>span{display:block;color:var(--muted,#7d8ba0);font-size:11px;font-weight:600;min-height:30px}
+.dashboard-live-card>strong{display:block;margin:7px 0 5px;color:var(--text,#182b47);font-size:23px;font-weight:800;letter-spacing:-.6px;overflow-wrap:anywhere}
+.dashboard-live-card>strong small{font-size:10px;font-weight:600;letter-spacing:0;color:var(--muted,#8190a5)}
+.dashboard-live-card>small{display:block;color:var(--muted,#8a97a9);font-size:10px}
+.dashboard-empty-note{display:flex;align-items:center;gap:10px;margin-top:14px;padding:15px;border:1px dashed var(--border,#dce4ef);border-radius:12px;color:var(--muted,#77869b);font-size:12px}
+:root[data-theme="dark"] .dashboard-live-card{background:#13243b;border-color:#263d5c;box-shadow:none}
+:root[data-theme="dark"] .dashboard-live-card>strong,:root[data-theme="dark"] .dashboard-section-heading h2{color:#edf4ff}
+@media(max-width:650px){.dashboard-section-heading{align-items:flex-start;flex-direction:column}.dashboard-live-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-live-card{padding:14px}.dashboard-live-card>strong{font-size:19px}}
