@@ -828,3 +828,11 @@ th{font-size:9px}td{font-size:10px}
 :root[data-theme="dark"] .dashboard-shortcuts{background:transparent}
 @media(max-width:1100px){.dashboard-shortcuts-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:650px){.dashboard-welcome{height:auto;min-height:180px;padding:24px 22px;border-radius:17px}.dashboard-welcome h2{font-size:27px}.dashboard-welcome p{font-size:14px}.dashboard-welcome-date{font-size:12px}.dashboard-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.dashboard-shortcuts-grid button.dashboard-shortcut{height:94px;min-height:94px;font-size:14px;border-radius:14px}}
+
+
+/* Final shortcut layout: 4 columns x 2 rows as in the supplied reference */
+.dashboard-shortcuts-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.dashboard-shortcuts-grid button.dashboard-shortcut{height:140px;min-height:140px;border-radius:25px;gap:14px;font-size:18px}
+.dashboard-shortcuts-grid button.dashboard-shortcut svg{width:27px;height:27px}
+@media(max-width:900px){.dashboard-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.dashboard-shortcuts-grid button.dashboard-shortcut{height:116px;min-height:116px;font-size:15px;border-radius:18px}}
+@media(max-width:480px){.dashboard-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.dashboard-shortcuts-grid button.dashboard-shortcut{height:96px;min-height:96px;font-size:13px;border-radius:14px}}
