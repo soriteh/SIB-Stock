@@ -142,7 +142,7 @@ function Dashboard() {
         <div className="sidebar-scroll">
           <div className="workspace">
             <div className="workspace-icon"><Building2 size={17} /></div>
-            <div className="workspace-copy"><strong>{company.name || "Mon entreprise"}</strong><small>{company.email || company.phone || "Espace de travail"}</small></div>
+            <div className="workspace-copy"><strong>{company.name || "Entreprise non configurée"}</strong><small>{company.email || company.phone || "Coordonnées non renseignées"}</small></div>
             <ChevronDown size={15} />
           </div>
           <div className="nav-label">ESPACE DE TRAVAIL</div>
@@ -158,12 +158,12 @@ function Dashboard() {
             <button className={active === 'Paramètres' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Paramètres')}><Settings size={18}/><span>Paramètres</span></button>
             <button className={active === 'Centre d’aide' ? 'nav-item active' : 'nav-item'} onClick={() => setActive('Centre d’aide')}><CircleHelp size={18}/><span>Centre d’aide</span></button>
           </div>
-          <div className="plan-card"><div className="plan-top"><span>OFFRE BUSINESS</span><span className="plan-dot"/></div><strong>Votre espace évolue</strong><p>Gérez vos stocks et vos équipes depuis un seul endroit.</p><button onClick={() => setActive('Abonnement')}>Gérer l’abonnement <ArrowUpRight size={14}/></button></div>
+
         </div>
         <div className="sidebar-bottom">
           <div className="profile-menu-anchor" ref={profileMenuAnchorRef}>
             {profileMenuOpen && createPortal(<div ref={profileDropdownRef} className="profile-dropdown" role="menu" aria-label="Menu du compte">
-              <div className="profile-dropdown-heading"><div className="profile-dropdown-avatar"><UserRound size={17}/></div><div><strong>Compte utilisateur</strong><small>{profileEmail || "Compte connecté"}</small></div></div>
+              <div className="profile-dropdown-heading"><div className="profile-dropdown-avatar"><UserRound size={17}/></div><div><strong>{displayName || 'Profil utilisateur'}</strong><small>{profileEmail || 'Adresse e-mail non renseignée'}</small></div></div>
               <div className="profile-dropdown-divider"/>
               <button role="menuitem" onClick={() => openProfileSection("Mon profil")}><UserRound size={16}/><span>Mon profil</span></button>
               <button role="menuitem" onClick={() => openProfileSection("Paramètres")}><Settings size={16}/><span>Paramètres</span></button>
@@ -171,7 +171,7 @@ function Dashboard() {
               <div className="profile-dropdown-divider"/>
               <button role="menuitem" className="profile-dropdown-logout" onClick={signOut}><LogOut size={16}/><span>Déconnexion</span></button>
             </div>, document.body)}
-            <button className="profile profile-trigger" aria-expanded={profileMenuOpen} aria-haspopup="menu" onClick={() => setProfileMenuOpen(v => !v)}><div className="avatar"><UserRound size={17}/></div><div><strong>Mon compte</strong><small>{profileEmail || "Compte utilisateur"}</small></div><ChevronDown size={15} className={profileMenuOpen ? "profile-chevron open" : "profile-chevron"}/></button>
+            <button className="profile profile-trigger" aria-expanded={profileMenuOpen} aria-haspopup="menu" onClick={() => setProfileMenuOpen(v => !v)}><div className="avatar"><UserRound size={17}/></div><div><strong>{displayName || 'Mon compte'}</strong><small>{profileEmail || 'Adresse e-mail non renseignée'}</small></div><ChevronDown size={15} className={profileMenuOpen ? "profile-chevron open" : "profile-chevron"}/></button>
           </div>
           <button className="sidebar-logout" onClick={signOut}><LogOut size={16}/><span>Se déconnecter</span></button>
         </div>
