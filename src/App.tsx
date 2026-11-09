@@ -60,6 +60,8 @@ function Dashboard() {
   const [active, setActive] = useState('Vue d’ensemble')
   const [query, setQuery] = useState('')
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+  const [notificationsOpen, setNotificationsOpen] = useState(false)
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const [profileEmail, setProfileEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
   const company = useTenantSettings()
@@ -81,6 +83,21 @@ function Dashboard() {
     void loadAccount()
     const clock = window.setInterval(() => setCurrentTime(new Date()), 60000)
     return () => { mounted = false; window.clearInterval(clock) }
+  }, [])
+
+  useEffect(() => {
+    const handleShortcut = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        searchInputRef.current?.focus()
+      }
+      if (event.key === 'Escape') {
+        setNotificationsOpen(false)
+        searchInputRef.current?.blur()
+      }
+    }
+    window.addEventListener('keydown', handleShortcut)
+    return () => window.removeEventListener('keydown', handleShortcut)
   }, [])
 
   const hour = Number(new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', hourCycle: 'h23', timeZone: company.timezone || 'Africa/Conakry' }).format(currentTime))
@@ -166,11 +183,14 @@ function Dashboard() {
 
       <main className="main-area">
         <header className="topbar">
-          <div className="breadcrumb"><span>Application</span><b>/</b><strong>{active}</strong></div>
+          <h1 className="topbar-title">{active}</h1>
           <div className="top-actions">
-            <div className="search-box"><Search size={16}/><input placeholder="Rechercher un produit, une référence..." value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>⌘ K</kbd></div>
-            <button className="icon-button" aria-label="Notifications"><Bell size={18}/><i/></button>
-            <button className="top-avatar top-avatar-button" aria-label="Ouvrir mon profil" onClick={() => setActive('Mon profil')}><UserRound size={17}/></button>
+            <label className="search-box" aria-label="Rechercher dans les mouvements récents"><Search size={19}/><input ref={searchInputRef} placeholder="Rechercher un produit, une référence..." value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>⌘ K</kbd>{query&&<button type="button" className="search-clear" aria-label="Effacer la recherche" onClick={()=>setQuery('')}>×</button>}</label>
+            <div className="top-notification-wrap">
+              <button className={notificationsOpen?"icon-button notification-button is-open":"icon-button notification-button"} aria-label="Notifications" aria-expanded={notificationsOpen} onClick={()=>setNotificationsOpen(v=>!v)}><Bell size={21}/><i/></button>
+              {notificationsOpen&&<div className="top-notification-panel"><div className="top-notification-heading"><strong>Notifications</strong><button type="button" onClick={()=>setNotificationsOpen(false)} aria-label="Fermer">×</button></div><div className="top-notification-empty"><span><Bell size={20}/></span><strong>Aucune notification à afficher</strong><p>Les alertes et informations importantes apparaîtront ici.</p></div></div>}
+            </div>
+            <button className="top-avatar top-avatar-button" aria-label="Ouvrir mon profil" title={displayName||"Mon profil"} onClick={() => setActive('Mon profil')}><UserRound size={20}/></button>
           </div>
         </header>
 
