@@ -1,5 +1,5 @@
 import {useCallback,useEffect,useMemo,useState} from 'react'
-import {Activity,ArrowDownLeft,ArrowUpRight,Boxes,Building2,CalendarDays,Clock3,Package,Plus,RefreshCw,ShoppingCart,Truck,Wallet,ClipboardList,ArrowLeftRight,FileText,Receipt,Users,Landmark,ShieldCheck} from 'lucide-react'
+import {Activity,ArrowDownLeft,ArrowUpRight,Boxes,Building2,CalendarDays,Clock3,Package,RefreshCw,ShoppingCart,Truck,Wallet,ArrowLeftRight,FileText,Receipt,Users,Landmark,ShieldCheck} from 'lucide-react'
 import {supabase} from '../lib/supabase'
 import {formatTenantMoney,useTenantSettings} from '../contexts/TenantSettingsContext'
 
@@ -61,7 +61,7 @@ export default function DashboardOverview({onNavigate,displayName}:{onNavigate:(
  return <div className="content dashboard-page">
   <section className="dashboard-welcome"><div className="dashboard-welcome-copy"><span className="dashboard-welcome-brand"><i/> SORITECH INNOV BUSINESS <b>/</b> ESPACE DE GESTION</span><h2>{greeting}, {displayName||'Utilisateur'} <span aria-hidden="true">👋</span></h2><p>{welcomeText}</p><div className="dashboard-welcome-date"><CalendarDays size={14}/>{new Intl.DateTimeFormat('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:company.timezone||'Africa/Conakry'}).format(now)}</div></div>{company.logo_url&&<img className="dashboard-welcome-logo" src={company.logo_url} alt={'Logo '+company.name}/>}</section>
   <div className="dashboard-toolbar"><div><span className="eyebrow"><span className="live-dot"/> PILOTAGE DES STOCKS</span><h2>Synthèse de l’activité</h2><p>Vue consolidée des stocks, des achats, des ventes et de la trésorerie.</p></div><button className="outline-button" onClick={()=>void load()} disabled={loading}><RefreshCw size={14} className={loading?'spin':''}/> Actualiser</button></div>
-  <section className="dashboard-shortcuts"><div className="dashboard-shortcuts-heading"><h3>Raccourcis</h3><span>Accès rapide aux opérations</span></div><div className="dashboard-shortcuts-grid">{shortcuts.map(({label,icon:Icon,section,tone},index)=><button className={'dashboard-shortcut '+tone} key={label} onClick={()=>onNavigate(section)}><Icon size={21} strokeWidth={2}/><span>{label}</span></button>)}</div></section>
+  <section className="dashboard-shortcuts"><div className="dashboard-shortcuts-heading"><h3>Raccourcis</h3><span>Accès rapide aux opérations</span></div><div className="dashboard-shortcuts-grid">{shortcuts.map(({label,icon:Icon,section,tone})=><button className={'dashboard-shortcut '+tone} key={label} onClick={()=>onNavigate(section)}><Icon size={21} strokeWidth={2}/><span>{label}</span></button>)}</div></section>
   {error&&<div className="catalog-error">Certaines données n’ont pas pu être chargées : {error}</div>}
   <section className="dashboard-kpi-grid">
    <article className="dashboard-kpi"><div className="dashboard-kpi-icon green"><ArrowDownLeft size={19}/></div><div><span>ENTRÉES AUJOURD’HUI</span><strong>{loading?'—':moves14.filter(x=>x.created_at.slice(0,10)===today&&Number(x.quantity_delta)>0).reduce((s,x)=>s+Number(x.quantity_delta),0).toLocaleString('fr-FR')}</strong><small>Quantités reçues</small></div></article>
