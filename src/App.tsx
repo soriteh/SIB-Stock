@@ -17,9 +17,9 @@ import HelpCenter from './components/HelpCenter'
 import SubscriptionPage from './components/SubscriptionPage'
 import ProfilePage from './components/ProfilePage'
 import {
-  Activity, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
+  Activity, ArrowUpRight, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
   ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package, LogOut,
-  Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound,
+  Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound, Sun, Moon,
 } from 'lucide-react'
 import { isSupabaseConfigured, supabase } from './lib/supabase'
 import { TenantSettingsProvider, useTenantSettings } from './contexts/TenantSettingsContext'
@@ -42,19 +42,6 @@ const navigation = [
   { label: 'Fournisseurs', icon: Truck },
 ]
 
-const movements = [
-  { code: 'MVT-2026-0148', product: 'Ordinateur portable HP 15', warehouse: 'Dépôt principal', type: 'Entrée', qty: '+12', date: 'Aujourd’hui, 10:42', status: 'Validé' },
-  { code: 'MVT-2026-0147', product: 'Cartouche HP 305 noire', warehouse: 'Magasin Kipé', type: 'Sortie', qty: '-4', date: 'Aujourd’hui, 09:18', status: 'Validé' },
-  { code: 'MVT-2026-0146', product: 'Câble réseau RJ45', warehouse: 'Dépôt principal', type: 'Entrée', qty: '+50', date: 'Hier, 16:35', status: 'Validé' },
-  { code: 'MVT-2026-0145', product: 'Souris sans fil Logitech', warehouse: 'Magasin Kipé', type: 'Sortie', qty: '-8', date: 'Hier, 14:12', status: 'Validé' },
-]
-
-const stats = [
-  { label: 'Références produits', value: '1 284', note: '+8,2 % ce mois', icon: Package, tone: 'blue' },
-  { label: 'Valeur du stock', value: '284,6 M', suffix: 'GNF', note: 'Coût de valorisation', icon: Boxes, tone: 'violet' },
-  { label: 'Entrées du mois', value: '426', note: '+12,4 % vs mois dernier', icon: ArrowDownLeft, tone: 'green' },
-  { label: 'Sorties du mois', value: '318', note: 'Toutes opérations confondues', icon: ArrowUpRight, tone: 'orange' },
-]
 
 function Dashboard() {
   const [active, setActive] = useState('Vue d’ensemble')
@@ -63,11 +50,13 @@ function Dashboard() {
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [topProfileOpen, setTopProfileOpen] = useState(false)
   const [profileAvatarUrl, setProfileAvatarUrl] = useState('')
+  const [darkTheme, setDarkTheme] = useState(() => { try { return localStorage.getItem('sib-stock-theme') === 'dark' } catch { return false } })
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [profileEmail, setProfileEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
   const company = useTenantSettings()
   const [currentTime, setCurrentTime] = useState(() => new Date())
+  const formattedClock = new Intl.DateTimeFormat('fr-FR', {hour:'2-digit',minute:'2-digit',timeZone: company.timezone || 'Africa/Conakry'}).format(currentTime)
   const profileMenuAnchorRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
 
@@ -87,6 +76,11 @@ function Dashboard() {
     const clock = window.setInterval(() => setCurrentTime(new Date()), 60000)
     return () => { mounted = false; window.clearInterval(clock) }
   }, [])
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = darkTheme ? 'dark' : 'light'
+    try { localStorage.setItem('sib-stock-theme', darkTheme ? 'dark' : 'light') } catch {}
+  }, [darkTheme])
 
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
@@ -137,7 +131,7 @@ function Dashboard() {
 
   async function signOut() { if (!supabase) return; const { error } = await supabase.auth.signOut(); if (error) window.alert(error.message); else setProfileMenuOpen(false) }
   function openProfileSection(section: string) { setActive(section); setProfileMenuOpen(false) }
-  const filtered = useMemo(() => movements.filter((m) => [m.code, m.product, m.warehouse].join(' ').toLowerCase().includes(query.toLowerCase())), [query])
+  const filtered = []
 
   return (
     <div className="app-shell">
@@ -157,7 +151,6 @@ function Dashboard() {
             {navigation.map(({ label, icon: Icon }) => (
               <button key={label} className={active === label ? 'nav-item active' : 'nav-item'} onClick={() => setActive(label)}>
                 <Icon size={18} strokeWidth={1.8} /><span>{label}</span>
-                {label === 'Mouvements' && <i className="nav-count">4</i>}
               </button>
             ))}
           </nav>
@@ -189,10 +182,12 @@ function Dashboard() {
         <header className="topbar">
           <h1 className="topbar-title">{active}</h1>
           <div className="top-actions">
+            <div className="topbar-datetime"><strong>{formattedClock}</strong><span>{welcomeDate}</span></div>
             <label className="search-box" aria-label="Rechercher dans les mouvements récents"><Search size={19}/><input ref={searchInputRef} placeholder="Rechercher un produit, une référence..." value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>⌘ K</kbd>{query&&<button type="button" className="search-clear" aria-label="Effacer la recherche" onClick={()=>setQuery('')}>×</button>}</label>
+            <button type="button" className="theme-toggle" aria-label={darkTheme ? "Activer le thème clair" : "Activer le thème sombre"} title={darkTheme ? "Thème clair" : "Thème sombre"} onClick={()=>setDarkTheme(v=>!v)}>{darkTheme?<Sun size={17}/>:<Moon size={17}/>}</button>
             <div className="top-notification-wrap">
-              <button className={notificationsOpen?"icon-button notification-button is-open":"icon-button notification-button"} aria-label="Notifications" aria-expanded={notificationsOpen} onClick={()=>setNotificationsOpen(v=>!v)}><Bell size={21}/><i/></button>
-              {notificationsOpen&&<div className="top-notification-panel"><div className="top-notification-heading"><strong>Notifications</strong><button type="button" onClick={()=>setNotificationsOpen(false)} aria-label="Fermer">×</button></div><div className="top-notification-empty"><span><Bell size={20}/></span><strong>Aucune notification à afficher</strong><p>Les alertes et informations importantes apparaîtront ici.</p></div></div>}
+              <button className={notificationsOpen?"icon-button notification-button is-open":"icon-button notification-button"} aria-label="Notifications" aria-expanded={notificationsOpen} onClick={()=>setNotificationsOpen(v=>!v)}><Bell size={19}/></button>
+              {notificationsOpen&&<div className="top-notification-panel"><div className="top-notification-heading"><strong>Notifications</strong><button type="button" onClick={()=>setNotificationsOpen(false)} aria-label="Fermer">×</button></div><div className="top-notification-empty"><strong>Aucune notification réelle</strong><p>Les notifications apparaîtront ici lorsqu’une alerte sera générée.</p></div></div>}
             </div>
             <div className="top-profile-wrap">
               <button className="top-avatar top-avatar-button" aria-label="Ouvrir le menu du profil" aria-haspopup="menu" aria-expanded={topProfileOpen} title={displayName||"Mon profil"} onClick={() => setTopProfileOpen(v=>!v)}>{profileAvatarUrl?<img src={profileAvatarUrl} alt="Photo de profil"/>:<UserRound size={18}/>}</button>
@@ -237,39 +232,11 @@ function Dashboard() {
 
           {!isSupabaseConfigured && <div className="setup-notice"><div><strong>Configuration Supabase requise</strong><p>Le socle visuel est initialisé. Ajoutez vos variables d’environnement pour connecter les données réelles.</p></div><code>VITE_SUPABASE_URL · VITE_SUPABASE_ANON_KEY</code></div>}
 
-          <section className="stats-grid">
-            {stats.map(({ label, value, suffix, note, icon: Icon, tone }) => (
-              <article className="stat-card" key={label}>
-                <div className="stat-head"><span>{label}</span><div className={'stat-icon '+tone}><Icon size={18}/></div></div>
-                <div className="stat-value">{value}<small>{suffix}</small></div><div className="stat-note">{note}</div>
-              </article>
-            ))}
-          </section>
-
-          <section className="middle-grid">
-            <article className="panel stock-panel">
-              <div className="panel-heading"><div><h2>État du stock</h2><p>Répartition de vos références produits</p></div><button className="text-button">Voir le rapport <ArrowUpRight size={15}/></button></div>
-              <div className="stock-summary"><div className="donut"><div><strong>1 284</strong><small>Produits</small></div></div><div className="legend">
-                <div><i className="legend-dot available"/><span>Disponible</span><strong>1 096</strong></div>
-                <div><i className="legend-dot low"/><span>Stock faible</span><strong>142</strong></div>
-                <div><i className="legend-dot empty"/><span>En rupture</span><strong>46</strong></div>
-              </div></div>
-            </article>
-            <article className="panel alert-panel">
-              <div className="panel-heading"><div><h2>Alertes de stock</h2><p>Produits nécessitant votre attention</p></div><span className="alert-badge">3 alertes</span></div>
-              <div className="alert-row"><div className="alert-symbol red"><Package size={17}/></div><div><strong>Cartouche HP 305 noire</strong><small>Réf. CART-305 · Seuil minimum : 10</small></div><b className="quantity danger">3 unités</b></div>
-              <div className="alert-row"><div className="alert-symbol amber"><Package size={17}/></div><div><strong>Souris sans fil Logitech</strong><small>Réf. LOG-M185 · Seuil minimum : 15</small></div><b className="quantity warning">8 unités</b></div>
-              <div className="alert-row"><div className="alert-symbol red"><Package size={17}/></div><div><strong>Disque SSD 500 Go</strong><small>Réf. SSD-500 · Seuil minimum : 5</small></div><b className="quantity danger">0 unité</b></div>
-            </article>
-          </section>
-
-          <section className="panel movement-panel">
-            <div className="panel-heading movement-heading"><div><h2>Derniers mouvements</h2><p>Suivi des entrées et sorties de marchandises</p></div><div className="heading-actions"><button className="outline-button">Exporter</button><button className="primary-button">+ Nouveau mouvement</button></div></div>
-            <div className="table-wrap"><table><thead><tr><th>RÉFÉRENCE</th><th>PRODUIT</th><th>ENTREPÔT</th><th>TYPE</th><th>QUANTITÉ</th><th>DATE</th><th>STATUT</th></tr></thead><tbody>
-              {filtered.map((m) => <tr key={m.code}><td className="ref-cell">{m.code}</td><td className="product-cell">{m.product}</td><td>{m.warehouse}</td><td><span className={m.type === 'Entrée' ? 'type-pill in' : 'type-pill out'}>{m.type}</span></td><td className={m.type === 'Entrée' ? 'qty-in' : 'qty-out'}>{m.qty}</td><td className="date-cell">{m.date}</td><td><span className="status-pill">{m.status}</span></td></tr>)}
-              {filtered.length === 0 && <tr><td colSpan={7} className="empty-state">Aucun mouvement ne correspond à votre recherche.</td></tr>}
-            </tbody></table></div>
-            <div className="table-footer"><span>Affichage de {filtered.length} mouvements récents</span><button className="text-button">Consulter l’historique <ArrowUpRight size={15}/></button></div>
+          <section className="dashboard-empty-state">
+            <div className="dashboard-empty-icon"><Boxes size={25}/></div>
+            <h2>Vos données de stock apparaîtront ici</h2>
+            <p>Aucune statistique, alerte ou opération de démonstration n’est affichée. Enregistrez vos produits et vos mouvements pour consulter des indicateurs issus de vos données réelles.</p>
+            <div className="dashboard-empty-actions"><button className="primary-button" onClick={()=>setActive('Produits')}>Ajouter des produits</button><button className="outline-button" onClick={()=>setActive('Mouvements')}>Consulter les mouvements</button></div>
           </section>
           <footer className="footer"><span>© {currentTime.getFullYear()} {company.legal_name || company.name} · Gestion intelligente des stocks</span><span><i className="footer-dot"/> Plateforme prête pour configuration</span></footer>
         </div>}
