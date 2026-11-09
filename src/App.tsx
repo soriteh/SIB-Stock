@@ -17,7 +17,7 @@ import HelpCenter from './components/HelpCenter'
 import SubscriptionPage from './components/SubscriptionPage'
 import ProfilePage from './components/ProfilePage'
 import {
-  Activity, ArrowUpRight, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
+  Activity, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
   ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package, LogOut,
   Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound, Sun, Moon,
 } from 'lucide-react'
