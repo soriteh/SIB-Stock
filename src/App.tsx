@@ -54,7 +54,6 @@ function Dashboard() {
   const [topProfileOpen, setTopProfileOpen] = useState(false)
   const [profileAvatarUrl, setProfileAvatarUrl] = useState('')
   const [welcomeOpen, setWelcomeOpen] = useState(false)
-  const [welcomeUserId, setWelcomeUserId] = useState('')
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [profileEmail, setProfileEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
@@ -71,7 +70,6 @@ function Dashboard() {
       const user = data.user
       if (!mounted || !user) return
       setProfileEmail(user.email ?? '')
-      setWelcomeUserId(user.id)
       let welcomeAlreadySeen = user.user_metadata?.sib_stock_welcome_seen === true
       if (!welcomeAlreadySeen) {
         try { welcomeAlreadySeen = localStorage.getItem('sib-stock-welcome-' + user.id) === 'seen' } catch {}
