@@ -37,7 +37,8 @@ export default function AuthGate({ children }: { children: ReactNode }) {
   // Déconnexion automatique après 30 minutes sans activité utilisateur.
   const lastActivityRef = useRef(0)
   useEffect(() => {
-    if (!supabase || !session?.user) return
+    const client = supabase
+    if (!client || !session?.user) return
     let timeoutId: number
     let disposed = false
     const inactivityLimit = 30 * 60 * 1000
@@ -47,7 +48,7 @@ export default function AuthGate({ children }: { children: ReactNode }) {
       timeoutId = window.setTimeout(async () => {
         if (disposed) return
         setNotice('Votre session a été fermée après 30 minutes d’inactivité. Veuillez vous reconnecter.')
-        await supabase.auth.signOut()
+        await client.auth.signOut()
       }, inactivityLimit)
     }
     const handleActivity = () => {
