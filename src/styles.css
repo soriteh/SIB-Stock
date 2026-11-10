@@ -1217,3 +1217,29 @@ th{font-size:9px}td{font-size:10px}
 @keyframes first-welcome-rise{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:520px){.first-welcome-card{padding:25px 21px;border-radius:17px}.first-welcome-kicker{margin-top:19px}}
 @media(prefers-reduced-motion:reduce){.first-welcome-backdrop,.first-welcome-card{animation:none}}
+
+
+/* Compact first-login welcome toast; never blocks the workspace. */
+.first-welcome-toast{
+  position:fixed;top:86px;right:24px;z-index:6000;
+  display:flex;align-items:center;gap:12px;
+  width:min(360px,calc(100vw - 32px));min-height:70px;
+  padding:13px 16px;border:1px solid rgba(0,87,185,.15);
+  border-radius:13px;background:#fff;color:#17243b;
+  box-shadow:0 12px 36px rgba(7,26,54,.18);
+  animation:welcome-toast-in .28s ease both;overflow:hidden;
+}
+.first-welcome-toast-mark{font:900 22px Manrope,sans-serif;letter-spacing:-3px;color:#0057b9;flex:0 0 auto}
+.first-welcome-toast-mark span{color:#ff7800}
+.first-welcome-toast>div{display:grid;gap:4px;min-width:0}
+.first-welcome-toast strong{font:700 12px Manrope,sans-serif;color:#10213b}
+.first-welcome-toast small{font-size:10px;color:#7d899b}
+.first-welcome-toast-progress{
+  position:absolute;left:0;bottom:0;height:3px;width:100%;
+  background:linear-gradient(90deg,#0057b9,#ff7800);
+  transform-origin:left;animation:welcome-toast-progress 4.2s linear forwards;
+}
+@keyframes welcome-toast-in{from{opacity:0;transform:translateY(-9px)}to{opacity:1;transform:translateY(0)}}
+@keyframes welcome-toast-progress{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+@media(max-width:520px){.first-welcome-toast{top:72px;right:12px;width:calc(100vw - 24px)}}
+@media(prefers-reduced-motion:reduce){.first-welcome-toast,.first-welcome-toast-progress{animation:none}}
