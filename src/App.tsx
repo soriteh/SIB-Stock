@@ -20,7 +20,7 @@ import DashboardOverview from './components/DashboardOverview'
 import {
   Activity, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
   ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package, LogOut,
-  Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound, Menu, PanelLeftClose,
+  Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound, Menu, PanelLeftClose, Sun, Moon,
 } from 'lucide-react'
 import { supabase } from './lib/supabase'
 import { TenantSettingsProvider, useTenantSettings } from './contexts/TenantSettingsContext'
@@ -54,6 +54,13 @@ function Dashboard() {
   const [topProfileOpen, setTopProfileOpen] = useState(false)
   const [profileAvatarUrl, setProfileAvatarUrl] = useState('')
   const [welcomeOpen, setWelcomeOpen] = useState(false)
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    try {
+      const saved = localStorage.getItem('sib-stock-theme')
+      if (saved === 'light' || saved === 'dark') return saved
+    } catch {}
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  })
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [profileEmail, setProfileEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
@@ -106,12 +113,10 @@ function Dashboard() {
   }, [company.logo_url])
 
   useEffect(() => {
-    const media = window.matchMedia('(prefers-color-scheme: dark)')
-    const applySystemTheme = () => { document.documentElement.dataset.theme = media.matches ? 'dark' : 'light' }
-    applySystemTheme()
-    media.addEventListener?.('change', applySystemTheme)
-    return () => media.removeEventListener?.('change', applySystemTheme)
-  }, [])
+    document.documentElement.dataset.theme = theme
+    document.documentElement.style.colorScheme = theme
+    try { localStorage.setItem('sib-stock-theme', theme) } catch {}
+  }, [theme])
 
   useEffect(() => {
     if (!welcomeOpen) return
@@ -222,6 +227,7 @@ function Dashboard() {
             <div className="topbar-datetime"><strong>{formattedClock}</strong><span>{welcomeDate}</span></div>
             <label className="search-box" aria-label="Rechercher dans les mouvements récents"><Search size={19}/><input ref={searchInputRef} placeholder="Rechercher un produit, une référence..." value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>⌘ K</kbd>{query&&<button type="button" className="search-clear" aria-label="Effacer la recherche" onClick={()=>setQuery('')}>×</button>}</label>
 
+            <button type="button" className="theme-toggle" aria-label={theme === 'dark' ? 'Activer le thème clair' : 'Activer le thème sombre'} title={theme === 'dark' ? 'Passer au thème clair' : 'Passer au thème sombre'} onClick={() => setTheme(current => current === 'dark' ? 'light' : 'dark')}><span className="theme-toggle-icon">{theme === 'dark' ? <Sun size={18}/> : <Moon size={18}/>}</span></button>
             <div className="top-notification-wrap">
               <button className={notificationsOpen?"icon-button notification-button is-open":"icon-button notification-button"} aria-label="Notifications" aria-expanded={notificationsOpen} onClick={()=>setNotificationsOpen(v=>!v)}><Bell size={19}/></button>
               {notificationsOpen&&<div className="top-notification-panel"><div className="top-notification-heading"><strong>Notifications</strong><button type="button" onClick={()=>setNotificationsOpen(false)} aria-label="Fermer">×</button></div><div className="top-notification-empty"><strong>Aucune notification réelle</strong><p>Les notifications apparaîtront ici lorsqu’une alerte sera générée.</p></div></div>}
