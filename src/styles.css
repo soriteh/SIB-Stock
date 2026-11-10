@@ -1366,3 +1366,37 @@ html,body,#root{min-height:100%;transition:background-color .28s ease,color .28s
 @media (prefers-reduced-motion: reduce) {
   .app-shell > .main-area { animation: none !important; }
 }
+
+
+/* Restore vertical scrolling in the main workspace.
+   The animated-background rule must not override the app's scroll container. */
+html, body, #root {
+  height: 100%;
+  min-height: 0;
+}
+body {
+  overflow: hidden;
+}
+.app-shell {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+.app-shell > .main-area {
+  height: 100vh !important;
+  height: 100dvh !important;
+  min-height: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+@media (max-width: 760px) {
+  .app-shell > .main-area {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+  }
+}
