@@ -1334,3 +1334,35 @@ html,body,#root{min-height:100%;transition:background-color .28s ease,color .28s
   .main-area::before{animation:none!important;will-change:auto}
   html,body,#root,.app-shell,.main-area,.topbar,.content{transition:none!important}
 }
+
+
+/* SIB Stock — animated background rendered on the workspace itself.
+   This avoids pseudo-element stacking issues and keeps the effect visible
+   in the spaces between cards and panels. */
+.app-shell > .main-area {
+  background-color: #f4f7fc !important;
+  background-image:
+    radial-gradient(ellipse at 8% 12%, rgba(0, 87, 185, .17), transparent 31%),
+    radial-gradient(ellipse at 91% 19%, rgba(255, 120, 0, .13), transparent 29%),
+    radial-gradient(ellipse at 72% 84%, rgba(36, 132, 220, .14), transparent 34%),
+    radial-gradient(ellipse at 25% 72%, rgba(0, 160, 190, .09), transparent 30%) !important;
+  background-size: 220% 220% !important;
+  background-position: 0% 0%;
+  animation: sib-workspace-background 24s ease-in-out infinite alternate !important;
+}
+:root[data-theme="dark"] .app-shell > .main-area {
+  background-color: #0b1424 !important;
+  background-image:
+    radial-gradient(ellipse at 8% 12%, rgba(36, 111, 211, .29), transparent 33%),
+    radial-gradient(ellipse at 91% 19%, rgba(255, 120, 0, .17), transparent 30%),
+    radial-gradient(ellipse at 72% 84%, rgba(55, 119, 210, .23), transparent 36%),
+    radial-gradient(ellipse at 25% 72%, rgba(0, 160, 190, .13), transparent 31%) !important;
+}
+@keyframes sib-workspace-background {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 55% 45%; }
+  100% { background-position: 100% 80%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-shell > .main-area { animation: none !important; }
+}
