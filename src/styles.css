@@ -1158,3 +1158,19 @@ th{font-size:9px}td{font-size:10px}
     grid-column: auto !important;
   }
 }
+
+
+/* Sidebar account footer: lift sign-out control and make its hover state red. */
+.sidebar-bottom{
+  padding-bottom:max(20px,calc(env(safe-area-inset-bottom) + 14px)) !important;
+}
+.sidebar-bottom .sidebar-logout{
+  transition:background .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease;
+}
+.sidebar-bottom .sidebar-logout:hover,
+.sidebar-bottom .sidebar-logout:focus-visible{
+  background:rgba(220,53,69,.18) !important;
+  border-color:rgba(255,92,105,.72) !important;
+  color:#ff6b75 !important;
+  box-shadow:0 0 0 2px rgba(220,53,69,.10);
+}
