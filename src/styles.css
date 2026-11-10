@@ -1243,3 +1243,44 @@ th{font-size:9px}td{font-size:10px}
 @keyframes welcome-toast-progress{from{transform:scaleX(1)}to{transform:scaleX(0)}}
 @media(max-width:520px){.first-welcome-toast{top:72px;right:12px;width:calc(100vw - 24px)}}
 @media(prefers-reduced-motion:reduce){.first-welcome-toast,.first-welcome-toast-progress{animation:none}}
+
+
+/* Subtle animated ambient background across the workspace. */
+.app-shell{
+  position:relative;
+  isolation:isolate;
+  background:#f3f6fc;
+}
+.main-area{
+  position:relative;
+  isolation:isolate;
+  background:transparent;
+}
+.main-area::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(0,87,185,.075),transparent 34%),
+    radial-gradient(ellipse at 88% 28%,rgba(255,120,0,.055),transparent 30%),
+    radial-gradient(ellipse at 55% 92%,rgba(57,126,220,.06),transparent 38%);
+  background-size:140% 140%;
+  animation:sib-ambient-drift 22s ease-in-out infinite alternate;
+}
+@keyframes sib-ambient-drift{
+  0%{background-position:0% 0%;filter:hue-rotate(0deg)}
+  50%{background-position:55% 35%;filter:hue-rotate(5deg)}
+  100%{background-position:100% 80%;filter:hue-rotate(-4deg)}
+}
+:root[data-theme="dark"] .app-shell{background:#0b1424}
+:root[data-theme="dark"] .main-area::before{
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(36,111,211,.16),transparent 36%),
+    radial-gradient(ellipse at 88% 28%,rgba(255,120,0,.075),transparent 32%),
+    radial-gradient(ellipse at 55% 92%,rgba(55,119,210,.11),transparent 40%);
+}
+@media(prefers-reduced-motion:reduce){
+  .main-area::before{animation:none}
+}
