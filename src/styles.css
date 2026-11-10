@@ -1092,3 +1092,39 @@ th{font-size:9px}td{font-size:10px}
   }
 }
 
+
+
+/* Dashboard: keep the eight KPI cards in four columns on desktop. */
+.dashboard-page .dashboard-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+}
+.dashboard-page .dashboard-kpi {
+  min-width: 0;
+}
+@container workspace (min-width: 900px) {
+  .main-area .dashboard-page .dashboard-kpi-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@container workspace (max-width: 899px) {
+  .main-area .dashboard-page .dashboard-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@container workspace (max-width: 520px) {
+  .main-area .dashboard-page .dashboard-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 700px) {
+  .dashboard-page .dashboard-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 390px) {
+  .dashboard-page .dashboard-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
