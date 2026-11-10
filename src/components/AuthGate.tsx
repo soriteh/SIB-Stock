@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { ArrowRight, Building2, LoaderCircle, LogOut } from 'lucide-react'
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
@@ -34,6 +34,37 @@ export default function AuthGate({ children }: { children: ReactNode }) {
     return () => { mounted = false; listener.subscription.unsubscribe() }
   }, [])
 
+  // Déconnexion automatique après 30 minutes sans activité utilisateur.
+  const lastActivityRef = useRef(0)
+  useEffect(() => {
+    if (!supabase || !session?.user) return
+    let timeoutId: number
+    let disposed = false
+    const inactivityLimit = 30 * 60 * 1000
+    const resetInactivityTimer = () => {
+      if (disposed) return
+      window.clearTimeout(timeoutId)
+      timeoutId = window.setTimeout(async () => {
+        if (disposed) return
+        setNotice('Votre session a été fermée après 30 minutes d’inactivité. Veuillez vous reconnecter.')
+        await supabase.auth.signOut()
+      }, inactivityLimit)
+    }
+    const handleActivity = () => {
+      const now = Date.now()
+      if (now - lastActivityRef.current < 1000) return
+      lastActivityRef.current = now
+      resetInactivityTimer()
+    }
+    const activityEvents: (keyof WindowEventMap)[] = ['pointerdown', 'pointermove', 'keydown', 'scroll', 'touchstart']
+    resetInactivityTimer()
+    activityEvents.forEach(eventName => window.addEventListener(eventName, handleActivity, { passive: true }))
+    return () => {
+      disposed = true
+      window.clearTimeout(timeoutId)
+      activityEvents.forEach(eventName => window.removeEventListener(eventName, handleActivity))
+    }
+  }, [session?.user?.id])
   useEffect(() => {
     let mounted = true
     async function loadTenant() {
@@ -118,6 +149,7 @@ export default function AuthGate({ children }: { children: ReactNode }) {
   if (!session) return (
     <div className="auth-screen"><div className="auth-card"><Brand />
       <div className="auth-kicker">GESTION INTELLIGENTE DES STOCKS</div>
+      {notice && <div className="auth-notice" role="status">{notice}</div>}
       <h1>{mode === 'login' ? 'Bienvenue sur SIB Stock' : 'Créer votre compte'}</h1>
       <p>{mode === 'login' ? 'Connectez-vous pour accéder à votre espace de gestion.' : 'Créez votre accès administrateur pour démarrer.'}</p>
       <form onSubmit={submitAuth} className="auth-form">
