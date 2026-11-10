@@ -76,9 +76,15 @@ function Dashboard() {
       if (!welcomeAlreadySeen) {
         try { welcomeAlreadySeen = localStorage.getItem('sib-stock-welcome-' + user.id) === 'seen' } catch {}
       }
-      setWelcomeOpen(!welcomeAlreadySeen)
       const { data: profile } = await supabase.from('profiles').select('full_name,avatar_path').eq('id', user.id).maybeSingle()
-      if (mounted) setDisplayName(profile?.full_name?.trim() || String(user.user_metadata?.full_name ?? '').trim() || user.email?.split('@')[0] || 'Utilisateur')
+      if (mounted) {
+        setDisplayName(profile?.full_name?.trim() || String(user.user_metadata?.full_name ?? '').trim() || user.email?.split('@')[0] || 'Utilisateur')
+        if (!welcomeAlreadySeen) {
+          setWelcomeOpen(true)
+          try { localStorage.setItem('sib-stock-welcome-' + user.id, 'seen') } catch {}
+          void supabase.auth.updateUser({ data: { sib_stock_welcome_seen: true } })
+        }
+      }
       if (profile?.avatar_path) {
         const { data: signed } = await supabase.storage.from('profile-avatars').createSignedUrl(profile.avatar_path, 3600)
         if (mounted) setProfileAvatarUrl(signed?.signedUrl ?? '')
@@ -109,15 +115,11 @@ function Dashboard() {
     return () => media.removeEventListener?.('change', applySystemTheme)
   }, [])
 
-  async function dismissFirstWelcome() {
-    if (supabase && welcomeUserId) {
-      const { error } = await supabase.auth.updateUser({ data: { sib_stock_welcome_seen: true } })
-      if (error) {
-        try { localStorage.setItem('sib-stock-welcome-' + welcomeUserId, 'seen') } catch {}
-      }
-    }
-    setWelcomeOpen(false)
-  }
+  useEffect(() => {
+    if (!welcomeOpen) return
+    const timeout = window.setTimeout(() => setWelcomeOpen(false), 4200)
+    return () => window.clearTimeout(timeout)
+  }, [welcomeOpen])
 
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
@@ -214,7 +216,7 @@ function Dashboard() {
         </div>
       </aside>
 
-      {welcomeOpen && <div className="first-welcome-backdrop" role="dialog" aria-modal="true" aria-labelledby="first-welcome-title"><section className="first-welcome-card"><div className="first-welcome-mark">S<span>I</span>B</div><span className="first-welcome-kicker">ESPACE DE GESTION</span><h2 id="first-welcome-title">Bienvenue sur SIB Stock, {displayName || "Utilisateur"} !</h2><p>Votre espace de gestion est prêt. Retrouvez vos produits, vos mouvements de stock, vos achats, vos ventes et votre trésorerie depuis un seul endroit.</p><button type="button" onClick={dismissFirstWelcome}>Commencer <span aria-hidden="true">→</span></button></section></div>}
+      {welcomeOpen && <div className="first-welcome-toast" role="status" aria-live="polite"><span className="first-welcome-toast-mark">S<span>I</span>B</span><div><strong>Bienvenue, {displayName || "Utilisateur"} !</strong><small>Votre espace SIB Stock est prêt.</small></div><span className="first-welcome-toast-progress" /></div>}
       <main className="main-area">
         <header className="topbar">
           <div className="topbar-heading"><button type="button" className="sidebar-toggle" aria-label="Ouvrir ou replier le menu" aria-expanded={mobileSidebarOpen || !sidebarCollapsed} onClick={() => { if (window.matchMedia("(max-width: 760px)").matches) setMobileSidebarOpen(v => !v); else setSidebarCollapsed(v => !v) }}>{sidebarCollapsed ? <Menu size={19}/> : <PanelLeftClose size={19}/>}</button><h1 className="topbar-title">{active}</h1></div>
