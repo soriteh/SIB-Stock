@@ -20,7 +20,7 @@ import DashboardOverview from './components/DashboardOverview'
 import {
   Activity, ArrowLeftRight, Bell, Boxes, Building2, Landmark, ShieldCheck,
   ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package, LogOut,
-  Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound, Sun, Moon, Menu, PanelLeftClose,
+  Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound, Menu, PanelLeftClose,
 } from 'lucide-react'
 import { supabase } from './lib/supabase'
 import { TenantSettingsProvider, useTenantSettings } from './contexts/TenantSettingsContext'
@@ -53,7 +53,8 @@ function Dashboard() {
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [topProfileOpen, setTopProfileOpen] = useState(false)
   const [profileAvatarUrl, setProfileAvatarUrl] = useState('')
-  const [darkTheme, setDarkTheme] = useState(() => { try { return localStorage.getItem('sib-stock-theme') === 'dark' } catch { return false } })
+  const [welcomeOpen, setWelcomeOpen] = useState(false)
+  const [welcomeUserId, setWelcomeUserId] = useState('')
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [profileEmail, setProfileEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
@@ -70,6 +71,8 @@ function Dashboard() {
       const user = data.user
       if (!mounted || !user) return
       setProfileEmail(user.email ?? '')
+      setWelcomeUserId(user.id)
+      try { setWelcomeOpen(localStorage.getItem('sib-stock-welcome-' + user.id) !== 'seen') } catch { setWelcomeOpen(true) }
       const { data: profile } = await supabase.from('profiles').select('full_name,avatar_path').eq('id', user.id).maybeSingle()
       if (mounted) setDisplayName(profile?.full_name?.trim() || String(user.user_metadata?.full_name ?? '').trim() || user.email?.split('@')[0] || 'Utilisateur')
       if (profile?.avatar_path) {
@@ -95,9 +98,17 @@ function Dashboard() {
   }, [company.logo_url])
 
   useEffect(() => {
-    document.documentElement.dataset.theme = darkTheme ? 'dark' : 'light'
-    try { localStorage.setItem('sib-stock-theme', darkTheme ? 'dark' : 'light') } catch {}
-  }, [darkTheme])
+    const media = window.matchMedia('(prefers-color-scheme: dark)')
+    const applySystemTheme = () => { document.documentElement.dataset.theme = media.matches ? 'dark' : 'light' }
+    applySystemTheme()
+    media.addEventListener?.('change', applySystemTheme)
+    return () => media.removeEventListener?.('change', applySystemTheme)
+  }, [])
+
+  function dismissFirstWelcome() {
+    try { if (welcomeUserId) localStorage.setItem('sib-stock-welcome-' + welcomeUserId, 'seen') } catch {}
+    setWelcomeOpen(false)
+  }
 
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
@@ -194,13 +205,14 @@ function Dashboard() {
         </div>
       </aside>
 
+      {welcomeOpen && <div className="first-welcome-backdrop" role="dialog" aria-modal="true" aria-labelledby="first-welcome-title"><section className="first-welcome-card"><div className="first-welcome-mark">S<span>I</span>B</div><span className="first-welcome-kicker">ESPACE DE GESTION</span><h2 id="first-welcome-title">Bienvenue sur SIB Stock, {displayName || "Utilisateur"} !</h2><p>Votre espace de gestion est prêt. Retrouvez vos produits, vos mouvements de stock, vos achats, vos ventes et votre trésorerie depuis un seul endroit.</p><button type="button" onClick={dismissFirstWelcome}>Commencer <span aria-hidden="true">→</span></button></section></div>}
       <main className="main-area">
         <header className="topbar">
           <div className="topbar-heading"><button type="button" className="sidebar-toggle" aria-label="Ouvrir ou replier le menu" aria-expanded={mobileSidebarOpen || !sidebarCollapsed} onClick={() => { if (window.matchMedia("(max-width: 760px)").matches) setMobileSidebarOpen(v => !v); else setSidebarCollapsed(v => !v) }}>{sidebarCollapsed ? <Menu size={19}/> : <PanelLeftClose size={19}/>}</button><h1 className="topbar-title">{active}</h1></div>
           <div className="top-actions">
             <div className="topbar-datetime"><strong>{formattedClock}</strong><span>{welcomeDate}</span></div>
             <label className="search-box" aria-label="Rechercher dans les mouvements récents"><Search size={19}/><input ref={searchInputRef} placeholder="Rechercher un produit, une référence..." value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>⌘ K</kbd>{query&&<button type="button" className="search-clear" aria-label="Effacer la recherche" onClick={()=>setQuery('')}>×</button>}</label>
-            <button type="button" className="theme-toggle" aria-label={darkTheme ? "Activer le thème clair" : "Activer le thème sombre"} title={darkTheme ? "Thème clair" : "Thème sombre"} onClick={()=>setDarkTheme(v=>!v)}>{darkTheme?<Sun size={17}/>:<Moon size={17}/>}</button>
+
             <div className="top-notification-wrap">
               <button className={notificationsOpen?"icon-button notification-button is-open":"icon-button notification-button"} aria-label="Notifications" aria-expanded={notificationsOpen} onClick={()=>setNotificationsOpen(v=>!v)}><Bell size={19}/></button>
               {notificationsOpen&&<div className="top-notification-panel"><div className="top-notification-heading"><strong>Notifications</strong><button type="button" onClick={()=>setNotificationsOpen(false)} aria-label="Fermer">×</button></div><div className="top-notification-empty"><strong>Aucune notification réelle</strong><p>Les notifications apparaîtront ici lorsqu’une alerte sera générée.</p></div></div>}
