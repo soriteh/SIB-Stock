@@ -1187,3 +1187,9 @@ th{font-size:9px}td{font-size:10px}
 .sidebar-bottom{
   padding-top:10px !important;
 }
+
+
+/* Raise the sign-out block slightly above the sidebar bottom edge. */
+.sidebar-bottom{
+  padding-bottom:max(28px,calc(env(safe-area-inset-bottom) + 22px)) !important;
+}
