@@ -72,7 +72,11 @@ function Dashboard() {
       if (!mounted || !user) return
       setProfileEmail(user.email ?? '')
       setWelcomeUserId(user.id)
-      try { setWelcomeOpen(localStorage.getItem('sib-stock-welcome-' + user.id) !== 'seen') } catch { setWelcomeOpen(true) }
+      let welcomeAlreadySeen = user.user_metadata?.sib_stock_welcome_seen === true
+      if (!welcomeAlreadySeen) {
+        try { welcomeAlreadySeen = localStorage.getItem('sib-stock-welcome-' + user.id) === 'seen' } catch {}
+      }
+      setWelcomeOpen(!welcomeAlreadySeen)
       const { data: profile } = await supabase.from('profiles').select('full_name,avatar_path').eq('id', user.id).maybeSingle()
       if (mounted) setDisplayName(profile?.full_name?.trim() || String(user.user_metadata?.full_name ?? '').trim() || user.email?.split('@')[0] || 'Utilisateur')
       if (profile?.avatar_path) {
@@ -105,8 +109,13 @@ function Dashboard() {
     return () => media.removeEventListener?.('change', applySystemTheme)
   }, [])
 
-  function dismissFirstWelcome() {
-    try { if (welcomeUserId) localStorage.setItem('sib-stock-welcome-' + welcomeUserId, 'seen') } catch {}
+  async function dismissFirstWelcome() {
+    if (supabase && welcomeUserId) {
+      const { error } = await supabase.auth.updateUser({ data: { sib_stock_welcome_seen: true } })
+      if (error) {
+        try { localStorage.setItem('sib-stock-welcome-' + welcomeUserId, 'seen') } catch {}
+      }
+    }
     setWelcomeOpen(false)
   }
 
