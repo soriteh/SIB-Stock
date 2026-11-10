@@ -1174,3 +1174,16 @@ th{font-size:9px}td{font-size:10px}
   color:#ff6b75 !important;
   box-shadow:0 0 0 2px rgba(220,53,69,.10);
 }
+
+
+/* Sidebar: remove the account/profile control and keep sign-out directly visible. */
+.sidebar-bottom .profile-menu-anchor,
+.sidebar-bottom .profile-trigger{
+  display:none !important;
+}
+.sidebar-bottom .sidebar-logout{
+  margin-top:0 !important;
+}
+.sidebar-bottom{
+  padding-top:10px !important;
+}
