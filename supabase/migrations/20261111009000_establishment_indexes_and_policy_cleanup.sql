@@ -1,0 +1,11 @@
+drop policy if exists establishments_admin_manage on public.establishments;
+create policy establishments_admin_insert on public.establishments for insert to authenticated with check(tenant_id=public.current_tenant_id() and public.has_tenant_role(array['owner','admin','manager']));
+create policy establishments_admin_update on public.establishments for update to authenticated using(tenant_id=public.current_tenant_id() and public.has_tenant_role(array['owner','admin','manager'])) with check(tenant_id=public.current_tenant_id() and public.has_tenant_role(array['owner','admin','manager']));
+create policy establishments_admin_delete on public.establishments for delete to authenticated using(tenant_id=public.current_tenant_id() and public.has_tenant_role(array['owner','admin','manager']));
+create index if not exists warehouses_establishment_tenant_fk_idx on public.warehouses(establishment_id,tenant_id);
+create index if not exists financial_accounts_establishment_tenant_fk_idx on public.financial_accounts(establishment_id,tenant_id);
+create index if not exists tenant_members_establishment_tenant_fk_idx on public.tenant_members(establishment_id,tenant_id);
+create index if not exists profiles_active_establishment_idx on public.profiles(active_establishment_id);
+create index if not exists financial_transactions_account_id_idx on public.financial_transactions(account_id);
+create index if not exists financial_transfers_source_account_id_idx on public.financial_transfers(source_account_id);
+create index if not exists financial_transfers_destination_account_id_idx on public.financial_transfers(destination_account_id);
