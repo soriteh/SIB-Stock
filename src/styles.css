@@ -1945,3 +1945,12 @@ body {
 @media(prefers-reduced-motion:reduce){
   .app-shell>.main-area>.content::before{animation:none!important}
 }
+
+
+/* Console Super Administrateur SaaS */
+.platform-admin-page .platform-admin-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:180px}
+.platform-admin-page .platform-admin-actions .primary-button,
+.platform-admin-page .platform-admin-actions .outline-button{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:7px 10px;font-size:12px;white-space:nowrap}
+.platform-admin-page .table-wrap td{vertical-align:middle}
+.platform-admin-page .subscription-empty{padding:24px;text-align:center;color:var(--muted,#64748b)}
+@media(max-width:760px){.platform-admin-page .platform-admin-actions{min-width:0}.platform-admin-page .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
