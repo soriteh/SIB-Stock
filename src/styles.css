@@ -1400,3 +1400,104 @@ body {
     margin-left: 0 !important;
   }
 }
+
+
+/* Premium SIB Stock authentication page */
+.auth-screen-premium{
+  min-height:100vh;
+  min-height:100dvh;
+  display:grid;
+  place-items:center;
+  padding:clamp(14px,3vw,42px);
+  overflow:auto;
+  background:
+    radial-gradient(ellipse at 12% 8%,rgba(0,87,185,.12),transparent 34%),
+    radial-gradient(ellipse at 92% 88%,rgba(255,120,0,.10),transparent 30%),
+    #f3f6fb;
+}
+.auth-layout{
+  width:min(1120px,100%);
+  min-height:min(700px,calc(100dvh - 48px));
+  display:grid;
+  grid-template-columns:minmax(0,1.04fr) minmax(390px,.96fr);
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.8);
+  border-radius:26px;
+  background:#fff;
+  box-shadow:0 28px 90px rgba(7,26,54,.15);
+}
+.auth-visual{
+  position:relative;
+  isolation:isolate;
+  display:flex;
+  min-height:650px;
+  overflow:hidden;
+  padding:clamp(28px,4vw,52px);
+  color:#fff;
+  background:linear-gradient(145deg,#071a36 0%,#0a3261 55%,#0757a7 100%);
+}
+.auth-visual:before,.auth-visual:after{
+  content:"";position:absolute;z-index:-1;border-radius:50%;pointer-events:none;
+  filter:blur(2px);animation:auth-orb-float 14s ease-in-out infinite alternate;
+}
+.auth-visual:before{width:440px;height:440px;right:-190px;top:8%;background:radial-gradient(circle,rgba(0,132,255,.42),transparent 68%)}
+.auth-visual:after{width:360px;height:360px;left:-170px;bottom:-100px;background:radial-gradient(circle,rgba(255,120,0,.25),transparent 68%);animation-delay:-5s}
+.auth-visual-content{display:flex;flex-direction:column;width:100%;min-height:100%;position:relative;z-index:1}
+.auth-visual .auth-brand{padding:0;margin:0}
+.auth-visual .auth-brand-mark{font-size:30px;color:#fff}
+.auth-visual .auth-brand strong{font-size:18px;color:#fff}
+.auth-visual-copy{margin:auto 0;padding:70px 0 50px;max-width:490px}
+.auth-visual-eyebrow{display:flex;align-items:center;gap:9px;color:#a9c8ec;font-size:9px;font-weight:800;letter-spacing:1.7px}
+.auth-live-dot{width:7px;height:7px;border-radius:50%;background:#ff8b32;box-shadow:0 0 0 5px rgba(255,139,50,.12)}
+.auth-visual-copy h1{margin:22px 0 16px;color:#fff;font:800 clamp(30px,3.5vw,46px)/1.12 Manrope,sans-serif;letter-spacing:-1.8px}
+.auth-visual-copy h1 span{color:#ff9a4a}
+.auth-visual-copy>p{max-width:420px;margin:0;color:#b7cce5;font-size:13px;line-height:1.8}
+.auth-feature-list{display:grid;gap:19px;margin-top:36px}
+.auth-feature-list>div{display:flex;align-items:center;gap:13px}
+.auth-feature-list>div>span{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;border:1px solid rgba(183,210,241,.2);border-radius:12px;background:rgba(255,255,255,.08);color:#ff9a4a}
+.auth-feature-list strong,.auth-feature-list small{display:block}
+.auth-feature-list strong{font-size:11px;color:#fff}
+.auth-feature-list small{margin-top:4px;color:#a9bfd9;font-size:9px}
+.auth-visual-footer{display:flex;justify-content:space-between;gap:12px;padding-top:18px;border-top:1px solid rgba(255,255,255,.15);color:#91add0;font-size:8px;font-weight:700;letter-spacing:1.5px}
+.auth-panel{display:grid;place-items:center;padding:clamp(22px,4vw,56px);background:rgba(255,255,255,.97)}
+.auth-card-premium{width:100%;max-width:390px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.auth-mobile-brand{display:none}
+.auth-card-premium .auth-kicker{margin:0 0 12px;color:#1769bd}
+.auth-card-premium h2{margin:0;color:#10213b;font:800 clamp(25px,3vw,32px)/1.2 Manrope,sans-serif;letter-spacing:-1px}
+.auth-card-premium .auth-intro{margin:10px 0 28px;color:#7d899b;font-size:12px;line-height:1.7}
+.auth-form-premium{gap:18px}
+.auth-form-premium label{gap:8px;color:#33445d;font-size:10px;font-weight:700}
+.auth-form-premium input{height:48px;padding:0 14px;border:1px solid #dfe6ef;border-radius:9px;background:#fbfcfe;color:#17243b;font-size:12px;transition:border-color .18s,box-shadow .18s,background .18s}
+.auth-form-premium input:focus{border-color:#1769bd;background:#fff;box-shadow:0 0 0 4px rgba(0,87,185,.09)}
+.auth-password-field{position:relative;display:block}
+.auth-password-field input{width:100%;padding-right:48px}
+.auth-password-toggle{position:absolute;top:50%;right:7px;transform:translateY(-50%);width:34px;height:34px;display:grid;place-items:center;border:0;border-radius:7px;background:transparent;color:#8290a4}
+.auth-password-toggle:hover{background:#edf3fa;color:#075bb8}
+.auth-submit-premium{height:49px;margin-top:4px;border-radius:9px;background:linear-gradient(100deg,#075bb8,#0871cf);box-shadow:0 8px 18px rgba(0,87,185,.19);font-size:12px;transition:transform .18s,box-shadow .18s,filter .18s}
+.auth-submit-premium:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 11px 24px rgba(0,87,185,.24);filter:saturate(1.08)}
+.auth-submit-premium:disabled{display:flex;opacity:.75}
+.auth-card-premium .auth-switch{margin-top:23px;font-size:10px}
+.auth-card-premium .auth-switch button{font-size:10px}
+.auth-security-premium{display:flex;justify-content:center;align-items:center;gap:7px;margin-top:28px;color:#91a0b2;font-size:9px}
+.auth-security-premium svg{color:#29966c}
+.auth-mobile-brand .auth-brand{padding:0;margin:0 0 32px}
+.auth-mobile-brand .auth-brand-mark{color:#075bb8;font-size:28px}
+.auth-mobile-brand .auth-brand strong{color:#071a36;font-size:17px}
+@keyframes auth-orb-float{from{transform:translate3d(-8px,-12px,0) scale(.96)}to{transform:translate3d(18px,16px,0) scale(1.06)}}
+@media(max-width:850px){
+  .auth-layout{width:min(560px,100%);min-height:auto;grid-template-columns:1fr;border-radius:20px}
+  .auth-visual{display:none}
+  .auth-panel{padding:clamp(26px,7vw,52px)}
+  .auth-mobile-brand{display:block}
+}
+@media(max-width:480px){
+  .auth-screen-premium{padding:0;background:#fff}
+  .auth-layout{min-height:100dvh;border:0;border-radius:0;box-shadow:none}
+  .auth-panel{align-items:start;padding:30px 22px}
+  .auth-card-premium{padding-top:12px}
+  .auth-card-premium .auth-intro{margin-bottom:24px}
+  .auth-security-premium{margin-top:24px}
+}
+@media(prefers-reduced-motion:reduce){
+  .auth-visual:before,.auth-visual:after,.auth-submit-premium{animation:none;transition:none}
+}
