@@ -31,9 +31,10 @@ export function EstablishmentProvider({ children }: { children: ReactNode }) {
     let items = (rows ?? []) as Establishment[]
     let selected = ''
     if (userId) {
+      const { data: tenantId } = await supabase.rpc('current_tenant_id')
       const [{ data: profile }, { data: membership }] = await Promise.all([
         supabase.from('profiles').select('active_establishment_id').eq('id', userId).maybeSingle(),
-        supabase.from('tenant_members').select('establishment_id,role,status').eq('user_id', userId).eq('status', 'active').maybeSingle()
+        supabase.from('tenant_members').select('establishment_id,role,status').eq('user_id', userId).eq('tenant_id', tenantId).eq('status', 'active').maybeSingle()
       ])
       selected = profile?.active_establishment_id ?? ''
       if (membership && !['owner', 'admin'].includes(membership.role)) {
