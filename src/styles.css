@@ -1900,3 +1900,48 @@ body {
   color:#d5e2f3!important;
   -webkit-text-fill-color:#d5e2f3!important;
 }
+
+
+/* Animation technologique visible dans les deux thèmes : couche de fond
+   placée au-dessus du fond de page et derrière le contenu des modules. */
+.app-shell>.main-area::after{display:none!important}
+.app-shell>.main-area>.content{
+  position:relative;
+  isolation:isolate;
+  overflow:clip;
+}
+.app-shell>.main-area>.content::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:0;
+  pointer-events:none;
+  opacity:.72;
+  background-image:
+    linear-gradient(rgba(0,87,185,.10) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,87,185,.10) 1px,transparent 1px),
+    radial-gradient(ellipse at 12% 8%,rgba(0,140,220,.13),transparent 38%),
+    linear-gradient(112deg,transparent 0%,rgba(0,140,220,.12) 48%,transparent 54%);
+  background-size:32px 32px,32px 32px,100% 100%,220% 100%;
+  background-position:0 0,0 0,0 0,-120% 0;
+  animation:sib-tech-canvas 18s linear infinite;
+}
+.app-shell>.main-area>.content>*{
+  position:relative;
+  z-index:1;
+}
+:root[data-theme="dark"] .app-shell>.main-area>.content::before{
+  opacity:.9;
+  background-image:
+    linear-gradient(rgba(103,174,255,.15) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(103,174,255,.15) 1px,transparent 1px),
+    radial-gradient(ellipse at 12% 8%,rgba(0,119,255,.19),transparent 42%),
+    linear-gradient(112deg,transparent 0%,rgba(51,151,255,.22) 48%,transparent 54%);
+}
+@keyframes sib-tech-canvas{
+  0%{background-position:0 0,0 0,0 0,-120% 0}
+  100%{background-position:0 32px,32px 0,0 0,120% 0}
+}
+@media(prefers-reduced-motion:reduce){
+  .app-shell>.main-area>.content::before{animation:none!important}
+}
