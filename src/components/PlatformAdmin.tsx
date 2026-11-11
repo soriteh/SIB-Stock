@@ -29,9 +29,9 @@ export default function PlatformAdmin(){
  const tabs:[Tab,string,typeof Building2][]=[['overview','Vue générale',Activity],['companies','Entreprises',Building2],['plans','Offres & tarifs',Layers3],['requests','Souscriptions',CreditCard],['audit','Journal d’audit',History]]
  if(loading&&!data)return <div className="content"><div className="panel catalog-loading"><LoaderCircle className="spin"/> Chargement de la console SaaS…</div></div>
  return <div className="content catalog-page platform-admin-page">
-  <section className="welcome-row"><div><div className="eyebrow"><ShieldCheck size={14}/> CONSOLE DE PILOTAGE GLOBAL</div><h1>Administration SaaS</h1><p>Gérez les entreprises, les licences, les abonnements et le catalogue commercial de SIB Stock.</p></div><button className="outline-button" onClick={()=>void load()} disabled={loading}><RefreshCw size={14}/> Actualiser</button></section>
+  <section className="welcome-row platform-admin-hero"><div className="platform-admin-hero-copy"><div className="eyebrow"><ShieldCheck size={14}/> CENTRE DE CONTRÔLE · SIB STOCK</div><h1>Administration SaaS</h1><p>Pilotez les espaces clients, les licences, les offres et les demandes d’abonnement depuis un espace centralisé.</p><div className="platform-admin-hero-meta"><span><i/> Console sécurisée</span><span>Super Administrateur</span></div></div><button className="outline-button platform-admin-refresh" onClick={()=>void load()} disabled={loading}><RefreshCw size={14} className={loading?"spin":""}/> Actualiser les données</button></section>
   {error&&<div className="catalog-error" role="alert">{error}</div>}{notice&&<div className="catalog-notice" role="status">{notice}</div>}
-  <nav className="platform-admin-tabs">{tabs.map(([id,label,Icon])=><button key={id} className={tab===id?'active':''} onClick={()=>setTab(id)}><Icon size={15}/>{label}{id==='requests'&&data?.stats.pending_requests? <b>{data.stats.pending_requests}</b>:null}</button>)}</nav>
+  <nav className="platform-admin-tabs" aria-label="Navigation administration SaaS">{tabs.map(([id,label,Icon])=><button key={id} className={tab===id?'active':''} onClick={()=>setTab(id)}><Icon size={15}/>{label}{id==='requests'&&data?.stats.pending_requests? <b>{data.stats.pending_requests}</b>:null}</button>)}</nav>
   {data&&<>
    {tab==='overview'&&<>
     <section className="stats-grid admin-stats">
