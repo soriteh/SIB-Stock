@@ -1598,3 +1598,47 @@ body {
   .auth-screen-premium .auth-layout{margin:0;width:100%;min-height:100%;}
   .auth-screen-premium .auth-panel{min-height:100%;}
 }
+
+
+/* Compact login screen: reduce the overall footprint while preserving readability. */
+.auth-screen-premium{
+  padding:clamp(10px,1.5vw,20px) !important;
+}
+.auth-screen-premium .auth-layout{
+  width:min(940px,100%) !important;
+  min-height:0 !important;
+  border-radius:20px;
+}
+.auth-screen-premium .auth-visual{
+  min-height:0 !important;
+  padding:clamp(22px,2.7vw,34px) !important;
+}
+.auth-screen-premium .auth-visual-content{min-height:0 !important}
+.auth-screen-premium .auth-visual-copy{padding:clamp(20px,3vh,34px) 0 !important}
+.auth-screen-premium .auth-visual-copy h1{font-size:clamp(27px,2.8vw,37px);margin:16px 0 12px}
+.auth-screen-premium .auth-visual-copy>p{font-size:12px;line-height:1.65}
+.auth-screen-premium .auth-feature-list{gap:12px;margin-top:22px}
+.auth-screen-premium .auth-feature-list>div>span{width:34px;height:34px;flex-basis:34px}
+.auth-screen-premium .auth-panel{padding:clamp(20px,2.8vw,34px) !important}
+.auth-screen-premium .auth-card-premium{max-width:350px}
+.auth-screen-premium .auth-mobile-brand .auth-brand{margin-bottom:22px}
+.auth-screen-premium .auth-card-premium h2{font-size:27px}
+.auth-screen-premium .auth-card-premium .auth-intro{margin:8px 0 18px}
+.auth-screen-premium .auth-form-premium{gap:12px}
+.auth-screen-premium .auth-form-premium input{height:43px;font-size:13px}
+.auth-screen-premium .auth-submit-premium{height:44px}
+.auth-screen-premium .auth-card-premium .auth-switch{margin-top:16px}
+.auth-screen-premium .auth-security-premium{margin-top:18px}
+@media(max-width:850px){
+  .auth-screen-premium{padding:14px !important}
+  .auth-screen-premium .auth-layout{width:min(440px,100%) !important}
+  .auth-screen-premium .auth-panel{padding:28px 30px !important}
+}
+@media(max-width:480px){
+  .auth-screen-premium{padding:0 !important}
+  .auth-screen-premium .auth-layout{width:100% !important;min-height:100dvh;border-radius:0}
+  .auth-screen-premium .auth-panel{padding:24px 22px !important}
+  .auth-screen-premium .auth-mobile-brand .auth-brand{margin-bottom:22px}
+  .auth-screen-premium .auth-card-premium h2{font-size:25px}
+  .auth-screen-premium .auth-form-premium input{height:46px;font-size:16px}
+}
