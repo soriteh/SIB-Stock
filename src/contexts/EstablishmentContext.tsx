@@ -27,14 +27,21 @@ export function EstablishmentProvider({ children }: { children: ReactNode }) {
       supabase.auth.getUser()
     ])
     if (listError) { setError(listError.message); setLoading(false); return }
-    const items = (rows ?? []) as Establishment[]
-    setEstablishments(items)
     const userId = userData.user?.id
+    let items = (rows ?? []) as Establishment[]
     let selected = ''
     if (userId) {
-      const { data: profile } = await supabase.from('profiles').select('active_establishment_id').eq('id', userId).maybeSingle()
+      const [{ data: profile }, { data: membership }] = await Promise.all([
+        supabase.from('profiles').select('active_establishment_id').eq('id', userId).maybeSingle(),
+        supabase.from('tenant_members').select('establishment_id,role,status').eq('user_id', userId).eq('status', 'active').maybeSingle()
+      ])
       selected = profile?.active_establishment_id ?? ''
+      if (membership && !['owner', 'admin'].includes(membership.role)) {
+        items = items.filter(item => item.id === membership.establishment_id)
+        selected = membership.establishment_id
+      }
     }
+    setEstablishments(items)
     if (!items.some(item => item.id === selected)) selected = items.find(item => item.is_primary)?.id ?? items[0]?.id ?? ''
     setActiveId(selected)
     setLoading(false)
