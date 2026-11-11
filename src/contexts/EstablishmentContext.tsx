@@ -47,7 +47,7 @@ export function EstablishmentProvider({ children }: { children: ReactNode }) {
     const { error: updateError } = await supabase.from('profiles').update({ active_establishment_id: id }).eq('id', userData.user.id)
     if (updateError) { setError(updateError.message); return }
     setActiveId(id)
-    window.dispatchEvent(new CustomEvent('establishment-changed', { detail: { id } }))
+    window.location.reload()
   }, [establishments])
   const activeEstablishment = establishments.find(item => item.id === activeId) ?? null
   return <Context.Provider value={{ establishments, activeEstablishment, loading, error, setActive, refresh }}>{children}</Context.Provider>
