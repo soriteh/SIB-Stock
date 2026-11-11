@@ -2467,3 +2467,159 @@ body {
   .subscription-page .subscription-plan:hover .subscription-plan-icon,
   .subscription-page .subscription-plan>button:hover{transform:none!important}
 }
+
+
+/* Console SaaS — cohérence visuelle des formulaires et fenêtres de saisie */
+.platform-admin-page .admin-modal-backdrop{
+  background:rgba(5,17,34,.72)!important;
+  backdrop-filter:blur(7px) saturate(115%);
+  animation:saas-overlay-in .2s ease both;
+}
+.platform-admin-page .admin-modal{
+  overflow:hidden;
+  box-shadow:0 34px 100px rgba(2,12,28,.38),0 8px 28px rgba(2,12,28,.18)!important;
+  animation:saas-modal-in .32s cubic-bezier(.2,.8,.2,1) both;
+}
+.platform-admin-page .admin-form-header{
+  background:linear-gradient(120deg,#fff 0%,#f7faff 68%,#eef6ff 100%);
+}
+.platform-admin-page .admin-form-header>div{min-width:0}
+.platform-admin-page .admin-form-kicker{
+  padding:6px 9px;border-radius:7px;
+  background:#edf5ff;border:1px solid #d9eaff;
+}
+.platform-admin-page .admin-form-header h2{
+  font-size:22px;line-height:1.25;letter-spacing:-.65px;
+}
+.platform-admin-page .admin-form-header p{max-width:650px}
+.platform-admin-page .admin-form-section{
+  position:relative;padding:21px 0;
+}
+.platform-admin-page .admin-form-section-title{
+  margin-bottom:16px;
+}
+.platform-admin-page .admin-form-section-title>span{
+  width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(145deg,#eaf4ff,#dcecff);
+  box-shadow:inset 0 1px 0 #fff;color:#075bb8;
+}
+.platform-admin-page .admin-form-section-title strong{font-size:12px;letter-spacing:.05px}
+.platform-admin-page .admin-form-grid{gap:15px 18px}
+.platform-admin-page .admin-plan-form-rebuilt label,
+.platform-admin-page .admin-license-form>label{
+  gap:8px;font-size:11px;font-weight:750;line-height:1.4;
+}
+.platform-admin-page .admin-plan-form-rebuilt input,
+.platform-admin-page .admin-plan-form-rebuilt textarea,
+.platform-admin-page .admin-plan-form-rebuilt select,
+.platform-admin-page .admin-license-form input,
+.platform-admin-page .admin-license-form select{
+  min-height:44px;padding:11px 13px;border-radius:10px;
+  border:1px solid #dce5ef;
+  background:linear-gradient(180deg,#fff,#fcfdff);
+  box-shadow:0 1px 2px rgba(15,35,60,.025);
+  transition:border-color .18s ease,box-shadow .18s ease,background .18s ease,transform .18s ease;
+}
+.platform-admin-page .admin-plan-form-rebuilt textarea{min-height:76px}
+.platform-admin-page .admin-plan-form-rebuilt input:hover,
+.platform-admin-page .admin-plan-form-rebuilt textarea:hover,
+.platform-admin-page .admin-plan-form-rebuilt select:hover,
+.platform-admin-page .admin-license-form input:hover,
+.platform-admin-page .admin-license-form select:hover{
+  border-color:#9dbbda;background:#fff;
+}
+.platform-admin-page .admin-plan-form-rebuilt input:focus,
+.platform-admin-page .admin-plan-form-rebuilt textarea:focus,
+.platform-admin-page .admin-plan-form-rebuilt select:focus,
+.platform-admin-page .admin-license-form input:focus,
+.platform-admin-page .admin-license-form select:focus{
+  border-color:#2479c9;background:#fff;
+  box-shadow:0 0 0 4px rgba(0,87,185,.10),0 3px 10px rgba(0,87,185,.05);
+  outline:0;
+}
+.platform-admin-page .admin-form-footer{
+  margin-top:4px;padding:17px 0 2px;
+  border-top:1px solid var(--admin-line,#e5eaf1);
+}
+.platform-admin-page .admin-form-actions button,
+.platform-admin-page .admin-license-form>button{
+  min-height:42px;border-radius:10px;font-weight:750;
+  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;
+}
+.platform-admin-page .admin-form-actions .primary-button,
+.platform-admin-page .admin-license-form>button{
+  background:linear-gradient(110deg,#075bb8,#147bd0);
+  box-shadow:0 7px 16px rgba(7,91,184,.2);
+}
+.platform-admin-page .admin-form-actions .primary-button:hover,
+.platform-admin-page .admin-license-form>button:hover{
+  transform:translateY(-1px);box-shadow:0 10px 21px rgba(7,91,184,.25);
+}
+.platform-admin-page .admin-license-header{
+  background:linear-gradient(120deg,#fff 0%,#f7faff 68%,#eef6ff 100%);
+}
+.platform-admin-page .admin-license-form .license-current-summary{
+  padding:12px;border-radius:13px;
+  background:linear-gradient(135deg,#eff6ff,#f8fbff);
+  border:1px solid #dceafa;
+}
+.platform-admin-page .admin-license-form .license-current-summary>div{
+  border:1px solid #e1eaf4;border-radius:10px;
+  box-shadow:0 2px 7px rgba(20,50,85,.035);
+}
+.platform-admin-page .admin-license-form .license-current-summary small{
+  text-transform:uppercase;letter-spacing:.45px;font-weight:750;
+}
+.platform-admin-page .admin-license-form>p{
+  padding:12px 14px;border:1px solid #e2eaf3;border-radius:10px;
+  background:#f7faff;line-height:1.65;
+}
+.platform-admin-page .admin-license-form>.catalog-error{
+  background:#fff4f2;border:1px solid #f1d0cb;color:#a63b32;
+}
+:root[data-theme="dark"] .platform-admin-page .admin-form-header,
+:root[data-theme="dark"] .platform-admin-page .admin-license-header{
+  background:linear-gradient(120deg,#111f33 0%,#142944 100%);
+}
+:root[data-theme="dark"] .platform-admin-page .admin-form-section-title>span{
+  background:linear-gradient(145deg,#1b3b60,#17314f);border-color:#294b70;color:#9acaff;
+}
+:root[data-theme="dark"] .platform-admin-page .admin-plan-form-rebuilt input,
+:root[data-theme="dark"] .platform-admin-page .admin-plan-form-rebuilt textarea,
+:root[data-theme="dark"] .platform-admin-page .admin-plan-form-rebuilt select,
+:root[data-theme="dark"] .platform-admin-page .admin-license-form input,
+:root[data-theme="dark"] .platform-admin-page .admin-license-form select{
+  background:#0e1d30;border-color:#30445e;color:#e4edf9;
+}
+:root[data-theme="dark"] .platform-admin-page .admin-plan-form-rebuilt input:focus,
+:root[data-theme="dark"] .platform-admin-page .admin-plan-form-rebuilt textarea:focus,
+:root[data-theme="dark"] .platform-admin-page .admin-plan-form-rebuilt select:focus,
+:root[data-theme="dark"] .platform-admin-page .admin-license-form input:focus,
+:root[data-theme="dark"] .platform-admin-page .admin-license-form select:focus{
+  border-color:#438ed3;box-shadow:0 0 0 4px rgba(48,132,220,.17);
+}
+:root[data-theme="dark"] .platform-admin-page .admin-license-form .license-current-summary{
+  background:#142944;border-color:#29415e;
+}
+:root[data-theme="dark"] .platform-admin-page .admin-license-form .license-current-summary>div{
+  background:#102036;border-color:#30445e;
+}
+:root[data-theme="dark"] .platform-admin-page .admin-license-form>p{
+  background:#142944;border-color:#29415e;color:#b5c5d9;
+}
+@keyframes saas-overlay-in{from{opacity:0}to{opacity:1}}
+@keyframes saas-modal-in{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:680px){
+  .platform-admin-page .admin-form-header h2{font-size:19px}
+  .platform-admin-page .admin-form-section{padding:17px 0}
+  .platform-admin-page .admin-license-form .license-current-summary{gap:7px}
+}
+@media(prefers-reduced-motion:reduce){
+  .platform-admin-page .admin-modal-backdrop,
+  .platform-admin-page .admin-modal{animation:none!important}
+  .platform-admin-page .admin-plan-form-rebuilt input,
+  .platform-admin-page .admin-plan-form-rebuilt textarea,
+  .platform-admin-page .admin-plan-form-rebuilt select,
+  .platform-admin-page .admin-license-form input,
+  .platform-admin-page .admin-license-form select{transition:none!important}
+}
