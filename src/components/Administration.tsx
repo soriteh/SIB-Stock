@@ -2,12 +2,13 @@ import {useCallback,useEffect,useMemo,useState} from 'react'
 import {LoaderCircle,RefreshCw,ShieldCheck,Users,Search,Filter} from 'lucide-react'
 import {supabase} from '../lib/supabase'
 
-type Member={id:string;user_id:string;role:string;status:string;created_at:string;full_name?:string|null;phone?:string|null}
+type Member={id:string;user_id:string;role:string;status:string;created_at:string;establishment_id:string;full_name?:string|null;phone?:string|null}
 const roles=['admin','manager','warehouse_manager','storekeeper','buyer','sales','cashier','accountant','viewer']
 const roleLabel=(s:string)=>({owner:'Propriétaire',admin:'Administrateur',manager:'Gestionnaire',warehouse_manager:'Responsable stock',storekeeper:'Magasinier',buyer:'Acheteur',sales:'Commercial',cashier:'Caissier',accountant:'Comptable',viewer:'Lecture seule'}[s]??s)
 
 export default function Administration(){
  const [members,setMembers]=useState<Member[]>([])
+ const [establishments,setEstablishments]=useState<{id:string;name:string}[]>([])
  const [loading,setLoading]=useState(true)
  const [busy,setBusy]=useState('')
  const [error,setError]=useState('')
@@ -18,7 +19,12 @@ export default function Administration(){
  const load=useCallback(async()=>{
   if(!supabase){setLoading(false);setError('Service de données indisponible.');return}
   setLoading(true);setError('')
-  const {data,error:e}=await supabase.from('tenant_members').select('id,user_id,role,status,created_at').order('created_at',{ascending:false})
+  const [{data,error:e},{data:sites,error:siteError}]=await Promise.all([
+   supabase.from('tenant_members').select('id,user_id,role,status,created_at,establishment_id').order('created_at',{ascending:false}),
+   supabase.from('establishments').select('id,name').eq('is_active',true).order('name')
+  ])
+  setEstablishments((sites??[]) as {id:string;name:string}[])
+  if(siteError)setError(siteError.message)
   if(e){setError(e.message);setMembers([]);setLoading(false);return}
   const rows=(data??[]) as Member[]
   const ids=rows.map(x=>x.user_id)
@@ -37,14 +43,14 @@ export default function Administration(){
   const matchesText=!term||[m.full_name,m.phone,m.user_id,m.role].some(v=>String(v??'').toLocaleLowerCase('fr').includes(term))
   return matchesText&&(roleFilter==='all'||m.role===roleFilter)&&(statusFilter==='all'||m.status===statusFilter)
  }),[members,query,roleFilter,statusFilter])
- async function update(m:Member,field:'role'|'status',value:string){
+ async function update(m:Member,field:'role'|'status'|'establishment_id',value:string){
   if(!supabase)return
   if(field==='status'&&value==='suspended'&&!window.confirm('Suspendre cet utilisateur ? Il perdra l’accès à cet espace.'))return
   if(field==='status'&&m.status==='suspended'&&value==='active'&&!window.confirm('Réactiver l’accès de cet utilisateur ?'))return
   setBusy(m.id);setError('');setNotice('')
   const {error:e}=await supabase.from('tenant_members').update({[field]:value}).eq('id',m.id)
   if(e)setError('Modification refusée : '+e.message)
-  else{setNotice(field==='role'?'Rôle de l’utilisateur mis à jour.':'Statut de l’utilisateur mis à jour.');await load()}
+  else{setNotice(field==='role'?'Rôle de l’utilisateur mis à jour.':field==='status'?'Statut de l’utilisateur mis à jour.':'Établissement de l’utilisateur mis à jour.');await load()}
   setBusy('')
  }
  return <div className="content catalog-page admin-page">
@@ -59,9 +65,9 @@ export default function Administration(){
   <section className="panel catalog-panel">
    <div className="panel-heading"><div><h2>Utilisateurs et permissions</h2><p>Les droits sont appliqués par les politiques de sécurité de la base de données.</p></div><span className="catalog-count">{filtered.length} résultat(s)</span></div>
    <div className="admin-toolbar"><label className="catalog-search"><Search size={15}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Rechercher un nom, téléphone ou identifiant…"/></label><label className="admin-filter"><Filter size={14}/><select value={roleFilter} onChange={e=>setRoleFilter(e.target.value)}><option value="all">Tous les rôles</option>{['owner',...roles].map(r=><option key={r} value={r}>{roleLabel(r)}</option>)}</select></label><label className="admin-filter"><select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}><option value="all">Tous les statuts</option><option value="active">Actifs</option><option value="invited">En attente</option><option value="suspended">Suspendus</option></select></label></div>
-   {loading?<div className="catalog-loading"><LoaderCircle className="spin"/> Chargement des utilisateurs…</div>:<div className="table-wrap"><table><thead><tr><th>UTILISATEUR</th><th>IDENTIFIANT</th><th>RÔLE</th><th>STATUT</th><th>DATE D’AJOUT</th></tr></thead><tbody>
-    {filtered.map(m=><tr key={m.id}><td><strong>{m.full_name||'Utilisateur sans nom'}</strong>{m.phone&&<small className="admin-phone">{m.phone}</small>}</td><td className="admin-id" title={m.user_id}>{m.user_id.slice(0,8)}…</td><td>{m.role==='owner'?<span className="status-pill">Propriétaire</span>:<select aria-label={'Rôle de '+(m.full_name||m.user_id)} className="admin-select" disabled={busy===m.id} value={m.role} onChange={e=>void update(m,'role',e.target.value)}>{roles.map(r=><option key={r} value={r}>{roleLabel(r)}</option>)}</select>}</td><td>{m.role==='owner'?<span className="status-pill">Actif</span>:<select aria-label={'Statut de '+(m.full_name||m.user_id)} className="admin-select" disabled={busy===m.id} value={m.status} onChange={e=>void update(m,'status',e.target.value)}><option value="active">Actif</option><option value="invited">Invité</option><option value="suspended">Suspendu</option></select>}{busy===m.id&&<LoaderCircle className="spin admin-saving" size={13}/>}</td><td>{new Date(m.created_at).toLocaleDateString('fr-FR')}</td></tr>)}
-    {!filtered.length&&<tr><td colSpan={5} className="empty-state">{members.length?'Aucun utilisateur ne correspond aux filtres.':'Aucun utilisateur visible ou droits insuffisants pour administrer cet espace.'}</td></tr>}
+   {loading?<div className="catalog-loading"><LoaderCircle className="spin"/> Chargement des utilisateurs…</div>:<div className="table-wrap"><table><thead><tr><th>UTILISATEUR</th><th>IDENTIFIANT</th><th>RÔLE</th><th>STATUT</th><th>ÉTABLISSEMENT</th><th>DATE D’AJOUT</th></tr></thead><tbody>
+    {filtered.map(m=><tr key={m.id}><td><strong>{m.full_name||'Utilisateur sans nom'}</strong>{m.phone&&<small className="admin-phone">{m.phone}</small>}</td><td className="admin-id" title={m.user_id}>{m.user_id.slice(0,8)}…</td><td>{m.role==='owner'?<span className="status-pill">Propriétaire</span>:<select aria-label={'Rôle de '+(m.full_name||m.user_id)} className="admin-select" disabled={busy===m.id} value={m.role} onChange={e=>void update(m,'role',e.target.value)}>{roles.map(r=><option key={r} value={r}>{roleLabel(r)}</option>)}</select>}</td><td>{m.role==='owner'?<span className="status-pill">Actif</span>:<select aria-label={'Statut de '+(m.full_name||m.user_id)} className="admin-select" disabled={busy===m.id} value={m.status} onChange={e=>void update(m,'status',e.target.value)}><option value="active">Actif</option><option value="invited">Invité</option><option value="suspended">Suspendu</option></select>}{busy===m.id&&<LoaderCircle className="spin admin-saving" size={13}/>}</td><td>{m.role==='owner'||m.role==='admin'?<span className="status-pill">Tous les sites</span>:<select aria-label={'Établissement de '+(m.full_name||m.user_id)} className="admin-select" disabled={busy===m.id} value={m.establishment_id} onChange={e=>void update(m,'establishment_id',e.target.value)}>{establishments.map(site=><option key={site.id} value={site.id}>{site.name}</option>)}</select>}</td><td>{new Date(m.created_at).toLocaleDateString('fr-FR')}</td></tr>)}
+    {!filtered.length&&<tr><td colSpan={6} className="empty-state">{members.length?'Aucun utilisateur ne correspond aux filtres.':'Aucun utilisateur visible ou droits insuffisants pour administrer cet espace.'}</td></tr>}
    </tbody></table></div>}
   </section>
   <div className="admin-note"><ShieldCheck size={16}/><p>Le propriétaire principal est protégé contre toute modification de rôle ou suspension. L’invitation de nouveaux comptes doit passer par une fonction serveur Supabase utilisant la clé de service, jamais exposée dans le navigateur. Les modifications restent soumises aux règles RLS.</p></div>
