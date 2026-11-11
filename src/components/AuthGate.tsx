@@ -237,7 +237,7 @@ export default function AuthGate({ children }: { children: ReactNode }) {
     </div></div>
   )
 
-  return <><div className="tenant-session"><span><Building2 size={15}/> {tenant.name}</span><button onClick={logout}><LogOut size={14}/> Déconnexion</button></div>{children}</>
+  return <><div className="tenant-session"><div className="tenant-session-company" aria-label={`Entreprise active : ${tenant.name}`}><Building2 size={18}/><strong>{tenant.name}</strong><ChevronDown size={15}/></div><button onClick={logout}><LogOut size={14}/> Déconnexion</button></div>{children}</>
 }
 
 function Brand() {
