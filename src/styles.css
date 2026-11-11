@@ -2203,3 +2203,9 @@ body {
  .platform-admin-page .admin-form-actions button{flex:1}
  .platform-admin-page .admin-license-form .license-current-summary{grid-template-columns:1fr}
 }
+
+
+/* SaaS admin dialogs: render in document.body to escape transformed/overflowing page shells. */
+.admin-modal-backdrop{position:fixed!important;inset:0!important;width:100vw;height:100dvh;min-height:100vh;z-index:10000!important;display:grid!important;place-items:center!important;align-items:center!important;justify-items:center!important;overflow-y:auto!important;overscroll-behavior:contain;padding:24px!important;background:rgba(8,18,34,.68)!important;backdrop-filter:blur(3px)}
+.admin-modal-backdrop>.admin-modal{position:relative!important;inset:auto!important;margin:auto!important;max-height:calc(100dvh - 48px)!important;overflow-y:auto!important;transform:none!important}
+@media(max-width:640px){.admin-modal-backdrop{padding:12px!important}.admin-modal-backdrop>.admin-modal{max-height:calc(100dvh - 24px)!important}}
