@@ -23,7 +23,7 @@ export default function Establishments() {
     const { data } = await supabase.from('tenant_subscriptions').select('subscription_plans(limits)').eq('tenant_id', tenantId).maybeSingle()
     const plan = data?.subscription_plans as unknown as { limits?: PlanLimits } | null
     const raw = plan?.limits?.establishments
-    setLimit(raw === null || raw === undefined ? null : Number(raw))
+    setLimit(raw === null ? null : raw === undefined ? 1 : Number(raw))
   }, [])
   useEffect(() => { void loadLimit() }, [loadLimit])
   async function submit(event: FormEvent) {
