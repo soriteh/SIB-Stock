@@ -196,6 +196,16 @@ export default function AuthGate({ children }: { children: ReactNode }) {
     </div>
   )
 
+  if (tenant?.status === 'suspended') return (
+    <div className="auth-screen"><div className="auth-card">
+      <Brand /><div className="auth-kicker">ACCÈS TEMPORAIREMENT SUSPENDU</div>
+      <h1>Espace entreprise suspendu</h1>
+      <p>L’accès à l’espace <strong>{tenant.name}</strong> est temporairement suspendu par l’administration SIB. Les données de votre entreprise restent conservées. Contactez l’assistance SIB pour régulariser la situation.</p>
+      {error && <div className="auth-error" role="alert">{error}</div>}
+      <button className="auth-submit" onClick={logout}><LogOut size={15}/> Se déconnecter</button>
+    </div></div>
+  )
+
   if (!tenant) return (
     <div className="auth-screen"><div className="auth-card"><Brand />
       <div className="auth-kicker">CONFIGURATION INITIALE</div><h1>Configurez votre entreprise</h1>
