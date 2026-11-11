@@ -3008,3 +3008,173 @@ body {
   .tenant-session-company strong{font-size:10px!important}
   .tenant-session>button{font-size:10px!important;padding:0 5px!important;gap:5px!important}
 }
+
+
+/* SIB Stock — système d'harmonisation transversal des pages */
+.app-shell>.main-area>.content{
+  --page-ink:#10213b;
+  --page-muted:#687b94;
+  --page-line:#e2eaf3;
+  --page-blue:#0057b9;
+  --page-orange:#ff7800;
+  padding-top:24px!important;
+}
+.app-shell>.main-area>.content::before{
+  opacity:.32!important;
+  background-image:
+    radial-gradient(ellipse at 8% 0%,rgba(0,112,210,.095),transparent 43%),
+    radial-gradient(ellipse at 94% 16%,rgba(255,120,0,.045),transparent 32%),
+    linear-gradient(120deg,transparent 0%,rgba(0,87,185,.035) 50%,transparent 100%)!important;
+  background-size:100% 100%,100% 100%,220% 100%!important;
+  background-position:0 0,0 0,-120% 0!important;
+  animation:sib-page-ambience 26s ease-in-out infinite!important;
+}
+@keyframes sib-page-ambience{
+  0%,100%{background-position:0 0,0 0,-100% 0}
+  50%{background-position:0 0,0 0,100% 0}
+}
+.app-shell>.main-area>.content>.welcome-row{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  gap:20px!important;min-height:112px!important;margin:0 0 22px!important;
+  padding:20px 24px!important;border:1px solid rgba(207,222,239,.92)!important;
+  border-radius:16px!important;
+  background:linear-gradient(112deg,rgba(255,255,255,.97),rgba(247,250,255,.94))!important;
+  box-shadow:0 8px 26px rgba(17,48,84,.045),inset 3px 0 0 #0057b9!important;
+}
+.app-shell>.main-area>.content>.welcome-row>div{min-width:0!important}
+.app-shell>.main-area>.content .welcome-row .eyebrow{
+  display:flex!important;align-items:center!important;gap:8px!important;
+  margin:0 0 8px!important;color:#58718f!important;
+  font-size:10px!important;font-weight:800!important;letter-spacing:1.45px!important;
+  line-height:1.4!important;
+}
+.app-shell>.main-area>.content .welcome-row h1{
+  margin:0 0 7px!important;color:#10213b!important;
+  font:800 clamp(23px,2.2vw,30px)/1.18 Manrope,sans-serif!important;
+  letter-spacing:-.9px!important;
+}
+.app-shell>.main-area>.content .welcome-row p{
+  max-width:780px!important;margin:0!important;color:#71839a!important;
+  font-size:13px!important;line-height:1.6!important;
+}
+.app-shell>.main-area>.content>.welcome-row>:last-child:not(:first-child){flex:0 0 auto}
+.app-shell>.main-area>.content .welcome-row .primary-button,
+.app-shell>.main-area>.content .welcome-row .outline-button{
+  min-height:40px!important;height:auto!important;padding:0 15px!important;
+  border-radius:10px!important;font-size:11px!important;white-space:nowrap!important;
+}
+.app-shell>.main-area>.content .stats-grid{gap:14px!important;margin-bottom:18px!important}
+.app-shell>.main-area>.content .stat-card,
+.app-shell>.main-area>.content .panel{
+  border:1px solid #e4ebf3!important;border-radius:13px!important;
+  box-shadow:0 4px 16px rgba(16,42,75,.045)!important;
+}
+.app-shell>.main-area>.content .stat-card{padding:17px 18px!important}
+.app-shell>.main-area>.content .panel-heading h2,
+.app-shell>.main-area>.content .catalog-form-heading strong,
+.app-shell>.main-area>.content .settings-section-title h2{
+  color:#172b48!important;font-family:Manrope,sans-serif!important;
+}
+.app-shell>.main-area>.content .catalog-toolbar,
+.app-shell>.main-area>.content .report-filter,
+.app-shell>.main-area>.content .partners-toolbar{
+  border:1px solid #e4ebf3!important;border-radius:12px!important;
+  background:rgba(255,255,255,.94)!important;padding:12px 14px!important;
+}
+.app-shell>.main-area>.content table thead{background:#f3f7fc!important}
+.app-shell>.main-area>.content table th{
+  color:#60748e!important;font-size:9px!important;letter-spacing:.7px!important;
+  font-weight:800!important;padding:12px 13px!important;
+}
+.app-shell>.main-area>.content table td{
+  color:#53677f!important;font-size:11px!important;padding:13px!important;
+  border-bottom:1px solid #edf1f6!important;
+}
+.app-shell>.main-area>.content table tbody tr:hover{background:#f7faff!important}
+.app-shell>.main-area>.content input:not([type="checkbox"]):not([type="radio"]),
+.app-shell>.main-area>.content select,
+.app-shell>.main-area>.content textarea{
+  border-color:#dce5ef!important;border-radius:9px!important;
+}
+.app-shell>.main-area>.content input:focus,
+.app-shell>.main-area>.content select:focus,
+.app-shell>.main-area>.content textarea:focus{
+  border-color:#4b91dc!important;box-shadow:0 0 0 3px rgba(0,87,185,.09)!important;outline:none!important;
+}
+.app-shell>.main-area>.content .primary-button{
+  border-radius:9px!important;background:#0057b9!important;border-color:#0057b9!important;
+  box-shadow:0 4px 10px rgba(0,87,185,.15)!important;
+}
+.app-shell>.main-area>.content .primary-button:hover{background:#064b99!important;transform:translateY(-1px)}
+.app-shell>.main-area>.content .outline-button{
+  border-radius:9px!important;border-color:#dce5ef!important;background:#fff!important;color:#435a75!important;
+}
+.subscription-page>.welcome-row{
+  min-height:128px!important;
+}
+.subscription-page .subscription-current,
+.subscription-page .subscription-plan{border-radius:16px!important}
+.subscription-page .subscription-current{border-color:#e0e9f3!important;box-shadow:0 7px 24px rgba(16,42,75,.055)!important}
+.help-page .help-hero{
+  border-radius:18px!important;box-shadow:0 8px 24px rgba(16,42,75,.08)!important;
+}
+.profile-page>.welcome-row{margin-bottom:18px!important}
+.dashboard-page .dashboard-welcome{
+  border-radius:18px!important;box-shadow:0 10px 28px rgba(7,26,54,.12)!important;
+}
+:root[data-theme="dark"] .app-shell>.main-area>.content::before{
+  opacity:.22!important;
+  background-image:
+    radial-gradient(ellipse at 8% 0%,rgba(0,112,210,.18),transparent 43%),
+    radial-gradient(ellipse at 94% 16%,rgba(255,120,0,.07),transparent 32%)!important;
+}
+:root[data-theme="dark"] .app-shell>.main-area>.content>.welcome-row{
+  border-color:#29415e!important;
+  background:linear-gradient(112deg,rgba(13,29,49,.97),rgba(17,39,64,.94))!important;
+  box-shadow:0 8px 26px rgba(0,0,0,.14),inset 3px 0 0 #1684e8!important;
+}
+:root[data-theme="dark"] .app-shell>.main-area>.content .welcome-row .eyebrow{color:#a8c2df!important}
+:root[data-theme="dark"] .app-shell>.main-area>.content .welcome-row h1{color:#edf5ff!important}
+:root[data-theme="dark"] .app-shell>.main-area>.content .welcome-row p{color:#b2c3d8!important}
+:root[data-theme="dark"] .app-shell>.main-area>.content .stat-card,
+:root[data-theme="dark"] .app-shell>.main-area>.content .panel{
+  border-color:#29415e!important;box-shadow:0 4px 18px rgba(0,0,0,.12)!important;
+}
+:root[data-theme="dark"] .app-shell>.main-area>.content .panel-heading h2,
+:root[data-theme="dark"] .app-shell>.main-area>.content .catalog-form-heading strong,
+:root[data-theme="dark"] .app-shell>.main-area>.content .settings-section-title h2{color:#e6effb!important}
+:root[data-theme="dark"] .app-shell>.main-area>.content .catalog-toolbar,
+:root[data-theme="dark"] .app-shell>.main-area>.content .report-filter,
+:root[data-theme="dark"] .app-shell>.main-area>.content .partners-toolbar{
+  border-color:#29415e!important;background:#11243a!important;
+}
+:root[data-theme="dark"] .app-shell>.main-area>.content table thead{background:#172d48!important}
+:root[data-theme="dark"] .app-shell>.main-area>.content table th{color:#a8bfd9!important}
+:root[data-theme="dark"] .app-shell>.main-area>.content table td{color:#c0cee0!important;border-color:#263e5b!important}
+:root[data-theme="dark"] .app-shell>.main-area>.content table tbody tr:hover{background:#142b46!important}
+:root[data-theme="dark"] .app-shell>.main-area>.content input:not([type="checkbox"]):not([type="radio"]),
+:root[data-theme="dark"] .app-shell>.main-area>.content select,
+:root[data-theme="dark"] .app-shell>.main-area>.content textarea{
+  border-color:#344d6b!important;background:#0d1e32!important;color:#e5eef9!important;
+}
+:root[data-theme="dark"] .app-shell>.main-area>.content .outline-button{
+  border-color:#3a526f!important;background:#142943!important;color:#d2e0f1!important;
+}
+@media(max-width:760px){
+  .app-shell>.main-area>.content{padding:15px 12px 22px!important}
+  .app-shell>.main-area>.content>.welcome-row{
+    min-height:0!important;align-items:flex-start!important;flex-direction:column!important;
+    gap:14px!important;padding:17px 16px!important;margin-bottom:17px!important;
+  }
+  .app-shell>.main-area>.content .welcome-row h1{font-size:22px!important}
+  .app-shell>.main-area>.content .welcome-row p{font-size:12px!important}
+  .app-shell>.main-area>.content>.welcome-row>:last-child:not(:first-child){width:100%!important}
+  .app-shell>.main-area>.content .welcome-row .primary-button,
+  .app-shell>.main-area>.content .welcome-row .outline-button{width:100%!important;justify-content:center!important}
+  .app-shell>.main-area>.content .stats-grid{gap:9px!important}
+  .app-shell>.main-area>.content .stat-card{padding:13px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .app-shell>.main-area>.content::before{animation:none!important}
+  .app-shell>.main-area>.content .primary-button{transition:none!important}
+}
