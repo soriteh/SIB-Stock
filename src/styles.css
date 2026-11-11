@@ -1881,3 +1881,22 @@ body {
     grid-template-columns:minmax(0,1fr)!important;
   }
 }
+
+
+/* Lisibilité des chiffres dans les cartes KPI en thème sombre */
+:root[data-theme="dark"] .main-area .stat-card .stat-value,
+:root[data-theme="dark"] .main-area .stats-grid .stat-value,
+:root[data-theme="dark"] .main-area .dashboard-kpi-grid .stat-value,
+:root[data-theme="dark"] .main-area .dashboard-kpi-grid .kpi-value,
+:root[data-theme="dark"] .main-area .dashboard-kpi-grid .metric-value,
+:root[data-theme="dark"] .main-area .dashboard-kpi-grid .card-value,
+:root[data-theme="dark"] .main-area .dashboard-kpi-grid .summary-value,
+:root[data-theme="dark"] .main-area .stats-card .value,
+:root[data-theme="dark"] .main-area .kpi-card .value {
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+}
+:root[data-theme="dark"] .main-area .stat-card .stat-value small {
+  color:#d5e2f3!important;
+  -webkit-text-fill-color:#d5e2f3!important;
+}
