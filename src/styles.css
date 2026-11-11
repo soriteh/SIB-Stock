@@ -1501,3 +1501,53 @@ body {
 @media(prefers-reduced-motion:reduce){
   .auth-visual:before,.auth-visual:after,.auth-submit-premium{animation:none;transition:none}
 }
+
+
+/* SIB Stock login — final layout calibration: balanced proportions and viewport-safe sizing. */
+.auth-screen-premium{
+  box-sizing:border-box;
+  width:100%;
+  min-height:100vh;
+  min-height:100dvh;
+  padding:clamp(12px,2.4vw,30px);
+}
+.auth-layout{
+  box-sizing:border-box;
+  width:min(1080px,100%);
+  min-height:0;
+  grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);
+  align-items:stretch;
+}
+.auth-visual{
+  box-sizing:border-box;
+  min-height:clamp(560px,calc(100dvh - 60px),720px);
+  padding:clamp(26px,3.5vw,46px);
+}
+.auth-visual-copy{padding:clamp(34px,5vh,58px) 0 clamp(26px,4vh,42px)}
+.auth-feature-list{gap:clamp(12px,2vh,18px);margin-top:clamp(22px,3vh,32px)}
+.auth-panel{box-sizing:border-box;min-width:0;padding:clamp(24px,4vw,48px)}
+.auth-card-premium{max-width:380px}
+.auth-card-premium .auth-intro{margin-bottom:clamp(18px,3vh,26px)}
+.auth-form-premium{gap:clamp(13px,2.2vh,17px)}
+.auth-card-premium .auth-switch{line-height:1.7}
+@media(max-height:720px) and (min-width:851px){
+  .auth-screen-premium{place-items:start center}
+  .auth-layout{margin:auto 0}
+  .auth-visual{min-height:560px}
+  .auth-visual-copy{padding:28px 0}
+  .auth-feature-list{gap:11px;margin-top:20px}
+}
+@media(max-width:850px){
+  .auth-screen-premium{place-items:center;padding:20px}
+  .auth-layout{width:min(520px,100%);min-height:0;grid-template-columns:minmax(0,1fr)}
+  .auth-panel{padding:clamp(28px,6vw,48px)}
+}
+@media(max-width:480px){
+  .auth-screen-premium{padding:0;place-items:stretch}
+  .auth-layout{width:100%;min-height:100dvh;min-height:100vh}
+  .auth-panel{padding:calc(26px + env(safe-area-inset-top)) 22px calc(24px + env(safe-area-inset-bottom))}
+  .auth-mobile-brand .auth-brand{margin-bottom:clamp(26px,7vh,42px)}
+  .auth-card-premium{max-width:100%;padding-top:0}
+  .auth-form-premium input{height:50px;font-size:16px}
+  .auth-submit-premium{height:50px}
+}
