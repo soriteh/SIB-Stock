@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
-import { Building2, LoaderCircle, MapPin, Plus, RefreshCw, Star } from 'lucide-react'
+import { Building2, LoaderCircle, Plus, RefreshCw, Star } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useEstablishment } from '../contexts/EstablishmentContext'
 
