@@ -5,7 +5,6 @@ import {supabase} from '../lib/supabase'
 type Member={id:string;user_id:string;role:string;status:string;created_at:string;full_name?:string|null;phone?:string|null}
 const roles=['admin','manager','warehouse_manager','storekeeper','buyer','sales','cashier','accountant','viewer']
 const roleLabel=(s:string)=>({owner:'Propriétaire',admin:'Administrateur',manager:'Gestionnaire',warehouse_manager:'Responsable stock',storekeeper:'Magasinier',buyer:'Acheteur',sales:'Commercial',cashier:'Caissier',accountant:'Comptable',viewer:'Lecture seule'}[s]??s)
-const statusLabel=(s:string)=>({active:'Actif',invited:'Invité',suspended:'Suspendu'}[s]??s)
 
 export default function Administration(){
  const [members,setMembers]=useState<Member[]>([])
