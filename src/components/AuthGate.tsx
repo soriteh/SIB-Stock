@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
-import { ArrowRight, Building2, LoaderCircle, LogOut } from 'lucide-react'
+import { ArrowRight, Building2, LoaderCircle, LogOut, Eye, EyeOff, ShieldCheck, Boxes, TrendingUp } from 'lucide-react'
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 
 type TenantSummary = { id: string; name: string; slug: string; status: string }
@@ -13,6 +13,7 @@ export default function AuthGate({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<'login' | 'signup'>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [fullName, setFullName] = useState('')
   const [company, setCompany] = useState('')
   const [slug, setSlug] = useState('')
@@ -148,22 +149,51 @@ export default function AuthGate({ children }: { children: ReactNode }) {
   if (loading) return <div className="auth-screen"><div className="auth-loading"><LoaderCircle className="spin" size={28}/><span>Chargement de votre espace sécurisé…</span></div></div>
 
   if (!session) return (
-    <div className="auth-screen"><div className="auth-card"><Brand />
-      <div className="auth-kicker">GESTION INTELLIGENTE DES STOCKS</div>
-      {notice && <div className="auth-notice" role="status">{notice}</div>}
-      <h1>{mode === 'login' ? 'Bienvenue sur SIB Stock' : 'Créer votre compte'}</h1>
-      <p>{mode === 'login' ? 'Connectez-vous pour accéder à votre espace de gestion.' : 'Créez votre accès administrateur pour démarrer.'}</p>
-      <form onSubmit={submitAuth} className="auth-form">
-        {mode === 'signup' && <label>Nom complet<input required value={fullName} onChange={e=>setFullName(e.target.value)} placeholder="Votre nom et prénom"/></label>}
-        <label>Adresse e-mail<input type="email" required autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="nom@entreprise.com"/></label>
-        <label>Mot de passe<input type="password" required minLength={8} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="8 caractères minimum"/></label>
-        {error && <div className="auth-error">{error}</div>}
-        {notice && <div className="auth-notice">{notice}</div>}
-        <button className="auth-submit" disabled={busy}>{busy ? <LoaderCircle className="spin" size={17}/> : <>{mode === 'login' ? 'Se connecter' : 'Créer mon compte'} <ArrowRight size={17}/></>}</button>
-      </form>
-      <div className="auth-switch">{mode === 'login' ? 'Vous n’avez pas encore de compte ?' : 'Vous avez déjà un compte ?'} <button onClick={()=>{setMode(mode === 'login' ? 'signup' : 'login');setError('');setNotice('')}}>{mode === 'login' ? 'Créer un compte' : 'Se connecter'}</button></div>
-      <small className="auth-security">Connexion sécurisée · Données isolées par entreprise</small>
-    </div></div>
+    <div className="auth-screen auth-screen-premium">
+      <div className="auth-layout">
+        <section className="auth-visual" aria-label="Présentation de SIB Stock">
+          <div className="auth-visual-orb auth-visual-orb-blue" />
+          <div className="auth-visual-orb auth-visual-orb-orange" />
+          <div className="auth-visual-content">
+            <Brand />
+            <div className="auth-visual-copy">
+              <span className="auth-visual-eyebrow"><span className="auth-live-dot" /> PLATEFORME DE GESTION INTELLIGENTE</span>
+              <h1>Pilotez votre stock.<br/><span>Maîtrisez votre activité.</span></h1>
+              <p>Centralisez vos produits, vos mouvements, vos achats et vos ventes dans un espace de gestion clair et sécurisé.</p>
+              <div className="auth-feature-list">
+                <div><span><Boxes size={17}/></span><div><strong>Stock maîtrisé</strong><small>Suivi des produits et des mouvements en temps réel</small></div></div>
+                <div><span><TrendingUp size={17}/></span><div><strong>Décisions éclairées</strong><small>Indicateurs et rapports pour suivre votre activité</small></div></div>
+                <div><span><ShieldCheck size={17}/></span><div><strong>Espace sécurisé</strong><small>Données séparées par entreprise</small></div></div>
+              </div>
+            </div>
+            <div className="auth-visual-footer"><span> SIB STOCK </span><span>GESTION · PERFORMANCE · CONTRÔLE</span></div>
+          </div>
+        </section>
+        <section className="auth-panel">
+          <div className="auth-card auth-card-premium">
+            <div className="auth-mobile-brand"><Brand /></div>
+            <div className="auth-kicker">{mode === 'login' ? 'ACCÈS À VOTRE ESPACE' : 'NOUVEL UTILISATEUR'}</div>
+            {notice && <div className="auth-notice" role="status">{notice}</div>}
+            <h2>{mode === 'login' ? 'Ravi de vous revoir' : 'Créer votre compte'}</h2>
+            <p className="auth-intro">{mode === 'login' ? 'Connectez-vous pour retrouver votre espace de travail.' : 'Créez votre accès administrateur pour démarrer.'}</p>
+            <form onSubmit={submitAuth} className="auth-form auth-form-premium">
+              {mode === 'signup' && <label>Nom complet<input required autoComplete="name" value={fullName} onChange={e=>setFullName(e.target.value)} placeholder="Votre nom et prénom"/></label>}
+              <label>Adresse e-mail<input type="email" required autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="nom@entreprise.com"/></label>
+              <label>Mot de passe
+                <span className="auth-password-field">
+                  <input type={showPassword ? 'text' : 'password'} required minLength={8} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="8 caractères minimum"/>
+                  <button type="button" className="auth-password-toggle" aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'} onClick={()=>setShowPassword(v=>!v)}>{showPassword ? <EyeOff size={17}/> : <Eye size={17}/>}</button>
+                </span>
+              </label>
+              {error && <div className="auth-error" role="alert">{error}</div>}
+              <button className="auth-submit auth-submit-premium" disabled={busy}>{busy ? <><LoaderCircle className="spin" size={17}/> Connexion en cours…</> : <>{mode === 'login' ? 'Se connecter' : 'Créer mon compte'} <ArrowRight size={17}/></>}</button>
+            </form>
+            <div className="auth-switch">{mode === 'login' ? 'Vous n’avez pas encore de compte ?' : 'Vous avez déjà un compte ?'} <button type="button" onClick={()=>{setMode(mode === 'login' ? 'signup' : 'login');setError('');setNotice('');setShowPassword(false)}}>{mode === 'login' ? 'Créer un compte' : 'Se connecter'}</button></div>
+            <div className="auth-security auth-security-premium"><ShieldCheck size={14}/><span>Connexion sécurisée · Données isolées par entreprise</span></div>
+          </div>
+        </section>
+      </div>
+    </div>
   )
 
   if (!tenant) return (
