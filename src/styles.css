@@ -2940,3 +2940,38 @@ body {
   .admin-plan-modal .admin-form-actions{width:100%!important}
   .admin-plan-modal .admin-form-actions button{flex:1!important;justify-content:center!important}
 }
+
+/* Fond technologique animé — pistes de circuits imprimés SIB */
+.auth-visual{isolation:isolate}
+.auth-circuit-board{
+  position:absolute;inset:0;width:100%;height:100%;z-index:0;
+  pointer-events:none;opacity:.68;mix-blend-mode:screen;
+}
+.auth-circuit-board path{
+  fill:none;stroke:#4ba9ef;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;
+  opacity:.34;vector-effect:non-scaling-stroke;
+}
+.auth-circuit-board .circuit-traces path{stroke-dasharray:5 8;animation:circuitTraceFlow 24s linear infinite}
+.auth-circuit-board .circuit-traces path:nth-child(2){animation-duration:31s;animation-direction:reverse;opacity:.24}
+.auth-circuit-board .circuit-traces path:nth-child(3){animation-duration:27s;opacity:.2}
+.auth-circuit-board .circuit-pulses path{
+  stroke:url(#circuitGlow);stroke-width:2.4;stroke-dasharray:24 420;
+  opacity:.9;filter:drop-shadow(0 0 5px rgba(75,169,239,.9));
+  animation:circuitSignal 8s linear infinite;
+}
+.auth-circuit-board .circuit-nodes circle{
+  fill:#68c4ff;stroke:#d4efff;stroke-width:1;opacity:.72;
+  filter:drop-shadow(0 0 5px rgba(72,174,255,.9));
+  transform-box:fill-box;transform-origin:center;animation:circuitNodePulse 3.6s ease-in-out infinite;
+}
+.auth-circuit-board .circuit-nodes circle:nth-child(3n){fill:#ff9a4a;animation-delay:-1.4s}
+.auth-circuit-board .circuit-nodes circle:nth-child(2n){animation-delay:-2.2s}
+.auth-visual-content{z-index:2}
+.auth-visual-orb{z-index:1;pointer-events:none}
+@keyframes circuitTraceFlow{to{stroke-dashoffset:-180}}
+@keyframes circuitSignal{from{stroke-dashoffset:444}to{stroke-dashoffset:-444}}
+@keyframes circuitNodePulse{0%,100%{opacity:.38;transform:scale(.78)}50%{opacity:1;transform:scale(1.35)}}
+@media(max-width:850px){.auth-circuit-board{opacity:.45}}
+@media(prefers-reduced-motion:reduce){
+  .auth-circuit-board .circuit-traces path,.auth-circuit-board .circuit-pulses path,.auth-circuit-board .circuit-nodes circle{animation:none!important}
+}
