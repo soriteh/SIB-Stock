@@ -1857,3 +1857,27 @@ body {
 .admin-note{display:flex;align-items:flex-start;gap:10px;margin-top:14px;padding:12px 14px;border:1px solid #dce8f7;border-radius:8px;background:#f5f9ff;color:#37618e}
 .admin-note p{margin:0;font-size:10px;line-height:1.6}
 @media(max-width:700px){.admin-toolbar{align-items:stretch;flex-direction:column}.admin-toolbar .catalog-search{max-width:none;flex-basis:auto}.admin-filter{width:100%}.admin-filter select{flex:1}}
+
+
+/* Harmonisation des cartes KPI : quatre cartes par ligne sur grand écran,
+   deux sur tablette et une seule sur petit mobile. */
+@container workspace (min-width: 900px) {
+  .app-shell>.main-area .content :is(.stats-grid,.dashboard-kpi-grid) {
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:13px!important;
+  }
+  .app-shell>.main-area .content :is(.stats-grid,.dashboard-kpi-grid)>* {
+    min-width:0!important;
+  }
+}
+@container workspace (min-width:521px) and (max-width:899px) {
+  .app-shell>.main-area .content :is(.stats-grid,.dashboard-kpi-grid) {
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@container workspace (max-width:520px) {
+  .app-shell>.main-area .content :is(.stats-grid,.dashboard-kpi-grid) {
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
