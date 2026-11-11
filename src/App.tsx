@@ -16,6 +16,7 @@ import SettingsPage from './components/SettingsPage'
 import HelpCenter from './components/HelpCenter'
 import SubscriptionPage from './components/SubscriptionPage'
 import PlatformAdmin from './components/PlatformAdmin'
+import Establishments from './components/Establishments'
 import ProfilePage from './components/ProfilePage'
 import DashboardOverview from './components/DashboardOverview'
 import {
@@ -26,11 +27,13 @@ import {
 import { supabase } from './lib/supabase'
 import { TenantSettingsProvider, useTenantSettings } from './contexts/TenantSettingsContext'
 import { PlanAccessProvider, usePlanAccess, type PlanTier } from './contexts/PlanAccessContext'
+import { EstablishmentProvider, useEstablishment } from './contexts/EstablishmentContext'
 
 const navigation = [
   { label: 'Vue d’ensemble', icon: LayoutDashboard },
   { label: 'Produits', icon: Package },
   { label: 'Entrepôts', icon: Warehouse },
+  { label: 'Établissements', icon: Building2 },
   { label: 'Mouvements', icon: Activity },
   { label: 'Transferts', icon: ArrowLeftRight, requiredTier: 'business' as PlanTier },
   { label: 'Achats', icon: Truck, requiredTier: 'business' as PlanTier },
@@ -73,6 +76,7 @@ function Dashboard() {
   const [displayName, setDisplayName] = useState('')
   const company = useTenantSettings()
   const { tier, loading: planLoading, canAccess } = usePlanAccess()
+  const { establishments, activeEstablishment, setActive: setActiveEstablishment } = useEstablishment()
   const [currentTime, setCurrentTime] = useState(() => new Date())
   const profileMenuAnchorRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
@@ -257,7 +261,7 @@ function Dashboard() {
       {welcomeOpen && <div className="first-welcome-toast" role="status" aria-live="polite"><span className="first-welcome-toast-mark">S<span>I</span>B</span><div><strong>Bienvenue, {displayName || "Utilisateur"} !</strong><small>Votre espace SIB Stock est prêt.</small></div><span className="first-welcome-toast-progress" /></div>}
       <main className="main-area">
         <header className="topbar">
-          <div className="topbar-heading"><button type="button" className="sidebar-toggle" aria-label="Ouvrir ou replier le menu" aria-expanded={mobileSidebarOpen || !sidebarCollapsed} onClick={() => { if (window.matchMedia("(max-width: 760px)").matches) setMobileSidebarOpen(v => !v); else setSidebarCollapsed(v => !v) }}>{sidebarCollapsed ? <Menu size={19}/> : <PanelLeftClose size={19}/>}</button><h1 className="topbar-title">{active}</h1></div>
+          <div className="topbar-heading"><button type="button" className="sidebar-toggle" aria-label="Ouvrir ou replier le menu" aria-expanded={mobileSidebarOpen || !sidebarCollapsed} onClick={() => { if (window.matchMedia("(max-width: 760px)").matches) setMobileSidebarOpen(v => !v); else setSidebarCollapsed(v => !v) }}>{sidebarCollapsed ? <Menu size={19}/> : <PanelLeftClose size={19}/>}</button><h1 className="topbar-title">{active}</h1>{establishments.length > 0 && <label className="establishment-switcher" title="Établissement actif"><Building2 size={15}/><select aria-label="Établissement actif" value={activeEstablishment?.id ?? ''} onChange={e => void setActiveEstablishment(e.target.value)}>{establishments.map(site => <option key={site.id} value={site.id}>{site.name}</option>)}</select><ChevronDown size={13}/></label>}</div>
           <div className="top-actions">
             <div className="topbar-datetime"><strong>{formattedClock}</strong><span>{welcomeDate}</span></div>
             <label className="search-box" aria-label="Rechercher dans les mouvements récents"><Search size={19}/><input ref={searchInputRef} placeholder="Rechercher un produit, une référence..." value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>⌘ K</kbd>{query&&<button type="button" className="search-clear" aria-label="Effacer la recherche" onClick={()=>setQuery('')}>×</button>}</label>
@@ -274,7 +278,7 @@ function Dashboard() {
           </div>
         </header>
 
-        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : active === 'Utilisateurs' ? <Administration /> : active === 'Paramètres' ? <SettingsPage /> : active === 'Centre d’aide' ? <HelpCenter /> : active === 'Abonnement' ? <SubscriptionPage /> : active === 'Mon profil' ? <ProfilePage /> : active === 'Administration SaaS' && isPlatformAdmin ? <PlatformAdmin /> : <DashboardOverview onNavigate={setActive} displayName={displayName} currentTime={currentTime} />}
+        {active === 'Établissements' ? <Establishments /> : active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : active === 'Utilisateurs' ? <Administration /> : active === 'Paramètres' ? <SettingsPage /> : active === 'Centre d’aide' ? <HelpCenter /> : active === 'Abonnement' ? <SubscriptionPage /> : active === 'Mon profil' ? <ProfilePage /> : active === 'Administration SaaS' && isPlatformAdmin ? <PlatformAdmin /> : <DashboardOverview onNavigate={setActive} displayName={displayName} currentTime={currentTime} />}
       </main>
     </div>
   )
@@ -282,5 +286,5 @@ function Dashboard() {
 
 
 export default function App() {
-  return <AuthGate><TenantSettingsProvider><PlanAccessProvider><Dashboard /></PlanAccessProvider></TenantSettingsProvider></AuthGate>
+  return <AuthGate><TenantSettingsProvider><PlanAccessProvider><EstablishmentProvider><Dashboard /></EstablishmentProvider></PlanAccessProvider></TenantSettingsProvider></AuthGate>
 }
