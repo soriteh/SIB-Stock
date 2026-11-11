@@ -2623,3 +2623,105 @@ body {
   .platform-admin-page .admin-license-form input,
   .platform-admin-page .admin-license-form select{transition:none!important}
 }
+
+
+/* Correctif ciblé — modal indépendant de gestion des licences SaaS */
+.platform-admin-page .admin-modal-backdrop{
+  position:fixed!important;inset:0!important;z-index:10000!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:24px!important;overflow-y:auto!important;
+  background:rgba(4,15,31,.76)!important;backdrop-filter:blur(8px) saturate(115%)!important;
+}
+.platform-admin-page .admin-license-modal{
+  position:relative!important;display:flex!important;flex-direction:column!important;
+  width:min(100%,700px)!important;max-width:700px!important;
+  max-height:min(880px,calc(100dvh - 48px))!important;height:auto!important;
+  margin:auto!important;padding:0!important;overflow:hidden!important;
+  border:1px solid rgba(255,255,255,.7)!important;border-radius:22px!important;
+  background:var(--admin-card,#fff)!important;
+  box-shadow:0 32px 100px rgba(0,0,0,.42)!important;
+}
+.platform-admin-page .admin-license-header{
+  position:relative!important;display:block!important;flex:0 0 auto!important;
+  padding:23px 72px 18px 28px!important;
+  border-bottom:1px solid var(--admin-line,#e5eaf1)!important;
+}
+.platform-admin-page .admin-license-header .admin-form-kicker{
+  display:inline-flex!important;align-items:center!important;gap:7px!important;
+  margin-bottom:10px!important;font-size:10px!important;font-weight:800!important;
+  letter-spacing:.075em!important;color:#075bb8!important;
+}
+.platform-admin-page .admin-license-header h2{
+  margin:0 0 5px!important;font-size:24px!important;line-height:1.2!important;
+  font-weight:800!important;letter-spacing:-.6px!important;color:var(--admin-ink,#172b4d)!important;
+}
+.platform-admin-page .admin-license-header p{
+  margin:0!important;font-size:13px!important;line-height:1.5!important;
+  color:var(--admin-muted,#718096)!important;
+}
+.platform-admin-page .admin-license-header p strong{color:var(--admin-ink,#172b4d)!important}
+.platform-admin-page .admin-license-header .admin-form-close{
+  position:absolute!important;top:20px!important;right:22px!important;
+  display:grid!important;place-items:center!important;width:36px!important;height:36px!important;
+  border:1px solid var(--admin-line,#e5eaf1)!important;border-radius:11px!important;
+  background:var(--admin-card,#fff)!important;color:var(--admin-ink,#334155)!important;
+}
+.platform-admin-page .admin-license-form{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  gap:15px!important;padding:20px 28px 26px!important;
+  overflow-y:auto!important;overscroll-behavior:contain!important;
+  min-height:0!important;flex:1 1 auto!important;
+}
+.platform-admin-page .admin-license-form>label{
+  display:flex!important;flex-direction:column!important;gap:7px!important;
+  margin:0!important;font-size:12px!important;font-weight:750!important;
+}
+.platform-admin-page .admin-license-form input,
+.platform-admin-page .admin-license-form select{
+  width:100%!important;min-height:46px!important;padding:10px 14px!important;
+  border-radius:11px!important;font-size:14px!important;
+}
+.platform-admin-page .admin-license-form>label small{font-size:11px!important;line-height:1.45!important}
+.platform-admin-page .admin-license-form .license-current-summary{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:9px!important;margin:2px 0 0!important;padding:10px!important;
+}
+.platform-admin-page .admin-license-form .license-current-summary>div{
+  min-width:0!important;min-height:72px!important;padding:11px!important;gap:7px!important;
+}
+.platform-admin-page .admin-license-form .license-current-summary small{
+  font-size:10px!important;line-height:1.35!important;
+}
+.platform-admin-page .admin-license-form .license-current-summary strong{
+  font-size:12px!important;line-height:1.4!important;overflow-wrap:anywhere!important;
+}
+.platform-admin-page .admin-license-form>p{
+  margin:0!important;font-size:11px!important;line-height:1.55!important;
+}
+.platform-admin-page .admin-license-form>button{
+  position:sticky!important;bottom:-1px!important;z-index:2!important;
+  width:100%!important;min-height:46px!important;margin-top:2px!important;
+  justify-content:center!important;
+}
+:root[data-theme="dark"] .platform-admin-page .admin-license-modal{
+  border-color:#29415e!important;background:#0d1b2d!important;
+}
+:root[data-theme="dark"] .platform-admin-page .admin-license-header{
+  border-color:#29415e!important;background:linear-gradient(120deg,#111f33,#142944)!important;
+}
+:root[data-theme="dark"] .platform-admin-page .admin-license-header h2,
+:root[data-theme="dark"] .platform-admin-page .admin-license-header p strong{
+  color:#e7effb!important;
+}
+@media(max-width:640px){
+  .platform-admin-page .admin-modal-backdrop{padding:10px!important;align-items:center!important}
+  .platform-admin-page .admin-license-modal{
+    width:100%!important;max-height:calc(100dvh - 20px)!important;border-radius:17px!important;
+  }
+  .platform-admin-page .admin-license-header{padding:18px 58px 15px 18px!important}
+  .platform-admin-page .admin-license-header h2{font-size:20px!important}
+  .platform-admin-page .admin-license-header .admin-form-close{top:16px!important;right:15px!important}
+  .platform-admin-page .admin-license-form{padding:16px 18px 20px!important;gap:13px!important}
+  .platform-admin-page .admin-license-form .license-current-summary{grid-template-columns:1fr!important}
+  .platform-admin-page .admin-license-form .license-current-summary>div{min-height:0!important}
+}
