@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { Barcode, Boxes, LoaderCircle, MapPin, Package, Plus, RefreshCw, Search, Warehouse } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { formatTenantMoney, useTenantSettings } from '../contexts/TenantSettingsContext'
+import { useEstablishment } from '../contexts/EstablishmentContext'
 
 type Mode = 'Produits' | 'Entrepôts'
 type ProductRow = { id:string; sku:string; name:string; unit_name:string; purchase_price:number; sale_price:number; minimum_stock:number; is_active:boolean }
@@ -9,6 +10,7 @@ type WarehouseRow = { id:string; code:string; name:string; address:string|null; 
 
 export default function InventoryCatalog({ mode }: { mode: Mode }) {
   const { currency_code } = useTenantSettings()
+  const { activeEstablishment } = useEstablishment()
   const money = (value:number) => formatTenantMoney(value,currency_code)
   const [products,setProducts] = useState<ProductRow[]>([])
   const [warehouses,setWarehouses] = useState<WarehouseRow[]>([])
@@ -65,7 +67,7 @@ export default function InventoryCatalog({ mode }: { mode: Mode }) {
         setNotice('Produit enregistré.')
         setName('');setSku('');setBarcode('');setPurchase('0');setSale('0');setMinimum('0')
       } else {
-        const {error:err}=await supabase.from('warehouses').insert({tenant_id:tenantId,code:code.trim(),name:name.trim(),address:address.trim()||null})
+        const {error:err}=await supabase.from('warehouses').insert({tenant_id:tenantId,establishment_id:activeEstablishment?.id,code:code.trim(),name:name.trim(),address:address.trim()||null})
         if(err) throw err
         setNotice('Entrepôt enregistré.')
         setName('');setCode('');setAddress('')
