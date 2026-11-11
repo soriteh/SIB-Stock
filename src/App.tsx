@@ -19,26 +19,27 @@ import PlatformAdmin from './components/PlatformAdmin'
 import ProfilePage from './components/ProfilePage'
 import DashboardOverview from './components/DashboardOverview'
 import {
-  Activity, ArrowLeftRight, Bell, Boxes, Building2, Landmark,
+  Activity, ArrowLeftRight, Bell, Boxes, Building2, Landmark, Lock,
   ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package, LogOut,
   Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound, Menu, PanelLeftClose, Sun, Moon, Monitor, ShieldCheck,
 } from 'lucide-react'
 import { supabase } from './lib/supabase'
 import { TenantSettingsProvider, useTenantSettings } from './contexts/TenantSettingsContext'
+import { PlanAccessProvider, usePlanAccess, type PlanTier } from './contexts/PlanAccessContext'
 
 const navigation = [
   { label: 'Vue d’ensemble', icon: LayoutDashboard },
   { label: 'Produits', icon: Package },
   { label: 'Entrepôts', icon: Warehouse },
   { label: 'Mouvements', icon: Activity },
-  { label: 'Transferts', icon: ArrowLeftRight },
-  { label: 'Achats', icon: Truck },
-  { label: 'Ventes', icon: ShoppingCart },
+  { label: 'Transferts', icon: ArrowLeftRight, requiredTier: 'business' as PlanTier },
+  { label: 'Achats', icon: Truck, requiredTier: 'business' as PlanTier },
+  { label: 'Ventes', icon: ShoppingCart, requiredTier: 'business' as PlanTier },
   { label: 'Inventaires', icon: Boxes },
-  { label: 'Caisse & finances', icon: Landmark },
+  { label: 'Caisse & finances', icon: Landmark, requiredTier: 'business' as PlanTier },
   { label: 'Rapports', icon: Activity },
   { label: 'Alertes', icon: Bell },
-  { label: 'Utilisateurs', icon: Users },
+  { label: 'Utilisateurs', icon: Users, requiredTier: 'business' as PlanTier },
   { label: 'Abonnement', icon: CreditCard },
   { label: 'Clients', icon: Users },
   { label: 'Fournisseurs', icon: Truck },
@@ -71,9 +72,17 @@ function Dashboard() {
   const [isPlatformAdmin, setIsPlatformAdmin] = useState(false)
   const [displayName, setDisplayName] = useState('')
   const company = useTenantSettings()
+  const { tier, loading: planLoading, canAccess } = usePlanAccess()
   const [currentTime, setCurrentTime] = useState(() => new Date())
   const profileMenuAnchorRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (planLoading) return
+    const protectedPages: Record<string, PlanTier> = { 'Transferts': 'business', 'Achats': 'business', 'Ventes': 'business', 'Caisse & finances': 'business', 'Utilisateurs': 'business' }
+    const required = protectedPages[active]
+    if (required && !canAccess(required)) setActive('Abonnement')
+  }, [active, planLoading, tier, canAccess])
 
   useEffect(() => {
     let mounted = true
@@ -214,11 +223,12 @@ function Dashboard() {
           </div>
           <div className="nav-label">ESPACE DE TRAVAIL</div>
           <nav className="navigation">
-            {[...navigation, ...(isPlatformAdmin ? [{ label: 'Administration SaaS', icon: ShieldCheck }] : [])].map(({ label, icon: Icon }) => (
-              <button key={label} className={active === label ? 'nav-item active' : 'nav-item'} onClick={() => { setActive(label); setMobileSidebarOpen(false) }}>
-                <Icon size={18} strokeWidth={1.8} /><span>{label}</span>
+            {[...navigation, ...(isPlatformAdmin ? [{ label: 'Administration SaaS', icon: ShieldCheck }] : [])].map(({ label, icon: Icon, requiredTier }) => {
+              const locked = Boolean(requiredTier && !planLoading && !canAccess(requiredTier))
+              return <button key={label} title={locked ? 'Disponible à partir de l’offre Business' : label} className={active === label ? 'nav-item active' : 'nav-item'} onClick={() => { setActive(locked ? 'Abonnement' : label); setMobileSidebarOpen(false) }}>
+                <Icon size={18} strokeWidth={1.8} /><span>{label}</span>{locked && <Lock size={13} className="nav-lock-icon" />}
               </button>
-            ))}
+            })}
           </nav>
           <div className="sidebar-settings">
             <div className="nav-label">CONFIGURATION</div>
@@ -272,5 +282,5 @@ function Dashboard() {
 
 
 export default function App() {
-  return <AuthGate><TenantSettingsProvider><Dashboard /></TenantSettingsProvider></AuthGate>
+  return <AuthGate><TenantSettingsProvider><PlanAccessProvider><Dashboard /></PlanAccessProvider></TenantSettingsProvider></AuthGate>
 }
