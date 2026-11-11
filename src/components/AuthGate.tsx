@@ -152,6 +152,23 @@ export default function AuthGate({ children }: { children: ReactNode }) {
     <div className="auth-screen auth-screen-premium">
       <div className="auth-layout">
         <section className="auth-visual" aria-label="Présentation de SIB Stock">
+          <svg className="auth-circuit-board" viewBox="0 0 900 760" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs><linearGradient id="circuitGlow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#55b7ff"/><stop offset=".62" stopColor="#1687e8"/><stop offset="1" stopColor="#ff8a32"/></linearGradient></defs>
+            <g className="circuit-traces">
+              <path d="M0 112H118V164H205V225H285 M900 80H790V142H720V210H650V260H590 M900 390H820V345H748V300H690 M0 510H105V455H175V405H255V360H330 M150 760V680H225V620H300V565H365 M720 760V690H665V635H610V580H550"/>
+              <path d="M0 255H72V300H145V345H220 M900 560H820V510H755V455H680V410H625 M390 0V75H445V130H510V180 M525 760V710H480V665H435V620"/>
+              <path d="M0 650H85V605H145V560H205 M900 220H845V260H795V300H745 M310 0V55H355V95H400"/>
+            </g>
+            <g className="circuit-pulses">
+              <path d="M0 112H118V164H205V225H285 M900 390H820V345H748V300H690 M0 510H105V455H175V405H255V360H330 M720 760V690H665V635H610V580H550"/>
+            </g>
+            <g className="circuit-nodes">
+              <circle cx="118" cy="112" r="4"/><circle cx="205" cy="164" r="4"/><circle cx="285" cy="225" r="4"/>
+              <circle cx="790" cy="142" r="4"/><circle cx="720" cy="210" r="4"/><circle cx="590" cy="260" r="4"/>
+              <circle cx="105" cy="455" r="4"/><circle cx="255" cy="360" r="4"/><circle cx="665" cy="635" r="4"/>
+              <circle cx="610" cy="580" r="4"/><circle cx="445" cy="130" r="4"/><circle cx="510" cy="180" r="4"/>
+            </g>
+          </svg>
           <div className="auth-visual-orb auth-visual-orb-blue" />
           <div className="auth-visual-orb auth-visual-orb-orange" />
           <div className="auth-visual-content">
