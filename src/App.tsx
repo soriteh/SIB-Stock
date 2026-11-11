@@ -220,11 +220,6 @@ function Dashboard() {
           <div><strong>{company.name || "SIB Stock"}</strong></div>
         </div>
         <div className="sidebar-scroll">
-          <div className="workspace">
-            <div className="workspace-icon"><Building2 size={17} /></div>
-            <div className="workspace-copy"><strong>{company.name || "Entreprise non configurée"}</strong><small>{company.email || company.phone || "Coordonnées non renseignées"}</small></div>
-            <ChevronDown size={15} />
-          </div>
           <div className="nav-label">ESPACE DE TRAVAIL</div>
           <nav className="navigation">
             {[...navigation, ...(isPlatformAdmin ? [{ label: 'Administration SaaS', icon: ShieldCheck }] : [])].map(({ label, icon: Icon, requiredTier }) => {
