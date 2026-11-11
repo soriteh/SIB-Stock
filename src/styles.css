@@ -2209,3 +2209,122 @@ body {
 .admin-modal-backdrop{position:fixed!important;inset:0!important;width:100vw;height:100dvh;min-height:100vh;z-index:10000!important;display:grid!important;place-items:center!important;align-items:center!important;justify-items:center!important;overflow-y:auto!important;overscroll-behavior:contain;padding:24px!important;background:rgba(8,18,34,.68)!important;backdrop-filter:blur(3px)}
 .admin-modal-backdrop>.admin-modal{position:relative!important;inset:auto!important;margin:auto!important;max-height:calc(100dvh - 48px)!important;overflow-y:auto!important;transform:none!important}
 @media(max-width:640px){.admin-modal-backdrop{padding:12px!important}.admin-modal-backdrop>.admin-modal{max-height:calc(100dvh - 24px)!important}}
+
+
+/* Finition premium des formulaires d'administration SaaS */
+.platform-admin-page .admin-plan-modal,
+.platform-admin-page .admin-license-modal{
+  background:var(--admin-card,#fff)!important;
+  box-shadow:0 32px 100px rgba(3,16,34,.32),0 8px 24px rgba(3,16,34,.12)!important;
+}
+.platform-admin-page .admin-form-header{
+  min-height:104px;align-items:center;
+  background:linear-gradient(115deg,var(--admin-card,#fff) 0%,color-mix(in srgb,var(--admin-card,#fff) 92%,#dcecff) 100%);
+}
+.platform-admin-page .admin-form-header h2{letter-spacing:-.55px}
+.platform-admin-page .admin-form-kicker{
+  padding:6px 9px;border:1px solid #d9eaff;border-radius:7px;
+  background:#f0f7ff;color:#075bb8;letter-spacing:.9px;
+}
+.platform-admin-page .admin-form-close{
+  flex:0 0 36px;width:36px;height:36px;cursor:pointer;
+  transition:background .18s,border-color .18s,color .18s,transform .18s;
+}
+.platform-admin-page .admin-form-close:hover{
+  color:#075bb8;border-color:#9fc7f1;background:#edf6ff;transform:rotate(4deg)
+}
+.platform-admin-page .admin-form-section{padding:20px 0}
+.platform-admin-page .admin-form-section-title>span{
+  width:31px;height:31px;border:1px solid #d6e8fb;
+  background:linear-gradient(145deg,#edf6ff,#e3f0ff);font-size:10px
+}
+.platform-admin-page .admin-form-section-title strong{font-size:12px;font-weight:800}
+.platform-admin-page .admin-form-section-title small{font-size:10px}
+.platform-admin-page .admin-plan-form-rebuilt input,
+.platform-admin-page .admin-plan-form-rebuilt textarea,
+.platform-admin-page .admin-plan-form-rebuilt select,
+.platform-admin-page .admin-license-form input,
+.platform-admin-page .admin-license-form select{
+  min-height:42px;border-radius:10px;padding:10px 12px;
+  box-shadow:0 1px 2px rgba(15,35,60,.025);
+}
+.platform-admin-page .admin-plan-form-rebuilt input:hover,
+.platform-admin-page .admin-plan-form-rebuilt textarea:hover,
+.platform-admin-page .admin-plan-form-rebuilt select:hover,
+.platform-admin-page .admin-license-form input:hover,
+.platform-admin-page .admin-license-form select:hover{border-color:#a9bfd8}
+.platform-admin-page .admin-plan-form-rebuilt input:focus,
+.platform-admin-page .admin-plan-form-rebuilt textarea:focus,
+.platform-admin-page .admin-plan-form-rebuilt select:focus,
+.platform-admin-page .admin-license-form input:focus,
+.platform-admin-page .admin-license-form select:focus{
+  border-color:#2678c9;box-shadow:0 0 0 3px rgba(7,91,184,.11);outline:0
+}
+.platform-admin-page .admin-form-footer{
+  position:sticky;bottom:0;margin:0 -26px;padding:16px 26px;
+  border-top:1px solid var(--admin-line,#e5eaf1);
+  background:var(--admin-card,#fff);z-index:1
+}
+.platform-admin-page .admin-toggle{
+  padding:9px 12px;border:1px solid var(--admin-line,#e5eaf1);
+  border-radius:10px;background:color-mix(in srgb,var(--admin-card,#fff) 94%,#075bb8 6%)
+}
+.platform-admin-page .admin-form-actions .primary-button,
+.platform-admin-page .admin-license-form>button{
+  min-height:41px;border-radius:9px;font-weight:750;
+  box-shadow:0 5px 13px rgba(7,91,184,.18)
+}
+.platform-admin-page .admin-license-modal{width:min(680px,100%)}
+.platform-admin-page .admin-license-header{position:relative;padding:21px 24px}
+.platform-admin-page .admin-license-header p strong{color:var(--admin-ink,#14243b);font-weight:750}
+.platform-admin-page .admin-license-form{
+  padding:22px 24px 24px!important;gap:17px 18px!important;
+}
+.platform-admin-page .admin-license-form>label{
+  align-content:start;gap:8px;color:var(--admin-ink,#334155);
+  font-size:11px;font-weight:750
+}
+.platform-admin-page .admin-license-form>label small{
+  color:var(--admin-muted,#718096);font-size:9px;font-weight:450
+}
+.platform-admin-page .admin-license-form .license-current-summary{
+  margin:2px 0 0;padding:13px;border-radius:12px;
+  background:color-mix(in srgb,var(--admin-card,#fff) 91%,#075bb8 9%);
+}
+.platform-admin-page .admin-license-form .license-current-summary>div{
+  min-height:66px;display:flex;flex-direction:column;justify-content:center;
+  padding:12px;border-radius:9px;background:var(--admin-card,#fff)
+}
+.platform-admin-page .admin-license-form .license-current-summary strong{font-size:12px}
+.platform-admin-page .admin-license-form>p{
+  margin:0;padding:11px 13px;border-radius:9px;
+  background:color-mix(in srgb,var(--admin-card,#fff) 94%,#075bb8 6%);
+  font-size:10px;line-height:1.6
+}
+.platform-admin-page .admin-license-form>.catalog-error{
+  border:1px solid #f2c8c4;background:#fff5f4;color:#a63b32
+}
+:root[data-theme="dark"] .platform-admin-page .admin-form-kicker{
+  border-color:#294b70;background:#142d49;color:#9acaff
+}
+:root[data-theme="dark"] .platform-admin-page .admin-form-header{
+  background:linear-gradient(115deg,#111f33,#142944)
+}
+:root[data-theme="dark"] .platform-admin-page .admin-form-section-title>span{
+  border-color:#294b70;background:#183453;color:#9acaff
+}
+:root[data-theme="dark"] .platform-admin-page .admin-toggle,
+:root[data-theme="dark"] .platform-admin-page .admin-license-form .license-current-summary{
+  background:#142944;border-color:#29415e
+}
+:root[data-theme="dark"] .platform-admin-page .admin-license-form .license-current-summary>div{
+  background:#102036
+}
+:root[data-theme="dark"] .platform-admin-page .admin-license-form>.catalog-error{
+  background:#3b2227;border-color:#744047;color:#ffb6b0
+}
+@media(max-width:680px){
+  .platform-admin-page .admin-form-footer{margin:0 -17px;padding:13px 17px}
+  .platform-admin-page .admin-license-header{padding:17px}
+  .platform-admin-page .admin-license-form{padding:17px!important}
+}
