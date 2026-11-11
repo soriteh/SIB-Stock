@@ -15,12 +15,13 @@ import Administration from './components/Administration'
 import SettingsPage from './components/SettingsPage'
 import HelpCenter from './components/HelpCenter'
 import SubscriptionPage from './components/SubscriptionPage'
+import PlatformAdmin from './components/PlatformAdmin'
 import ProfilePage from './components/ProfilePage'
 import DashboardOverview from './components/DashboardOverview'
 import {
   Activity, ArrowLeftRight, Bell, Boxes, Building2, Landmark,
   ChevronDown, CircleHelp, CreditCard, LayoutDashboard, Package, LogOut,
-  Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound, Menu, PanelLeftClose, Sun, Moon, Monitor,
+  Search, Settings, ShoppingCart, Truck, Users, Warehouse, UserRound, Menu, PanelLeftClose, Sun, Moon, Monitor, ShieldCheck,
 } from 'lucide-react'
 import { supabase } from './lib/supabase'
 import { TenantSettingsProvider, useTenantSettings } from './contexts/TenantSettingsContext'
@@ -67,11 +68,23 @@ function Dashboard() {
   const theme = themeMode === 'auto' ? systemTheme : themeMode
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [profileEmail, setProfileEmail] = useState('')
+  const [isPlatformAdmin, setIsPlatformAdmin] = useState(false)
   const [displayName, setDisplayName] = useState('')
   const company = useTenantSettings()
   const [currentTime, setCurrentTime] = useState(() => new Date())
   const profileMenuAnchorRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    let mounted = true
+    async function loadPlatformRole() {
+      if (!supabase) return
+      const { data, error } = await supabase.rpc('is_platform_admin')
+      if (mounted && !error) setIsPlatformAdmin(data === true)
+    }
+    void loadPlatformRole()
+    return () => { mounted = false }
+  }, [])
 
   useEffect(() => {
     let mounted = true
@@ -201,7 +214,7 @@ function Dashboard() {
           </div>
           <div className="nav-label">ESPACE DE TRAVAIL</div>
           <nav className="navigation">
-            {navigation.map(({ label, icon: Icon }) => (
+            {[...navigation, ...(isPlatformAdmin ? [{ label: 'Administration SaaS', icon: ShieldCheck }] : [])].map(({ label, icon: Icon }) => (
               <button key={label} className={active === label ? 'nav-item active' : 'nav-item'} onClick={() => { setActive(label); setMobileSidebarOpen(false) }}>
                 <Icon size={18} strokeWidth={1.8} /><span>{label}</span>
               </button>
@@ -251,7 +264,7 @@ function Dashboard() {
           </div>
         </header>
 
-        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : active === 'Utilisateurs' ? <Administration /> : active === 'Paramètres' ? <SettingsPage /> : active === 'Centre d’aide' ? <HelpCenter /> : active === 'Abonnement' ? <SubscriptionPage /> : active === 'Mon profil' ? <ProfilePage /> : <DashboardOverview onNavigate={setActive} displayName={displayName} currentTime={currentTime} />}
+        {active === 'Produits' || active === 'Entrepôts' ? <InventoryCatalog mode={active as 'Produits' | 'Entrepôts'} /> : active === 'Mouvements' ? <StockMovements /> : active === 'Clients' ? <Clients /> : active === 'Fournisseurs' ? <BusinessPartners /> : active === 'Transferts' ? <StockTransfers /> : active === 'Inventaires' ? <StockInventories /> : active === 'Achats' ? <CommercialDocuments mode="purchase" /> : active === 'Ventes' ? <CommercialDocuments mode="sale" /> : active === 'Caisse & finances' ? <Finance /> : active === 'Rapports' ? <Reports /> : active === 'Alertes' ? <StockAlerts /> : active === 'Utilisateurs' ? <Administration /> : active === 'Paramètres' ? <SettingsPage /> : active === 'Centre d’aide' ? <HelpCenter /> : active === 'Abonnement' ? <SubscriptionPage /> : active === 'Mon profil' ? <ProfilePage /> : active === 'Administration SaaS' && isPlatformAdmin ? <PlatformAdmin /> : <DashboardOverview onNavigate={setActive} displayName={displayName} currentTime={currentTime} />}
       </main>
     </div>
   )
