@@ -125,7 +125,7 @@ export default function SubscriptionPage() {
     <div className="subscription-plans">
       {plans.map(plan=><article key={plan.id} className={'subscription-plan '+(selectedPlan===plan.id?'selected':'')}>
         <div className="subscription-plan-top"><div className="subscription-plan-icon"><Sparkles size={18}/></div>{plan.code==='business'&&<span className="plan-recommended">POPULAIRE</span>}</div>
-        <h3>{plan.name}</h3><p>{plan.description}</p><div className="subscription-price">{formatPrice(plan.price_amount,plan.currency_code)}{plan.price_amount!==null&&plan.price_amount>0&&<small> / {plan.billing_interval==='yearly'?'an':'mois'}</small>}</div>
+        <h3>{plan.name}</h3><p>{plan.description}</p><div className="subscription-price">{formatPrice(plan.price_amount,plan.currency_code)}{plan.price_amount!==null&&plan.price_amount>0&&<small> / {plan.billing_interval==='yearly'?'an':plan.billing_interval==='quarterly'?'trimestre':plan.billing_interval==='monthly'?'mois':'période'}</small>}</div>
         <ul>{(plan.features||[]).map((feature,i)=><li key={i}><CheckCircle2 size={14}/>{feature}</li>)}</ul>
         <button type="button" className={selectedPlan===plan.id?'selected-plan-button':'outline-button'} onClick={()=>setSelectedPlan(plan.id)}>{selectedPlan===plan.id?'Offre sélectionnée':'Choisir cette offre'}</button>
       </article>)}
