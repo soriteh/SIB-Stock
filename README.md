@@ -2,13 +2,12 @@
 
 Plateforme SaaS multi-entreprises de gestion de stock, achats, ventes, inventaires, finances et entrepôts.
 
-## Stack cible
+## Stack officielle
 
 - React + TypeScript + Vite
-- Tailwind CSS
-- Supabase Auth, PostgreSQL, RLS, Storage et Edge Functions
-- PWA responsive (application connectée)
+- Supabase Auth, PostgreSQL, RLS, Storage et fonctions serveur
 - Vercel pour le déploiement frontend
+- Aucun fournisseur PostgreSQL tiers n'est utilisé par l'application.
 
 ## Principes d'architecture
 
@@ -19,20 +18,21 @@ Plateforme SaaS multi-entreprises de gestion de stock, achats, ventes, inventair
 5. Aucune clé secrète ou clé `service_role` dans le frontend.
 6. Les opérations sensibles sont vérifiées côté serveur et protégées par RLS.
 
-## Démarrage
-
-Le socle applicatif et les migrations Supabase seront ajoutés progressivement. Voir [docs/architecture.md](docs/architecture.md), [docs/roadmap.md](docs/roadmap.md) et [supabase/README.md](supabase/README.md).
-
 ## Configuration
 
-Copier `.env.example` vers `.env.local` et renseigner les variables publiques Supabase. Ne jamais committer les secrets.
+Copier `.env.example` vers `.env.local` et renseigner :
+
+- `VITE_SUPABASE_URL` : URL du projet Supabase SIB-Stock.
+- `VITE_SUPABASE_PUBLISHABLE_KEY` : clé publique recommandée.
+- `VITE_SUPABASE_ANON_KEY` : compatibilité avec les environnements existants uniquement.
+
+Le client utilise la clé publishable en priorité et conserve la clé anon comme solution de compatibilité. Ne jamais utiliser une clé `service_role` ou une clé secrète dans le frontend, ni committer les valeurs des variables.
 
 ## État du projet
 
 - Fondations multi-tenant, authentification, produits et entrepôts opérationnels.
 - Moteur de mouvements de stock transactionnel : entrées, sorties, ajustements, soldes et historique.
-- Migration SQL de durcissement appliquée au projet Supabase `sib-stock`.
+- Base de production Supabase `sib-stock`.
 - Frontend déployé sur Vercel : https://sib-stock-soritech.vercel.app
-- CI GitHub Actions : vérifications TypeScript et build Vite réussis sur le dernier lot de changements.
 
 Les achats, ventes, transferts, inventaires physiques, finances et rapports avancés restent à développer. Une recette fonctionnelle avec des comptes utilisateurs réels est requise avant utilisation opérationnelle.
