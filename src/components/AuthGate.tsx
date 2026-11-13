@@ -159,10 +159,16 @@ export default function AuthGate({ children }: { children: ReactNode }) {
         })
         if (authError) throw authError
         if (!data.session) setNotice('Compte créé. Consultez votre boîte e-mail pour confirmer votre adresse, puis connectez-vous.')
-        else setNotice('Compte créé. Vous pouvez maintenant configurer votre entreprise.')
+        else {
+          try { localStorage.setItem(`sib-stock:last-activity:${data.session.user.id}`, String(Date.now())) } catch {}
+          setNotice('Compte créé. Vous pouvez maintenant configurer votre entreprise.')
+        }
       } else {
-        const { error: authError } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
+        const { data, error: authError } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
         if (authError) throw authError
+        if (data.user) {
+          try { localStorage.setItem(`sib-stock:last-activity:${data.user.id}`, String(Date.now())) } catch {}
+        }
       }
     } catch (err) { setError(err instanceof Error ? err.message : 'Une erreur est survenue.') }
     finally { setBusy(false) }
