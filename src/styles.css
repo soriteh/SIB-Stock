@@ -3692,3 +3692,26 @@ body {
 @media(prefers-reduced-motion:reduce){
   .main-area::before{animation:none!important}
 }
+
+
+/* Abonnement — aligner toutes les offres sur une seule rangée sur ordinateur. */
+.subscription-page .subscription-plans{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  width:100%!important;
+  max-width:none!important;
+  gap:16px!important;
+}
+.subscription-page .subscription-plan{
+  width:100%!important;
+  min-width:0!important;
+  height:100%!important;
+}
+.subscription-page .subscription-plan>button{margin-top:auto}
+@media(max-width:760px){
+  .subscription-page .subscription-plans{
+    grid-template-columns:minmax(0,1fr)!important;
+    max-width:100%!important;
+  }
+}
