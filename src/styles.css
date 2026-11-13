@@ -3206,3 +3206,45 @@ body {
     min-height:40px!important;
   }
 }
+
+
+/* SIB Stock — le menu latéral occupe toute la hauteur disponible */
+.app-shell>.sidebar{
+  min-height:100vh;
+  min-height:100dvh;
+}
+.app-shell>.sidebar>.sidebar-scroll{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+.app-shell>.sidebar>.sidebar-scroll>.navigation{
+  flex:1 0 auto!important;
+  justify-content:space-between!important;
+  align-content:stretch!important;
+  min-height:0!important;
+  margin-bottom:14px!important;
+}
+.app-shell>.sidebar>.sidebar-scroll>.navigation>.nav-item{
+  flex:1 0 42px!important;
+  min-height:42px!important;
+}
+.app-shell>.sidebar>.sidebar-scroll>.sidebar-settings{
+  flex:0 0 auto!important;
+}
+.app-shell>.sidebar>.sidebar-bottom{
+  flex:0 0 auto!important;
+  margin-top:0!important;
+}
+@media(max-width:760px){
+  .app-shell>.sidebar>.sidebar-scroll>.navigation{
+    flex:1 0 auto!important;
+    justify-content:space-evenly!important;
+    gap:3px!important;
+  }
+  .app-shell>.sidebar>.sidebar-scroll>.navigation>.nav-item{
+    flex:1 0 40px!important;
+    min-height:40px!important;
+  }
+}
