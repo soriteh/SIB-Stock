@@ -3297,3 +3297,36 @@ body {
 @media(prefers-reduced-motion:reduce){
   .top-profile-wrap .top-avatar-button{transition:none}
 }
+
+/* SIB Stock — contour lumineux animé du bouton Profil, sans déformation de l'avatar */
+.top-profile-wrap{
+  position:relative!important;
+  isolation:isolate;
+}
+.top-profile-wrap::before{
+  content:"";
+  position:absolute;
+  inset:-4px;
+  z-index:0;
+  pointer-events:none;
+  border-radius:50%;
+  background:conic-gradient(from 0deg,transparent 0deg,#0057b9 75deg,#55b7ff 125deg,transparent 165deg,transparent 205deg,#ff7800 255deg,#ffc078 300deg,transparent 335deg);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1.5px));
+  mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1.5px));
+  animation:sib-profile-ring-rotate 5s linear infinite;
+  opacity:.82;
+}
+.top-profile-wrap .top-avatar-button{
+  z-index:1;
+}
+.top-profile-wrap:has(.top-avatar-button:hover)::before,
+.top-profile-wrap:has(.top-avatar-button[aria-expanded="true"])::before{
+  inset:-5px;
+  opacity:1;
+  filter:drop-shadow(0 0 4px rgba(0,87,185,.45));
+  animation-duration:2.2s;
+}
+@keyframes sib-profile-ring-rotate{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){
+  .top-profile-wrap::before{animation:none!important}
+}
