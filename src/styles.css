@@ -3250,12 +3250,12 @@ body {
 }
 
 
-/* SIB Stock — relever le bouton de déconnexion pour éviter le chevauchement avec la barre système */
+/* SIB Stock — ajustement supplémentaire : bouton de déconnexion légèrement plus haut */
 .app-shell>.sidebar>.sidebar-bottom{
-  padding-bottom:calc(max(12px,env(safe-area-inset-bottom)) + 22px)!important;
+  padding-bottom:calc(max(12px,env(safe-area-inset-bottom)) + 32px)!important;
 }
 @media(max-width:760px){
   .app-shell>.sidebar>.sidebar-bottom{
-    padding-bottom:calc(max(10px,env(safe-area-inset-bottom)) + 18px)!important;
+    padding-bottom:calc(max(10px,env(safe-area-inset-bottom)) + 28px)!important;
   }
 }
