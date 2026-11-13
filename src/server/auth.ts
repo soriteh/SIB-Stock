@@ -33,6 +33,8 @@ export const auth = betterAuth({
   trustedOrigins,
   emailAndPassword: {
     enabled: true,
+    // Keep public account creation closed until tenant onboarding and invitations are migrated.
+    disableSignUp: true,
     minPasswordLength: 10,
     maxPasswordLength: 128,
   },
