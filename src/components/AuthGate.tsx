@@ -35,8 +35,119 @@ export default function AuthGate({ children }: { children: ReactNode }) {
     return () => { mounted = false; listener.subscription.unsubscribe() }
   }, [])
 
-  // Déconnexion automatique après 30 minutes d'inactivité réelle.
+  // Déconnexion automatique après 30 minutes sans interaction utilisateur.
   const lastActivityRef = useRef(0)
+  useEffect(() => {
+    const client = supabase
+    const userId = session?.user?.id
+    if (!client || !userId) return
+
+    const inactivityLimit = 30 * 60 * 1000
+    const activityStorageKey = `sib-stock:last-activity:${userId}`
+    let timeoutId: number | undefined
+    let watchdogId: number | undefined
+    let disposed = false
+    let expired = false
+
+    const readLastActivity = () => {
+      try {
+        const stored = Number(localStorage.getItem(activityStorageKey))
+        if (Number.isFinite(stored) && stored > 0) return stored
+      } catch {}
+      return lastActivityRef.current
+    }
+
+    const writeLastActivity = (timestamp: number) => {
+      lastActivityRef.current = timestamp
+      try { localStorage.setItem(activityStorageKey, String(timestamp)) } catch {}
+    }
+
+    const expireSession = async () => {
+      if (disposed || expired) return
+      expired = true
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId)
+      if (watchdogId !== undefined) window.clearInterval(watchdogId)
+      setNotice('Votre session a été fermée après 30 minutes d’inactivité. Veuillez vous reconnecter.')
+      const { error: signOutError } = await client.auth.signOut({ scope: 'local' })
+      if (signOutError && !disposed) {
+        setError('La déconnexion automatique a échoué. Vérifiez votre connexion puis déconnectez-vous manuellement.')
+      }
+    }
+
+    const checkInactivity = () => {
+      if (disposed || expired) return
+      const lastActivity = readLastActivity()
+      // Une session sans horodatage valide démarre à l'instant de l'activation.
+      if (!lastActivity) {
+        writeLastActivity(Date.now())
+        scheduleCheck()
+        return
+      }
+      const remaining = inactivityLimit - (Date.now() - lastActivity)
+      if (remaining <= 0) {
+        void expireSession()
+        return
+      }
+      scheduleCheck(remaining)
+    }
+
+    const scheduleCheck = (delay = inactivityLimit) => {
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId)
+      timeoutId = window.setTimeout(checkInactivity, Math.max(250, Math.min(delay + 50, 5000)))
+    }
+
+    const handleActivity = () => {
+      if (disposed || expired) return
+      const now = Date.now()
+      const lastActivity = readLastActivity()
+      // Une action après expiration ne doit jamais prolonger la session.
+      if (lastActivity && now - lastActivity >= inactivityLimit) {
+        void expireSession()
+        return
+      }
+      writeLastActivity(now)
+      scheduleCheck()
+    }
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== activityStorageKey) return
+      const timestamp = Number(event.newValue)
+      if (Number.isFinite(timestamp) && timestamp > 0) {
+        lastActivityRef.current = timestamp
+        checkInactivity()
+      }
+    }
+
+    // Le watchdog vérifie aussi les onglets suspendus ou laissés en arrière-plan.
+    const handleResume = () => checkInactivity()
+    if (!lastActivityRef.current) {
+      const stored = readLastActivity()
+      if (stored) lastActivityRef.current = stored
+    }
+    if (!readLastActivity()) writeLastActivity(Date.now())
+    checkInactivity()
+    watchdogId = window.setInterval(checkInactivity, 5000)
+
+    const activityEvents: (keyof WindowEventMap)[] = [
+      'pointerdown', 'keydown', 'wheel', 'scroll', 'touchstart', 'click', 'input'
+    ]
+    activityEvents.forEach(eventName => window.addEventListener(eventName, handleActivity, { passive: true }))
+    window.addEventListener('focus', handleResume)
+    window.addEventListener('pageshow', handleResume)
+    window.addEventListener('storage', handleStorage)
+    document.addEventListener('visibilitychange', handleResume)
+
+    return () => {
+      disposed = true
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId)
+      if (watchdogId !== undefined) window.clearInterval(watchdogId)
+      activityEvents.forEach(eventName => window.removeEventListener(eventName, handleActivity))
+      window.removeEventListener('focus', handleResume)
+      window.removeEventListener('pageshow', handleResume)
+      window.removeEventListener('storage', handleStorage)
+      document.removeEventListener('visibilitychange', handleResume)
+    }
+  }, [session?.user?.id])
   useEffect(() => {
     const client = supabase
     const userId = session?.user?.id
