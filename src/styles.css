@@ -3248,3 +3248,14 @@ body {
     min-height:40px!important;
   }
 }
+
+
+/* SIB Stock — relever le bouton de déconnexion pour éviter le chevauchement avec la barre système */
+.app-shell>.sidebar>.sidebar-bottom{
+  padding-bottom:calc(max(12px,env(safe-area-inset-bottom)) + 22px)!important;
+}
+@media(max-width:760px){
+  .app-shell>.sidebar>.sidebar-bottom{
+    padding-bottom:calc(max(10px,env(safe-area-inset-bottom)) + 18px)!important;
+  }
+}
