@@ -3535,3 +3535,58 @@ body {
 @media(prefers-reduced-motion:reduce){
   .main-area{animation:none!important}
 }
+
+
+/* SIB Stock — circuit animation harmonisée sur toutes les pages du workspace.
+   Le fond est appliqué au conteneur commun .main-area : chaque module (stock,
+   ventes, achats, finances, rapports, paramètres, aide et administration)
+   en bénéficie sans modifier son contenu ni ses interactions. */
+.main-area{
+  background-color:#f3f7fd!important;
+  background-image:
+    radial-gradient(ellipse at 8% 14%,rgba(0,87,185,.16),transparent 30%),
+    radial-gradient(ellipse at 91% 24%,rgba(255,120,0,.105),transparent 26%),
+    radial-gradient(ellipse at 70% 92%,rgba(0,87,185,.12),transparent 29%),
+    radial-gradient(circle,rgba(0,105,210,.42) 1.15px,transparent 2px),
+    radial-gradient(circle,rgba(255,120,0,.34) 1.15px,transparent 2px),
+    linear-gradient(90deg,transparent 0 24%,rgba(0,87,185,.12) 24.1% 24.35%,transparent 24.45% 100%),
+    linear-gradient(0deg,transparent 0 68%,rgba(0,87,185,.105) 68.1% 68.35%,transparent 68.45% 100%),
+    linear-gradient(90deg,transparent 0 73%,rgba(255,120,0,.10) 73.1% 73.35%,transparent 73.45% 100%),
+    linear-gradient(0deg,transparent 0 31%,rgba(255,120,0,.09) 31.1% 31.35%,transparent 31.45% 100%);
+  background-size:
+    100% 100%,100% 100%,100% 100%,
+    154px 146px,218px 196px,
+    308px 264px,308px 264px,436px 392px,436px 392px!important;
+  background-position:
+    0 0,0 0,0 0,
+    12px 18px,74px 62px,
+    0 0,0 0,38px 26px,38px 26px!important;
+  animation:sib-all-pages-circuit 22s linear infinite!important;
+}
+@keyframes sib-all-pages-circuit{
+  0%{
+    background-position:0 0,0 0,0 0,12px 18px,74px 62px,0 0,0 0,38px 26px,38px 26px;
+  }
+  50%{
+    background-position:0 0,0 0,0 0,89px 91px,183px 160px,34px 26px,-26px 34px,70px 54px,6px 54px;
+  }
+  100%{
+    background-position:0 0,0 0,0 0,166px 164px,292px 258px,68px 52px,-52px 68px,102px 82px,-26px 82px;
+  }
+}
+:root[data-theme="dark"] .main-area{
+  background-color:#071a36!important;
+  background-image:
+    radial-gradient(ellipse at 8% 14%,rgba(0,112,220,.30),transparent 31%),
+    radial-gradient(ellipse at 91% 24%,rgba(255,120,0,.20),transparent 27%),
+    radial-gradient(ellipse at 70% 92%,rgba(0,87,185,.24),transparent 30%),
+    radial-gradient(circle,rgba(86,174,255,.68) 1.25px,transparent 2.2px),
+    radial-gradient(circle,rgba(255,145,65,.55) 1.25px,transparent 2.2px),
+    linear-gradient(90deg,transparent 0 24%,rgba(60,150,255,.22) 24.1% 24.4%,transparent 24.5% 100%),
+    linear-gradient(0deg,transparent 0 68%,rgba(60,150,255,.19) 68.1% 68.4%,transparent 68.5% 100%),
+    linear-gradient(90deg,transparent 0 73%,rgba(255,135,55,.17) 73.1% 73.4%,transparent 73.5% 100%),
+    linear-gradient(0deg,transparent 0 31%,rgba(255,135,55,.15) 31.1% 31.4%,transparent 31.5% 100%);
+}
+@media(prefers-reduced-motion:reduce){
+  .main-area{animation:none!important}
+}
