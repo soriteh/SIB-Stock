@@ -219,6 +219,13 @@ function Dashboard() {
           <div className={company.id ? (company.logo_url ? "brand-mark has-custom-logo" : "brand-mark") : "brand-mark brand-mark-loading"}>{company.id ? (company.logo_url ? <img src={company.logo_url} alt={"Logo "+company.name} /> : <>S<span>I</span>B</>) : null}</div>
           <div><strong>{company.name || "SIB Stock"}</strong></div>
         </div>
+        {activeEstablishment && <div className="establishment-switcher sidebar-establishment-switcher" title="Établissement actif">
+          <Building2 size={15}/>
+          {establishments.length > 1 ? <>
+            <select aria-label="Établissement actif" value={activeEstablishment.id} onChange={e => void setActiveEstablishment(e.target.value)}>{establishments.map(site => <option key={site.id} value={site.id}>{site.name}</option>)}</select>
+            <ChevronDown size={13}/>
+          </> : <strong className="sidebar-establishment-name">{activeEstablishment.name}</strong>}
+        </div>}
         <div className="sidebar-scroll">
           <div className="nav-label">ESPACE DE TRAVAIL</div>
           <nav className="navigation">
@@ -256,7 +263,7 @@ function Dashboard() {
       {welcomeOpen && <div className="first-welcome-toast" role="status" aria-live="polite"><span className="first-welcome-toast-mark">S<span>I</span>B</span><div><strong>Bienvenue, {displayName || "Utilisateur"} !</strong><small>Votre espace SIB Stock est prêt.</small></div><span className="first-welcome-toast-progress" /></div>}
       <main className="main-area">
         <header className="topbar">
-          <div className="topbar-heading"><button type="button" className="sidebar-toggle" aria-label="Ouvrir ou replier le menu" aria-expanded={mobileSidebarOpen || !sidebarCollapsed} onClick={() => { if (window.matchMedia("(max-width: 760px)").matches) setMobileSidebarOpen(v => !v); else setSidebarCollapsed(v => !v) }}>{sidebarCollapsed ? <Menu size={19}/> : <PanelLeftClose size={19}/>}</button><h1 className="topbar-title">{active}</h1>{establishments.length > 0 && <label className="establishment-switcher" title="Établissement actif"><Building2 size={15}/><select aria-label="Établissement actif" value={activeEstablishment?.id ?? ''} onChange={e => void setActiveEstablishment(e.target.value)}>{establishments.map(site => <option key={site.id} value={site.id}>{site.name}</option>)}</select><ChevronDown size={13}/></label>}</div>
+          <div className="topbar-heading"><button type="button" className="sidebar-toggle" aria-label="Ouvrir ou replier le menu" aria-expanded={mobileSidebarOpen || !sidebarCollapsed} onClick={() => { if (window.matchMedia("(max-width: 760px)").matches) setMobileSidebarOpen(v => !v); else setSidebarCollapsed(v => !v) }}>{sidebarCollapsed ? <Menu size={19}/> : <PanelLeftClose size={19}/>}</button><h1 className="topbar-title">{active}</h1></div>
           <div className="top-actions">
             <div className="topbar-datetime"><strong>{formattedClock}</strong><span>{welcomeDate}</span></div>
             <label className="search-box" aria-label="Rechercher dans les mouvements récents"><Search size={19}/><input ref={searchInputRef} placeholder="Rechercher un produit, une référence..." value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>⌘ K</kbd>{query&&<button type="button" className="search-clear" aria-label="Effacer la recherche" onClick={()=>setQuery('')}>×</button>}</label>
