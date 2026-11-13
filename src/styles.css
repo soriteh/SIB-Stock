@@ -3492,3 +3492,46 @@ body {
   .main-area::after{animation:none!important}
 }
 
+
+
+/* SIB Stock — fond circuits natif du workspace.
+   Le décor est peint sur le conteneur lui-même (et non sur un pseudo-élément
+   superposé), afin d'éviter les conflits de stacking-context des pages. */
+.main-area{
+  background-color:var(--sib-canvas,#f4f7fc)!important;
+  background-image:
+    radial-gradient(circle at 12% 16%,rgba(0,105,210,.12) 0,transparent 24%),
+    radial-gradient(circle at 88% 28%,rgba(255,120,0,.085) 0,transparent 22%),
+    radial-gradient(circle at 64% 88%,rgba(0,87,185,.09) 0,transparent 26%),
+    radial-gradient(circle,rgba(0,87,185,.26) 1px,transparent 1.7px),
+    radial-gradient(circle,rgba(255,120,0,.22) 1px,transparent 1.8px),
+    repeating-linear-gradient(90deg,transparent 0 55px,rgba(0,87,185,.075) 55px 56px,transparent 56px 112px),
+    repeating-linear-gradient(0deg,transparent 0 55px,rgba(0,87,185,.06) 55px 56px,transparent 56px 112px)!important;
+  background-size:
+    100% 100%,100% 100%,100% 100%,
+    112px 112px,168px 168px,112px 112px,112px 112px!important;
+  background-position:
+    0 0,0 0,0 0,
+    8px 12px,42px 58px,0 0,0 0!important;
+  animation:sib-workspace-circuit-drift 24s linear infinite!important;
+}
+.main-area::after{display:none!important;content:none!important}
+@keyframes sib-workspace-circuit-drift{
+  0%{background-position:0 0,0 0,0 0,8px 12px,42px 58px,0 0,0 0}
+  50%{background-position:0 0,0 0,0 0,64px 68px,126px 142px,28px 28px,-28px 28px}
+  100%{background-position:0 0,0 0,0 0,120px 124px,210px 226px,56px 56px,-56px 56px}
+}
+:root[data-theme="dark"] .main-area{
+  background-color:#0b1424!important;
+  background-image:
+    radial-gradient(circle at 12% 16%,rgba(0,125,255,.20) 0,transparent 25%),
+    radial-gradient(circle at 88% 28%,rgba(255,120,0,.13) 0,transparent 23%),
+    radial-gradient(circle at 64% 88%,rgba(0,105,220,.14) 0,transparent 27%),
+    radial-gradient(circle,rgba(82,165,255,.42) 1px,transparent 1.8px),
+    radial-gradient(circle,rgba(255,145,55,.36) 1px,transparent 1.9px),
+    repeating-linear-gradient(90deg,transparent 0 55px,rgba(65,145,235,.13) 55px 56px,transparent 56px 112px),
+    repeating-linear-gradient(0deg,transparent 0 55px,rgba(65,145,235,.11) 55px 56px,transparent 56px 112px)!important;
+}
+@media(prefers-reduced-motion:reduce){
+  .main-area{animation:none!important}
+}
