@@ -221,9 +221,9 @@ export default function AuthGate({ children }: { children: ReactNode }) {
 
   if (!isSupabaseConfigured || !supabase) return (
     <div className="auth-screen"><div className="auth-card"><Brand /><h1>Connexion à Supabase requise</h1>
-      <p>Ajoutez VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY dans le fichier .env.local, puis redémarrez l’application.</p>
+      <p>Ajoutez VITE_SUPABASE_URL et VITE_SUPABASE_PUBLISHABLE_KEY (ou VITE_SUPABASE_ANON_KEY) dans le fichier .env.local, puis redémarrez l’application.</p>
       <code>VITE_SUPABASE_URL=https://votre-projet.supabase.co</code>
-      <code>VITE_SUPABASE_ANON_KEY=votre-cle-publique</code>
+      <code>VITE_SUPABASE_PUBLISHABLE_KEY=votre-cle-publique</code>
     </div></div>
   )
 
