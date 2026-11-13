@@ -79,6 +79,8 @@ function Dashboard() {
   const [currentTime, setCurrentTime] = useState(() => new Date())
   const profileMenuAnchorRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
+  const topProfileWrapRef = useRef<HTMLDivElement>(null)
+  const topNotificationWrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (planLoading) return
@@ -182,6 +184,29 @@ function Dashboard() {
   const formattedClock = new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit',timeZone:'Africa/Conakry'}).format(currentTime)
 
   useEffect(() => {
+    if (!topProfileOpen && !notificationsOpen) return
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target
+      if (!(target instanceof Node)) return
+      if (topProfileWrapRef.current?.contains(target) || topNotificationWrapRef.current?.contains(target)) return
+      setTopProfileOpen(false)
+      setNotificationsOpen(false)
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setTopProfileOpen(false)
+        setNotificationsOpen(false)
+      }
+    }
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [topProfileOpen, notificationsOpen])
+
+  useEffect(() => {
     if (!profileMenuOpen) return
     const handlePointerDown = (event: PointerEvent) => {
       const target = event.target
@@ -261,11 +286,11 @@ function Dashboard() {
             <label className="search-box" aria-label="Rechercher dans les mouvements récents"><Search size={19}/><input ref={searchInputRef} placeholder="Rechercher un produit, une référence..." value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>⌘ K</kbd>{query&&<button type="button" className="search-clear" aria-label="Effacer la recherche" onClick={()=>setQuery('')}>×</button>}</label>
 
             <button type="button" className="theme-toggle" aria-label={themeMode === 'auto' ? 'Thème automatique actif' : themeMode === 'dark' ? 'Passer au thème clair' : 'Passer au thème automatique'} title={themeMode === 'auto' ? `Thème automatique (système : ${systemTheme === 'dark' ? 'sombre' : 'clair'}) — cliquer pour changer` : themeMode === 'dark' ? 'Thème sombre — cliquer pour passer au thème clair' : 'Thème clair — cliquer pour passer au thème automatique'} onClick={() => setThemeMode(current => current === 'auto' ? 'dark' : current === 'dark' ? 'light' : 'auto')}><span className="theme-toggle-icon">{themeMode === 'auto' ? <Monitor size={18}/> : theme === 'dark' ? <Sun size={18}/> : <Moon size={18}/>}</span></button>
-            <div className="top-notification-wrap">
+            <div className="top-notification-wrap" ref={topNotificationWrapRef}>
               <button className={notificationsOpen?"icon-button notification-button is-open":"icon-button notification-button"} aria-label="Notifications" aria-expanded={notificationsOpen} onClick={()=>setNotificationsOpen(v=>!v)}><Bell size={19}/></button>
               {notificationsOpen&&<div className="top-notification-panel"><div className="top-notification-heading"><strong>Notifications</strong><button type="button" onClick={()=>setNotificationsOpen(false)} aria-label="Fermer">×</button></div><div className="top-notification-empty"><strong>Aucune notification réelle</strong><p>Les notifications apparaîtront ici lorsqu’une alerte sera générée.</p></div></div>}
             </div>
-            <div className="top-profile-wrap">
+            <div className="top-profile-wrap" ref={topProfileWrapRef}>
               <button className="top-avatar top-avatar-button" aria-label="Ouvrir le menu du profil" aria-haspopup="menu" aria-expanded={topProfileOpen} title={displayName||"Mon profil"} onClick={() => setTopProfileOpen(v=>!v)}>{profileAvatarUrl?<img src={profileAvatarUrl} alt="Photo de profil"/>:<UserRound size={18}/>}</button>
               {topProfileOpen&&<div className="top-profile-menu" role="menu" aria-label="Menu du profil"><div className="top-profile-identity">{profileAvatarUrl?<img src={profileAvatarUrl} alt=""/>:<span className="top-profile-initial">{(displayName||profileEmail||'U').slice(0,1).toUpperCase()}</span>}<div><strong>{displayName||'Utilisateur'}</strong><small>{profileEmail||'Compte utilisateur'}</small></div></div><div className="top-profile-divider"/><button role="menuitem" onClick={()=>{setActive('Mon profil');setTopProfileOpen(false)}}><UserRound size={15}/> Mon profil</button><button role="menuitem" onClick={()=>{setActive('Paramètres');setTopProfileOpen(false)}}><Settings size={15}/> Paramètres</button><button role="menuitem" onClick={()=>{setActive('Centre d’aide');setTopProfileOpen(false)}}><CircleHelp size={15}/> Centre d’aide</button><div className="top-profile-divider"/><button role="menuitem" className="top-profile-logout" onClick={()=>{setTopProfileOpen(false);void signOut()}}><LogOut size={15}/> Déconnexion</button></div>}
             </div>
