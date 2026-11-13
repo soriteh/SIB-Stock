@@ -3433,3 +3433,285 @@ body {
     animation:none!important;
   }
 }
+
+/* Correctif visibilité : le champ animé doit passer devant les fonds opaques,
+   tout en laissant les pages et leurs contrôles au-dessus du calque. */
+.main-area::after{
+  z-index:2!important;
+  opacity:.28;
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(0,132,255,.22),transparent 28%),
+    radial-gradient(ellipse at 88% 32%,rgba(255,120,0,.15),transparent 25%),
+    radial-gradient(ellipse at 68% 88%,rgba(0,87,185,.16),transparent 30%),
+    repeating-linear-gradient(90deg,transparent 0 78px,rgba(0,87,185,.075) 79px 80px,transparent 81px 160px),
+    repeating-linear-gradient(0deg,transparent 0 78px,rgba(0,87,185,.06) 79px 80px,transparent 81px 160px);
+  background-size:100% 100%,100% 100%,100% 100%,160px 160px,160px 160px;
+}
+.main-area> :not(.topbar){
+  position:relative!important;
+  z-index:3!important;
+  animation:sib-page-enter .48s cubic-bezier(.2,.7,.25,1) both;
+}
+.main-area>.topbar{z-index:200!important}
+:root[data-theme="dark"] .main-area::after{opacity:.38}
+@media(prefers-reduced-motion:reduce){
+  .main-area> :not(.topbar){animation:none!important}
+}
+
+/* SIB circuit overlay — visible above card backgrounds, never intercepts clicks. */
+.main-area::after{
+  z-index:150!important;
+  inset:70px 0 0!important;
+  opacity:.52!important;
+  pointer-events:none!important;
+  background-image:
+    radial-gradient(circle,rgba(0,112,220,.72) 1.2px,transparent 2px),
+    radial-gradient(circle,rgba(255,120,0,.65) 1.3px,transparent 2px),
+    linear-gradient(90deg,transparent 0 18%,rgba(0,112,220,.20) 18.1% 18.35%,transparent 18.45% 100%),
+    linear-gradient(0deg,transparent 0 62%,rgba(0,112,220,.18) 62.1% 62.35%,transparent 62.45% 100%),
+    linear-gradient(90deg,transparent 0 72%,rgba(255,120,0,.17) 72.1% 72.35%,transparent 72.45% 100%),
+    linear-gradient(0deg,transparent 0 28%,rgba(255,120,0,.16) 28.1% 28.35%,transparent 28.45% 100%),
+    radial-gradient(ellipse at 12% 18%,rgba(0,132,255,.22),transparent 28%),
+    radial-gradient(ellipse at 88% 32%,rgba(255,120,0,.14),transparent 25%);
+  background-size:160px 140px,230px 190px,320px 260px,320px 260px,420px 340px,420px 340px,100% 100%,100% 100%;
+  background-position:12px 20px,70px 65px,0 0,0 0,30px 20px,30px 20px,0 0,0 0;
+  animation:sib-login-atmosphere 12s linear infinite!important;
+  mix-blend-mode:multiply;
+}
+:root[data-theme="dark"] .main-area::after{
+  opacity:.62!important;
+  mix-blend-mode:screen;
+}
+.main-area>.content,
+.main-area> :not(.topbar):not(.content){
+  z-index:1!important;
+  position:relative!important;
+}
+.main-area>.topbar{z-index:200!important}
+@media(prefers-reduced-motion:reduce){
+  .main-area::after{animation:none!important}
+}
+
+
+
+/* SIB Stock — fond circuits natif du workspace.
+   Le décor est peint sur le conteneur lui-même (et non sur un pseudo-élément
+   superposé), afin d'éviter les conflits de stacking-context des pages. */
+.main-area{
+  background-color:var(--sib-canvas,#f4f7fc)!important;
+  background-image:
+    radial-gradient(circle at 12% 16%,rgba(0,105,210,.12) 0,transparent 24%),
+    radial-gradient(circle at 88% 28%,rgba(255,120,0,.085) 0,transparent 22%),
+    radial-gradient(circle at 64% 88%,rgba(0,87,185,.09) 0,transparent 26%),
+    radial-gradient(circle,rgba(0,87,185,.26) 1px,transparent 1.7px),
+    radial-gradient(circle,rgba(255,120,0,.22) 1px,transparent 1.8px),
+    repeating-linear-gradient(90deg,transparent 0 55px,rgba(0,87,185,.075) 55px 56px,transparent 56px 112px),
+    repeating-linear-gradient(0deg,transparent 0 55px,rgba(0,87,185,.06) 55px 56px,transparent 56px 112px)!important;
+  background-size:
+    100% 100%,100% 100%,100% 100%,
+    112px 112px,168px 168px,112px 112px,112px 112px!important;
+  background-position:
+    0 0,0 0,0 0,
+    8px 12px,42px 58px,0 0,0 0!important;
+  animation:sib-workspace-circuit-drift 24s linear infinite!important;
+}
+.main-area::after{display:none!important;content:none!important}
+@keyframes sib-workspace-circuit-drift{
+  0%{background-position:0 0,0 0,0 0,8px 12px,42px 58px,0 0,0 0}
+  50%{background-position:0 0,0 0,0 0,64px 68px,126px 142px,28px 28px,-28px 28px}
+  100%{background-position:0 0,0 0,0 0,120px 124px,210px 226px,56px 56px,-56px 56px}
+}
+:root[data-theme="dark"] .main-area{
+  background-color:#0b1424!important;
+  background-image:
+    radial-gradient(circle at 12% 16%,rgba(0,125,255,.20) 0,transparent 25%),
+    radial-gradient(circle at 88% 28%,rgba(255,120,0,.13) 0,transparent 23%),
+    radial-gradient(circle at 64% 88%,rgba(0,105,220,.14) 0,transparent 27%),
+    radial-gradient(circle,rgba(82,165,255,.42) 1px,transparent 1.8px),
+    radial-gradient(circle,rgba(255,145,55,.36) 1px,transparent 1.9px),
+    repeating-linear-gradient(90deg,transparent 0 55px,rgba(65,145,235,.13) 55px 56px,transparent 56px 112px),
+    repeating-linear-gradient(0deg,transparent 0 55px,rgba(65,145,235,.11) 55px 56px,transparent 56px 112px)!important;
+}
+@media(prefers-reduced-motion:reduce){
+  .main-area{animation:none!important}
+}
+
+
+/* SIB Stock — circuit animation harmonisée sur toutes les pages du workspace.
+   Le fond est appliqué au conteneur commun .main-area : chaque module (stock,
+   ventes, achats, finances, rapports, paramètres, aide et administration)
+   en bénéficie sans modifier son contenu ni ses interactions. */
+.main-area{
+  background-color:#f3f7fd!important;
+  background-image:
+    radial-gradient(ellipse at 8% 14%,rgba(0,87,185,.16),transparent 30%),
+    radial-gradient(ellipse at 91% 24%,rgba(255,120,0,.105),transparent 26%),
+    radial-gradient(ellipse at 70% 92%,rgba(0,87,185,.12),transparent 29%),
+    radial-gradient(circle,rgba(0,105,210,.42) 1.15px,transparent 2px),
+    radial-gradient(circle,rgba(255,120,0,.34) 1.15px,transparent 2px),
+    linear-gradient(90deg,transparent 0 24%,rgba(0,87,185,.12) 24.1% 24.35%,transparent 24.45% 100%),
+    linear-gradient(0deg,transparent 0 68%,rgba(0,87,185,.105) 68.1% 68.35%,transparent 68.45% 100%),
+    linear-gradient(90deg,transparent 0 73%,rgba(255,120,0,.10) 73.1% 73.35%,transparent 73.45% 100%),
+    linear-gradient(0deg,transparent 0 31%,rgba(255,120,0,.09) 31.1% 31.35%,transparent 31.45% 100%);
+  background-size:
+    100% 100%,100% 100%,100% 100%,
+    154px 146px,218px 196px,
+    308px 264px,308px 264px,436px 392px,436px 392px!important;
+  background-position:
+    0 0,0 0,0 0,
+    12px 18px,74px 62px,
+    0 0,0 0,38px 26px,38px 26px!important;
+  animation:sib-all-pages-circuit 22s linear infinite!important;
+}
+@keyframes sib-all-pages-circuit{
+  0%{
+    background-position:0 0,0 0,0 0,12px 18px,74px 62px,0 0,0 0,38px 26px,38px 26px;
+  }
+  50%{
+    background-position:0 0,0 0,0 0,89px 91px,183px 160px,34px 26px,-26px 34px,70px 54px,6px 54px;
+  }
+  100%{
+    background-position:0 0,0 0,0 0,166px 164px,292px 258px,68px 52px,-52px 68px,102px 82px,-26px 82px;
+  }
+}
+:root[data-theme="dark"] .main-area{
+  background-color:#071a36!important;
+  background-image:
+    radial-gradient(ellipse at 8% 14%,rgba(0,112,220,.30),transparent 31%),
+    radial-gradient(ellipse at 91% 24%,rgba(255,120,0,.20),transparent 27%),
+    radial-gradient(ellipse at 70% 92%,rgba(0,87,185,.24),transparent 30%),
+    radial-gradient(circle,rgba(86,174,255,.68) 1.25px,transparent 2.2px),
+    radial-gradient(circle,rgba(255,145,65,.55) 1.25px,transparent 2.2px),
+    linear-gradient(90deg,transparent 0 24%,rgba(60,150,255,.22) 24.1% 24.4%,transparent 24.5% 100%),
+    linear-gradient(0deg,transparent 0 68%,rgba(60,150,255,.19) 68.1% 68.4%,transparent 68.5% 100%),
+    linear-gradient(90deg,transparent 0 73%,rgba(255,135,55,.17) 73.1% 73.4%,transparent 73.5% 100%),
+    linear-gradient(0deg,transparent 0 31%,rgba(255,135,55,.15) 31.1% 31.4%,transparent 31.5% 100%);
+}
+@media(prefers-reduced-motion:reduce){
+  .main-area{animation:none!important}
+}
+
+/* SIB Stock — correction définitive : décor circuit visible au-dessus des fonds de modules. */
+.main-area{position:relative!important;isolation:isolate!important;overflow-x:clip}
+.main-area::after{
+  content:""!important;display:block!important;position:absolute!important;
+  inset:72px 0 0!important;z-index:2!important;pointer-events:none!important;
+  opacity:.56!important;mix-blend-mode:multiply;
+  background-image:
+    radial-gradient(circle at 8% 16%,rgba(40,145,235,.72) 0 2px,transparent 3px),
+    radial-gradient(circle at 83% 28%,rgba(255,120,0,.65) 0 2px,transparent 3px),
+    radial-gradient(circle at 24% 72%,rgba(40,145,235,.58) 0 2px,transparent 3px),
+    radial-gradient(circle at 72% 84%,rgba(255,120,0,.52) 0 2px,transparent 3px),
+    repeating-linear-gradient(90deg,transparent 0 88px,rgba(0,87,185,.16) 89px 90px,transparent 91px 176px),
+    repeating-linear-gradient(0deg,transparent 0 72px,rgba(0,87,185,.13) 73px 74px,transparent 75px 144px),
+    linear-gradient(90deg,transparent 0 18%,rgba(0,87,185,.22) 18.1% 18.35%,transparent 18.45% 100%),
+    linear-gradient(0deg,transparent 0 62%,rgba(0,87,185,.18) 62.1% 62.35%,transparent 62.45% 100%),
+    linear-gradient(90deg,transparent 0 76%,rgba(255,120,0,.18) 76.1% 76.35%,transparent 76.45% 100%),
+    linear-gradient(0deg,transparent 0 30%,rgba(255,120,0,.15) 30.1% 30.35%,transparent 30.45% 100%),
+    radial-gradient(ellipse at 10% 20%,rgba(0,112,220,.15),transparent 32%),
+    radial-gradient(ellipse at 90% 35%,rgba(255,120,0,.10),transparent 28%);
+  background-size:220px 190px,260px 220px,300px 260px,360px 300px,176px 144px,176px 144px,440px 360px,440px 360px,520px 420px,520px 420px,100% 100%,100% 100%;
+  background-position:0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0;
+  animation:sib-reference-circuit-motion 18s linear infinite!important;
+}
+.main-area>.topbar{position:sticky!important;z-index:210!important}
+.main-area>:not(.topbar){position:relative!important;z-index:1!important}
+@keyframes sib-reference-circuit-motion{
+  0%{background-position:0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0}
+  50%{background-position:35px 28px,-28px 24px,42px -30px,-36px 34px,44px 36px,-36px 36px,28px 18px,-18px 28px,36px 24px,-24px 36px,0 0,0 0}
+  100%{background-position:70px 56px,-56px 48px,84px -60px,-72px 68px,88px 72px,-72px 72px,56px 36px,-36px 56px,72px 48px,-48px 72px,0 0,0 0}
+}
+:root[data-theme="dark"] .main-area::after{opacity:.68!important;mix-blend-mode:screen}
+@media(prefers-reduced-motion:reduce){.main-area::after{animation:none!important}}
+
+
+/* SIB Stock — couche circuits animés globale, au-dessus des fonds des modules.
+   Les pages métier sont des enfants directs de .main-area : cette couche
+   indépendante reste visible sur chaque module sans intercepter les clics. */
+.main-area{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow-x:clip!important;
+}
+.main-area::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:70px 0 0 0!important;
+  z-index:8!important;
+  pointer-events:none!important;
+  opacity:.58!important;
+  background-image:
+    radial-gradient(circle at 12% 18%,rgba(35,145,240,.95) 0 2px,transparent 3.5px),
+    radial-gradient(circle at 12% 18%,rgba(35,145,240,.28) 0 7px,transparent 11px),
+    radial-gradient(circle at 78% 34%,rgba(255,120,0,.9) 0 2px,transparent 3.5px),
+    radial-gradient(circle at 78% 34%,rgba(255,120,0,.24) 0 8px,transparent 13px),
+    radial-gradient(circle at 34% 76%,rgba(35,145,240,.85) 0 2px,transparent 3.5px),
+    radial-gradient(circle at 34% 76%,rgba(35,145,240,.22) 0 7px,transparent 12px),
+    repeating-linear-gradient(90deg,transparent 0 78px,rgba(0,87,185,.20) 79px 80px,transparent 81px 156px),
+    repeating-linear-gradient(0deg,transparent 0 66px,rgba(0,87,185,.16) 67px 68px,transparent 69px 132px),
+    repeating-linear-gradient(90deg,transparent 0 154px,rgba(255,120,0,.13) 155px 156px,transparent 157px 308px),
+    repeating-linear-gradient(0deg,transparent 0 132px,rgba(255,120,0,.12) 133px 134px,transparent 135px 264px),
+    radial-gradient(ellipse at 12% 18%,rgba(0,112,220,.16),transparent 34%),
+    radial-gradient(ellipse at 88% 38%,rgba(255,120,0,.12),transparent 30%);
+  background-size:260px 220px,260px 220px,330px 280px,330px 280px,390px 330px,390px 330px,156px 132px,156px 132px,308px 264px,308px 264px,100% 100%,100% 100%;
+  background-position:0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0;
+  animation:sib-global-circuit-flow 16s linear infinite!important;
+  mix-blend-mode:multiply;
+}
+.main-area>.topbar{
+  position:sticky!important;
+  z-index:220!important;
+}
+.main-area>:not(.topbar){
+  position:relative!important;
+  z-index:2!important;
+}
+:root[data-theme="dark"] .main-area::before{
+  opacity:.72!important;
+  mix-blend-mode:screen;
+  background-image:
+    radial-gradient(circle at 12% 18%,rgba(75,175,255,1) 0 2px,transparent 3.5px),
+    radial-gradient(circle at 12% 18%,rgba(35,145,240,.32) 0 8px,transparent 12px),
+    radial-gradient(circle at 78% 34%,rgba(255,145,65,1) 0 2px,transparent 3.5px),
+    radial-gradient(circle at 78% 34%,rgba(255,120,0,.30) 0 8px,transparent 13px),
+    radial-gradient(circle at 34% 76%,rgba(75,175,255,.95) 0 2px,transparent 3.5px),
+    radial-gradient(circle at 34% 76%,rgba(35,145,240,.28) 0 8px,transparent 12px),
+    repeating-linear-gradient(90deg,transparent 0 78px,rgba(65,155,255,.25) 79px 80px,transparent 81px 156px),
+    repeating-linear-gradient(0deg,transparent 0 66px,rgba(65,155,255,.21) 67px 68px,transparent 69px 132px),
+    repeating-linear-gradient(90deg,transparent 0 154px,rgba(255,135,55,.20) 155px 156px,transparent 157px 308px),
+    repeating-linear-gradient(0deg,transparent 0 132px,rgba(255,135,55,.18) 133px 134px,transparent 135px 264px),
+    radial-gradient(ellipse at 12% 18%,rgba(0,112,220,.22),transparent 34%),
+    radial-gradient(ellipse at 88% 38%,rgba(255,120,0,.17),transparent 30%);
+}
+@keyframes sib-global-circuit-flow{
+  0%{background-position:0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0}
+  50%{background-position:42px 28px,42px 28px,-36px 32px,-36px 32px,48px -34px,48px -34px,39px 33px,-33px 39px,52px 44px,-44px 52px,0 0,0 0}
+  100%{background-position:84px 56px,84px 56px,-72px 64px,-72px 64px,96px -68px,96px -68px,78px 66px,-66px 78px,104px 88px,-88px 104px,0 0,0 0}
+}
+@media(prefers-reduced-motion:reduce){
+  .main-area::before{animation:none!important}
+}
+
+
+/* Abonnement — aligner toutes les offres sur une seule rangée sur ordinateur. */
+.subscription-page .subscription-plans{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  width:100%!important;
+  max-width:none!important;
+  gap:16px!important;
+}
+.subscription-page .subscription-plan{
+  width:100%!important;
+  min-width:0!important;
+  height:100%!important;
+}
+.subscription-page .subscription-plan>button{margin-top:auto}
+@media(max-width:760px){
+  .subscription-page .subscription-plans{
+    grid-template-columns:minmax(0,1fr)!important;
+    max-width:100%!important;
+  }
+}
