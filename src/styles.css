@@ -3458,3 +3458,37 @@ body {
   .main-area> :not(.topbar){animation:none!important}
 }
 
+/* SIB circuit overlay — visible above card backgrounds, never intercepts clicks. */
+.main-area::after{
+  z-index:150!important;
+  inset:70px 0 0!important;
+  opacity:.52!important;
+  pointer-events:none!important;
+  background-image:
+    radial-gradient(circle,rgba(0,112,220,.72) 1.2px,transparent 2px),
+    radial-gradient(circle,rgba(255,120,0,.65) 1.3px,transparent 2px),
+    linear-gradient(90deg,transparent 0 18%,rgba(0,112,220,.20) 18.1% 18.35%,transparent 18.45% 100%),
+    linear-gradient(0deg,transparent 0 62%,rgba(0,112,220,.18) 62.1% 62.35%,transparent 62.45% 100%),
+    linear-gradient(90deg,transparent 0 72%,rgba(255,120,0,.17) 72.1% 72.35%,transparent 72.45% 100%),
+    linear-gradient(0deg,transparent 0 28%,rgba(255,120,0,.16) 28.1% 28.35%,transparent 28.45% 100%),
+    radial-gradient(ellipse at 12% 18%,rgba(0,132,255,.22),transparent 28%),
+    radial-gradient(ellipse at 88% 32%,rgba(255,120,0,.14),transparent 25%);
+  background-size:160px 140px,230px 190px,320px 260px,320px 260px,420px 340px,420px 340px,100% 100%,100% 100%;
+  background-position:12px 20px,70px 65px,0 0,0 0,30px 20px,30px 20px,0 0,0 0;
+  animation:sib-login-atmosphere 12s linear infinite!important;
+  mix-blend-mode:multiply;
+}
+:root[data-theme="dark"] .main-area::after{
+  opacity:.62!important;
+  mix-blend-mode:screen;
+}
+.main-area>.content,
+.main-area> :not(.topbar):not(.content){
+  z-index:1!important;
+  position:relative!important;
+}
+.main-area>.topbar{z-index:200!important}
+@media(prefers-reduced-motion:reduce){
+  .main-area::after{animation:none!important}
+}
+
