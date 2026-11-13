@@ -3179,3 +3179,30 @@ body {
   .app-shell>.main-area>.content::before{animation:none!important}
   .app-shell>.main-area>.content .primary-button{transition:none!important}
 }
+
+
+/* SIB Stock — remonter le contenu du menu latéral sur petits écrans */
+@media(max-width:760px){
+  .app-shell>.sidebar{
+    padding-top:8px!important;
+    padding-bottom:10px!important;
+  }
+  .app-shell>.sidebar .sidebar-scroll{
+    padding-top:0!important;
+  }
+  .app-shell>.sidebar .sidebar-scroll .brand{
+    margin-top:0!important;
+    padding-top:0!important;
+    padding-bottom:14px!important;
+  }
+  .app-shell>.sidebar .sidebar-scroll>.nav-label{
+    padding-top:0!important;
+    padding-bottom:8px!important;
+  }
+  .app-shell>.sidebar .sidebar-scroll .navigation{
+    gap:3px!important;
+  }
+  .app-shell>.sidebar .sidebar-scroll .nav-item{
+    min-height:40px!important;
+  }
+}
