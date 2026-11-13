@@ -22,6 +22,11 @@ Serveur uniquement :
 
 Ne jamais préfixer les secrets avec `VITE_`, les commiter ou les transmettre dans le navigateur. Configurer des valeurs distinctes pour Development, Preview et Production.
 
+## Schéma PostgreSQL isolé
+Les tables Better Auth doivent être placées dans le schéma PostgreSQL `better_auth`, distinct du schéma métier existant. Le pool serveur définit `search_path=better_auth` et limite chaque instance Vercel à une connexion. Le fichier `db/migrations/0001_create_better_auth_schema.sql` ne crée que ce schéma vide. Il ne touche à aucune table ni donnée existante.
+
+Après création du schéma sur une base de développement dédiée, exécuter `npm run auth:schema:diff` pour générer le SQL Better Auth. Examiner le fichier généré avant toute application. `npm run auth:schema:check` vérifie ensuite le schéma connecté. Ne jamais exécuter ces commandes contre la production pendant la phase de développement.
+
 ## État de l'implémentation
 Cette branche ajoute le socle Better Auth côté serveur et client. Elle ne remplace pas encore l'AuthGate historique ni les accès Supabase des modules métier. Ce maintien temporaire est volontaire : retirer Supabase maintenant couperait l'authentification et les écrans de production avant que les API Neon soient prêtes.
 
