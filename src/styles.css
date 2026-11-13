@@ -3259,3 +3259,53 @@ body {
     padding-bottom:calc(max(10px,env(safe-area-inset-bottom)) + 28px)!important;
   }
 }
+
+
+/* Premium micro-interaction for the top-bar profile button */
+.top-profile-wrap .top-avatar-button{
+  position:relative;isolation:isolate;overflow:visible;
+  display:grid;place-items:center;
+  border:1px solid rgba(0,87,185,.22);
+  background:linear-gradient(145deg,#fff 0%,#edf5ff 100%);
+  color:#075bb8;
+  box-shadow:0 3px 10px rgba(0,87,185,.10);
+  transition:transform .24s cubic-bezier(.2,.8,.2,1),box-shadow .24s ease,border-color .24s ease,background .24s ease;
+}
+.top-profile-wrap .top-avatar-button::before{
+  content:"";position:absolute;inset:-4px;border:1px solid rgba(0,111,220,.0);
+  border-radius:inherit;pointer-events:none;transition:inset .24s ease,border-color .24s ease,opacity .24s ease;
+}
+.top-profile-wrap .top-avatar-button::after{
+  content:"";position:absolute;inset:-2px;border-radius:inherit;z-index:-1;
+  background:linear-gradient(135deg,rgba(0,87,185,.16),rgba(255,120,0,.18));
+  opacity:0;filter:blur(7px);transition:opacity .24s ease;
+}
+.top-profile-wrap .top-avatar-button:hover{
+  transform:translateY(-2px) scale(1.045);
+  border-color:rgba(0,87,185,.55);
+  box-shadow:0 7px 18px rgba(0,87,185,.19);
+  background:linear-gradient(145deg,#fff 0%,#e5f1ff 100%);
+}
+.top-profile-wrap .top-avatar-button:hover::before,
+.top-profile-wrap .top-avatar-button[aria-expanded="true"]::before{
+  inset:-4px;border-color:rgba(0,87,185,.32);
+}
+.top-profile-wrap .top-avatar-button:hover::after,
+.top-profile-wrap .top-avatar-button[aria-expanded="true"]::after{opacity:1}
+.top-profile-wrap .top-avatar-button[aria-expanded="true"]{
+  transform:scale(.96);border-color:#ff7800;
+  box-shadow:0 0 0 3px rgba(255,120,0,.13),0 5px 14px rgba(0,87,185,.14);
+}
+.top-profile-wrap .top-avatar-button img{
+  transition:transform .3s ease,filter .3s ease;
+}
+.top-profile-wrap .top-avatar-button:hover img{transform:scale(1.08);filter:saturate(1.12)}
+.top-profile-wrap .top-avatar-button:focus-visible{
+  outline:3px solid rgba(0,87,185,.35);outline-offset:4px;
+}
+@media(prefers-reduced-motion:reduce){
+  .top-profile-wrap .top-avatar-button,
+  .top-profile-wrap .top-avatar-button::before,
+  .top-profile-wrap .top-avatar-button::after,
+  .top-profile-wrap .top-avatar-button img{transition:none}
+}
