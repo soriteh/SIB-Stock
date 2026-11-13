@@ -3353,3 +3353,83 @@ body {
   position:relative;
   z-index:1;
 }
+
+
+/* SIB visual language on every authenticated page: animated circuit field + soft light orbs. */
+.main-area{
+  position:relative!important;
+  isolation:isolate!important;
+}
+.main-area::after{
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:0;
+  pointer-events:none;
+  opacity:.42;
+  background:
+    radial-gradient(circle at 14% 18%,rgba(0,132,255,.16),transparent 22%),
+    radial-gradient(circle at 88% 34%,rgba(255,120,0,.10),transparent 20%),
+    radial-gradient(circle at 72% 86%,rgba(0,87,185,.10),transparent 24%),
+    repeating-linear-gradient(90deg,transparent 0 118px,rgba(0,87,185,.055) 119px 120px,transparent 121px 240px),
+    repeating-linear-gradient(0deg,transparent 0 94px,rgba(0,87,185,.045) 95px 96px,transparent 97px 190px);
+  background-size:100% 100%,100% 100%,100% 100%,240px 190px,240px 190px;
+  animation:sib-login-atmosphere 28s ease-in-out infinite alternate;
+}
+.main-area>.topbar{z-index:200!important;position:sticky!important}
+.main-area>.content,
+.main-area> :not(.topbar):not(.content){
+  position:relative;
+  z-index:1;
+}
+.main-area>.content{
+  animation:sib-page-enter .48s cubic-bezier(.2,.7,.25,1) both;
+}
+.main-area .dashboard-panel,
+.main-area .dashboard-kpi,
+.main-area .dashboard-shortcut,
+.main-area .catalog-panel,
+.main-area .settings-card,
+.main-area .admin-card,
+.main-area .finance-card,
+.main-area .report-card,
+.main-area .help-card{
+  animation:sib-card-enter .55s cubic-bezier(.2,.7,.25,1) both;
+}
+.main-area .dashboard-kpi:nth-child(2),
+.main-area .dashboard-shortcut:nth-child(2){animation-delay:.04s}
+.main-area .dashboard-kpi:nth-child(3),
+.main-area .dashboard-shortcut:nth-child(3){animation-delay:.08s}
+.main-area .dashboard-kpi:nth-child(4),
+.main-area .dashboard-shortcut:nth-child(4){animation-delay:.12s}
+.main-area .dashboard-kpi:nth-child(5),
+.main-area .dashboard-shortcut:nth-child(5){animation-delay:.16s}
+.main-area .dashboard-kpi:nth-child(6),
+.main-area .dashboard-shortcut:nth-child(6){animation-delay:.20s}
+.main-area .dashboard-kpi:nth-child(7),
+.main-area .dashboard-shortcut:nth-child(7){animation-delay:.24s}
+.main-area .dashboard-kpi:nth-child(8),
+.main-area .dashboard-shortcut:nth-child(8){animation-delay:.28s}
+@keyframes sib-login-atmosphere{
+  0%{background-position:0 0,0 0,0 0,0 0,0 0;filter:hue-rotate(0deg)}
+  50%{background-position:2% 4%,-2% 3%,3% -2%,24px 18px, -18px 14px;filter:hue-rotate(5deg)}
+  100%{background-position:-2% 2%,2% -3%,-2% 3%,48px 36px,-36px 28px;filter:hue-rotate(-4deg)}
+}
+@keyframes sib-page-enter{
+  from{opacity:0;transform:translateY(9px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes sib-card-enter{
+  from{opacity:0;transform:translateY(12px) scale(.992)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+:root[data-theme="dark"] .main-area::after{opacity:.55}
+@media(prefers-reduced-motion:reduce){
+  .main-area::after,.main-area>.content,
+  .main-area .dashboard-panel,.main-area .dashboard-kpi,
+  .main-area .dashboard-shortcut,.main-area .catalog-panel,
+  .main-area .settings-card,.main-area .admin-card,
+  .main-area .finance-card,.main-area .report-card,.main-area .help-card{
+    animation:none!important;
+  }
+}
