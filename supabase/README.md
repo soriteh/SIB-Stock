@@ -1,9 +1,29 @@
-# Supabase
+# Supabase — SIB Stock
 
-1. Créer un projet Supabase dédié à SIB Stock.
-2. Copier l'URL et la clé publique anon dans `.env.local`.
-3. Appliquer les migrations du dossier `migrations/` dans l'ordre.
-4. Activer la confirmation e-mail dans Auth avant la mise en production.
-5. Ne jamais placer la clé `service_role` dans le frontend.
+Supabase est l'unique plateforme de données et d'authentification de SIB Stock.
 
-Les migrations sont conçues pour PostgreSQL/Supabase. Tester d'abord dans un projet de développement.
+## Projet
+
+- Projet : `sib-stock`
+- Région : `eu-west-3`
+- Base : PostgreSQL managé par Supabase
+
+## Configuration locale et Vercel
+
+Renseigner les variables suivantes :
+
+1. `VITE_SUPABASE_URL`
+2. `VITE_SUPABASE_PUBLISHABLE_KEY` (recommandée)
+3. `VITE_SUPABASE_ANON_KEY` (compatibilité avec les environnements déjà configurés)
+
+Le frontend privilégie la clé publishable. La clé anon reste acceptée pour ne pas interrompre les déploiements existants.
+
+## Règles de sécurité
+
+- Ne jamais exposer `service_role` ou une clé secrète dans le navigateur.
+- Activer et vérifier RLS sur toutes les tables exposées.
+- Les autorisations métier doivent être appliquées dans les politiques RLS et les fonctions SQL.
+- Ne pas exécuter de migration destructive sur la base de production.
+- Tester les nouvelles migrations sur un environnement distinct avant production.
+
+Les migrations du dossier `migrations/` sont conçues pour PostgreSQL/Supabase. Les appliquer dans l'ordre après revue du schéma et sauvegarde.
