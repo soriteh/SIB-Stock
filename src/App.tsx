@@ -219,13 +219,6 @@ function Dashboard() {
           <div className={company.id ? (company.logo_url ? "brand-mark has-custom-logo" : "brand-mark") : "brand-mark brand-mark-loading"}>{company.id ? (company.logo_url ? <img src={company.logo_url} alt={"Logo "+company.name} /> : <>S<span>I</span>B</>) : null}</div>
           <div><strong>{company.name || "SIB Stock"}</strong></div>
         </div>
-        {activeEstablishment && <div className="establishment-switcher sidebar-establishment-switcher" title="Établissement actif">
-          <Building2 size={15}/>
-          {establishments.length > 1 ? <>
-            <select aria-label="Établissement actif" value={activeEstablishment.id} onChange={e => void setActiveEstablishment(e.target.value)}>{establishments.map(site => <option key={site.id} value={site.id}>{site.name}</option>)}</select>
-            <ChevronDown size={13}/>
-          </> : <strong className="sidebar-establishment-name">{activeEstablishment.name}</strong>}
-        </div>}
         <div className="sidebar-scroll">
           <div className="nav-label">ESPACE DE TRAVAIL</div>
           <nav className="navigation">
