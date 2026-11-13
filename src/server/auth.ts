@@ -17,7 +17,10 @@ const trustedOrigins = (process.env.BETTER_AUTH_TRUSTED_ORIGINS ?? '')
 const pool = new Pool({
   connectionString: databaseUrl,
   ssl: { rejectUnauthorized: true },
-  max: 5,
+  // Keep Better Auth tables separate from existing SIB business tables.
+  options: '-c search_path=better_auth',
+  // Vercel serverless: keep each function instance's connection footprint small.
+  max: 1,
   idleTimeoutMillis: 30_000,
   connectionTimeoutMillis: 10_000,
 })
