@@ -27,7 +27,7 @@ import {
 import { supabase } from './lib/supabase'
 import { TenantSettingsProvider, useTenantSettings } from './contexts/TenantSettingsContext'
 import { PlanAccessProvider, usePlanAccess, type PlanTier } from './contexts/PlanAccessContext'
-import { EstablishmentProvider, useEstablishment } from './contexts/EstablishmentContext'
+import { EstablishmentProvider } from './contexts/EstablishmentContext'
 
 const navigation = [
   { label: 'Vue d’ensemble', icon: LayoutDashboard },
@@ -76,7 +76,6 @@ function Dashboard() {
   const [displayName, setDisplayName] = useState('')
   const company = useTenantSettings()
   const { tier, loading: planLoading, canAccess } = usePlanAccess()
-  const { establishments, activeEstablishment, setActive: setActiveEstablishment } = useEstablishment()
   const [currentTime, setCurrentTime] = useState(() => new Date())
   const profileMenuAnchorRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
