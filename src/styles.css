@@ -2131,6 +2131,13 @@ body {
 .admin-license-form>p{font-size:9px;line-height:1.5;color:#8491a3}
 @media(max-width:600px){.license-toolbar{align-items:stretch}.license-toolbar .admin-search,.license-toolbar>select{flex-basis:100%;min-width:0}.license-toolbar .catalog-count{margin-left:0}.license-current-summary{grid-template-columns:1fr}.platform-admin-actions{flex-wrap:wrap}}
 
+/* Establishment selector moved from the global topbar into the sidebar */
+.sidebar-establishment-switcher{width:calc(100% - 20px);max-width:none;height:38px;margin:-12px 10px 22px;padding:0 10px;border-color:#294463;background:#102746;color:#9fc5f5;box-sizing:border-box}
+.sidebar-establishment-switcher select{flex:1;width:100%;max-width:none;color:#fff;font-size:11px}
+.sidebar-establishment-switcher select option{color:#20334f;background:#fff}
+.sidebar-establishment-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff;font-size:11px;font-weight:650}
+@media(max-width:900px){.sidebar-establishment-switcher{max-width:none}.sidebar-establishment-switcher select{max-width:none}}
+
 /* Establishment management */
 .establishment-switcher{height:34px;display:flex;align-items:center;gap:7px;padding:0 9px;border:1px solid #e3e9f1;border-radius:7px;background:#f8faff;color:#42607f;max-width:220px}
 .establishment-switcher select{min-width:0;max-width:165px;border:0;outline:0;background:transparent;color:#263b58;font-size:10px;font-weight:600;cursor:pointer}
