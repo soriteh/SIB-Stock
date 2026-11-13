@@ -7,13 +7,17 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc -b --pretty"
+    "typecheck": "tsc -b --pretty",
+    "auth:schema:diff": "npx auth@latest generate --config ./src/server/auth.ts --output ./db/migrations/0002_better_auth.sql --yes",
+    "auth:schema:check": "npx auth@latest check schema --config ./src/server/auth.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "better-auth": "^1.7.0",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
@@ -23,6 +27,7 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16",
     "typescript": "~5.7.2",
-    "vite": "^6.0.5"
+    "vite": "^6.0.5",
+    "@types/pg": "^8.15.5"
   }
 }
