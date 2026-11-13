@@ -145,7 +145,7 @@ export default function AuthGate({ children }: { children: ReactNode }) {
   useEffect(() => {
     let mounted = true
     async function loadTenant() {
-      if (!supabase || !session?.user) { setTenant(null); return }
+      if (!supabase || !session?.user?.id) { setTenant(null); setLoading(false); return }
       setLoading(true)
       const { data: profile, error: profileError } = await supabase
         .from('profiles').select('active_tenant_id').eq('id', session.user.id).maybeSingle()
@@ -162,7 +162,7 @@ export default function AuthGate({ children }: { children: ReactNode }) {
     }
     void loadTenant()
     return () => { mounted = false }
-  }, [session])
+  }, [session?.user?.id])
 
   async function submitAuth(event: FormEvent) {
     event.preventDefault()
