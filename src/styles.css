@@ -3433,3 +3433,28 @@ body {
     animation:none!important;
   }
 }
+
+/* Correctif visibilité : le champ animé doit passer devant les fonds opaques,
+   tout en laissant les pages et leurs contrôles au-dessus du calque. */
+.main-area::after{
+  z-index:2!important;
+  opacity:.28;
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(0,132,255,.22),transparent 28%),
+    radial-gradient(ellipse at 88% 32%,rgba(255,120,0,.15),transparent 25%),
+    radial-gradient(ellipse at 68% 88%,rgba(0,87,185,.16),transparent 30%),
+    repeating-linear-gradient(90deg,transparent 0 78px,rgba(0,87,185,.075) 79px 80px,transparent 81px 160px),
+    repeating-linear-gradient(0deg,transparent 0 78px,rgba(0,87,185,.06) 79px 80px,transparent 81px 160px);
+  background-size:100% 100%,100% 100%,100% 100%,160px 160px,160px 160px;
+}
+.main-area> :not(.topbar){
+  position:relative!important;
+  z-index:3!important;
+  animation:sib-page-enter .48s cubic-bezier(.2,.7,.25,1) both;
+}
+.main-area>.topbar{z-index:200!important}
+:root[data-theme="dark"] .main-area::after{opacity:.38}
+@media(prefers-reduced-motion:reduce){
+  .main-area> :not(.topbar){animation:none!important}
+}
+
